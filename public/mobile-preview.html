@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>我行我诉</title>
+  <style>
+    :root{--ink:#1f2d3a;--muted:#7c8996;--line:#e9eff0;--blue:#1d7895;--deep:#135b76;--bg:#f5f8f8}*{box-sizing:border-box}body{margin:0;background:#e9eeee;color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif}.app{max-width:480px;min-height:100svh;margin:auto;background:var(--bg)}header{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#fff;border-bottom:1px solid var(--line)}.brand{font-size:16px;font-weight:700;display:flex;gap:9px;align-items:center}.mark{width:27px;height:27px;border-radius:8px;background:var(--deep);color:#fff;display:grid;place-items:center;font-size:15px}.hint{font-size:11px;color:#94a0a9}.welcome{min-height:calc(100svh - 62px);padding:clamp(72px,16vh,130px) 28px 45px;background:radial-gradient(circle at 78% 6%,#fff 0,#f7fafa 29%,#eff5f5 74%,#e8f0f0 100%)}.eyebrow{font-size:12px;color:var(--blue);font-weight:700;letter-spacing:.13em;margin-bottom:18px}h1{font-size:clamp(37px,10vw,46px);line-height:1.25;letter-spacing:-.05em;margin:0;font-weight:650}.welcome p{color:#687787;font-size:15px;line-height:1.8;margin:21px 0 33px}.primary{border:0;border-radius:11px;background:var(--deep);color:#fff;padding:16px 20px;min-width:192px;font-weight:700;box-shadow:0 10px 20px #165a7525;font:inherit}.note{font-size:12px;color:#8795a0;margin-top:27px}.hidden{display:none!important}.stages{background:#fff;border-bottom:1px solid var(--line);padding:18px 21px 16px}.stages ol{padding:0;margin:0;list-style:none;display:flex;position:relative;justify-content:space-between}.stages ol:before{content:"";position:absolute;height:1px;top:14px;left:27px;right:27px;background:#dfe8e9}.stages li{z-index:1;width:25%;display:flex;flex-direction:column;align-items:center;gap:6px;color:#a1adb6;font-size:10px;white-space:nowrap}.dot{width:29px;height:29px;border:1px solid #dce5e7;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:11px}.active{color:var(--deep)!important;font-weight:700}.active .dot{background:var(--deep);border-color:var(--deep);color:#fff;box-shadow:0 0 0 4px #dceff0}.done{color:#6c8b93!important}.done .dot{background:#83afb3;color:#fff;border-color:#83afb3}.area{padding:19px 16px 31px}.card{min-height:calc(100svh - 183px);background:#fff;border:1px solid #e5ecee;border-radius:15px;box-shadow:0 10px 28px #3d52610d;overflow:hidden;display:flex;flex-direction:column}.progress{padding:16px 19px 14px;border-bottom:1px solid #edf1f2;font-size:11px;color:#89959e;display:flex;justify-content:space-between}.bar{height:4px;width:92px;border-radius:5px;background:#e8eeee;overflow:hidden}.fill{height:100%;background:#6fa8ae}.content{padding:32px 21px 28px}.stage-name{font-size:12px;color:var(--blue);font-weight:700;margin:0 0 13px}.card h2{font-size:24px;line-height:1.42;letter-spacing:-.035em;margin:0;font-weight:650}.desc{font-size:13px;line-height:1.7;color:#778593;margin:10px 0 25px}.options{display:grid;gap:10px}.option{border:1px solid #e2e9eb;background:#fff;border-radius:10px;padding:14px 14px 14px 16px;min-height:64px;display:flex;align-items:center;justify-content:space-between;text-align:left;font:inherit;color:var(--ink)}.option:active{background:#f3fbfb;border-color:#7ab3b9}.option strong{font-size:14px;display:block}.option small{display:block;color:#89959f;font-size:11px;line-height:1.45;margin-top:4px}.arrow{font-size:17px;color:#78a1a7}.back{border:0;background:transparent;color:#7b8995;margin:auto 21px 19px;width:max-content;padding:6px 0;font:inherit;font-size:13px}.result{text-align:center;align-items:center;justify-content:center;padding:45px 25px}.check{width:48px;height:48px;border-radius:50%;background:#6fa8ae;color:#fff;display:grid;place-items:center;font-size:23px;margin:0 auto 22px}.text{display:block;margin:20px auto 0;border:0;background:transparent;color:#7b8995;font:inherit;font-size:13px}
+    header{position:relative;justify-content:center}header .hint{display:none}.stages{padding:12px 11px 10px;overflow:hidden}.progress-nodes{position:relative;display:flex;justify-content:space-between;list-style:none;padding:0;margin:0}.progress-nodes:before{content:'';position:absolute;left:5%;right:5%;top:8px;height:1px;background:#d8e2e3}.progress-nodes li{z-index:1;width:12.5%;display:flex;flex-direction:column;align-items:center;gap:5px;color:#91a0a7;font-size:9px;white-space:nowrap}.progress-nodes i{width:15px;height:15px;border-radius:50%;border:1px solid #bdc9ca;background:#fff;display:grid;place-items:center;color:#fff;font-size:10px;font-style:normal}.progress-nodes li.done,.progress-nodes li.active{color:#1d2935;font-weight:650}.progress-nodes li.done i{background:#22313c;border-color:#22313c}.progress-nodes li.active i{background:#101820;border-color:#101820;box-shadow:0 0 0 3px #eaf0f0}.card{min-height:calc(100svh - 191px)}.content h2{text-align:center;margin-bottom:22px}.stages div{display:block}.area{padding-bottom:76px}.entry{width:100%;height:52px;border:1px solid #dce6e8;border-radius:10px;padding:0 14px;color:var(--ink);font:inherit;font-size:14px;outline:none}.entry:focus{border-color:#73aeb7;box-shadow:0 0 0 3px #e2f1f2}.input-wrap{position:relative;display:block;width:100%;overflow:hidden;border-radius:10px}.input-wrap .entry{position:relative;z-index:1}.scroll-hint{position:absolute;z-index:2;left:14px;right:14px;top:0;height:52px;line-height:52px;pointer-events:none;white-space:nowrap;color:#8a969f;animation:hint-scroll 8s linear infinite}.input-wrap:focus-within .scroll-hint{display:none}.input-wrap:has(.entry:not(:placeholder-shown)) .scroll-hint{display:none}@keyframes hint-scroll{0%,15%{transform:translateX(100%)}75%,100%{transform:translateX(-100%)}}.form-fields{display:grid;gap:13px}.form-fields label{display:grid;gap:7px;color:#546373;font-size:13px;font-weight:650}.evidence-picker{border:1px solid #dce7e9;border-radius:10px;overflow:hidden}.picker-label{border:0;border-bottom:1px solid #e6edef;background:#f8fbfb;width:100%;padding:13px 14px;text-align:left;color:#516270;font:inherit;font-size:13px;font-weight:650}.picker-label span{float:right;color:#7e9da3;font-size:11px;font-weight:400}.evidence-options{display:grid;grid-template-columns:1fr 1fr;padding:8px;gap:6px}.evidence-option{border:1px solid #e1e9eb;background:#fff;border-radius:8px;min-height:42px;text-align:left;padding:0 10px;color:#4a5b68;font:inherit;font-size:13px}.evidence-option i{display:inline-grid;width:15px;height:15px;margin-right:8px;border:1px solid #b8c8cc;border-radius:4px;vertical-align:-3px}.evidence-option.selected{background:#eff9f9;border-color:#74aeb5;color:#155e77}.evidence-option.selected i{background:#1d7895;border-color:#1d7895}.evidence-option.selected i:after{content:'✓';color:#fff;font-size:11px;line-height:13px;text-align:center}.evidence-warning{margin-top:13px;border-radius:9px;background:#fff7ed;border:1px solid #f6ddbd;color:#855c2c;padding:11px 12px;font-size:11px;line-height:1.65}.evidence-warning strong{font-size:12px;color:#774719}.next{margin-top:14px;width:100%}.human-service{position:fixed;z-index:20;right:18px;left:auto;bottom:14px;transform:none;border:0;border-radius:999px;background:#135b76;color:#fff;padding:11px 22px;font:inherit;font-size:13px;box-shadow:0 8px 22px #123c4a35}.human-service:active{transform:scale(.98)}.human-toast{position:fixed;z-index:30;left:50%;bottom:67px;transform:translateX(-50%);background:#22313c;color:#fff;border-radius:8px;padding:10px 14px;font-size:12px;white-space:nowrap}.back{position:fixed!important;z-index:21;left:18px;bottom:14px;margin:0!important;background:var(--bg);border-radius:999px;padding:11px 16px!important;box-shadow:0 4px 14px #123c4a18}
+    .human-service{right:auto;left:50%;transform:translateX(clamp(86px,25vw,140px))}.human-service:active{transform:translateX(clamp(86px,25vw,140px)) scale(.98)}.back{left:50%;transform:translateX(calc(-1 * clamp(86px,25vw,140px)));white-space:nowrap}.back:hover{color:var(--deep)}
+    .human-service{left:50%!important;right:auto!important;transform:translateX(16px)!important}.human-service:active{transform:translateX(16px) scale(.98)!important}.back{left:50%!important;transform:translateX(-138px)!important}.ai-pill{position:fixed;z-index:29;left:50%;bottom:62px;transform:translateX(-50%);max-width:calc(min(480px,100vw) - 34px);border:1px solid #dbe9eb;background:#fff;color:#50606d;border-radius:999px;padding:9px 13px;font-size:12px;box-shadow:0 8px 20px #123c4a18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ai-pill.warn{border-color:#f2d4a9;background:#fff8ef;color:#81541c}.ai-pill.human{border-color:#badbe1;background:#effafa;color:#135b76}.evidence-picker{margin-top:18px}.input-wrap+.evidence-picker,.entry+.evidence-picker,.form-fields+.evidence-picker{margin-top:20px}.evidence-options{grid-template-columns:repeat(5,minmax(0,1fr))!important;padding:7px!important;gap:4px!important}.evidence-option{min-height:34px!important;padding:0 3px!important;font-size:11px!important;text-align:center!important;white-space:nowrap!important}.evidence-option i{width:12px!important;height:12px!important;margin-right:3px!important;border-radius:3px!important}.evidence-warning{font-size:10px!important;line-height:1.55!important;padding:10px 11px!important}.evidence-warning strong{font-size:11px!important}.calc-box{text-align:left;margin-top:18px;border:1px solid #dce9eb;border-radius:11px;background:#f8fbfb;padding:13px 14px;color:#40515f;font-size:12px;line-height:1.7}.calc-total{font-size:20px;font-weight:750;color:#135b76;margin:4px 0 8px}.calc-box ul{margin:7px 0 0;padding-left:18px}.calc-box li{margin:3px 0}.calc-warn{border-color:#f2d4a9;background:#fff8ef;color:#81541c}
+    .repay-list{display:grid;gap:10px;margin-top:2px}.repay-row{border:1px solid #e1e9eb;border-radius:10px;background:#fbfdfd;padding:10px;display:grid;grid-template-columns:1.15fr .85fr;gap:8px;align-items:center}.repay-row-title{grid-column:1/-1;color:#50606d;font-size:12px;font-weight:650}.repay-date,.repay-money{height:44px;border:1px solid #dce6e8;border-radius:9px;background:#fff;padding:0 10px;color:var(--ink);font:inherit;font-size:13px;outline:none;min-width:0}.repay-money{text-align:right}.repay-date:focus,.repay-money:focus{border-color:#73aeb7;box-shadow:0 0 0 3px #e2f1f2}.add-repay{height:42px;border:1px dashed #9fbfc4;border-radius:10px;background:#f8fbfb;color:#135b76;font:inherit;font-size:13px}.repay-list+.evidence-picker{margin-top:20px}
+    .calc-title{font-weight:750;color:#1f2d3a;margin-bottom:9px}.calc-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e8eff0;padding:8px 0;gap:12px}.calc-row span:first-child{color:#667786}.calc-row strong{font-size:15px;color:#1f2d3a;white-space:nowrap}.calc-row.total{border-bottom:0;margin-top:4px}.calc-row.total strong{font-size:20px;color:#135b76}.calc-logic{margin-top:10px;color:#647482;font-size:11px;line-height:1.65}.calc-help{margin:11px 0 0;color:#7b8995;font-size:11px;line-height:1.6;text-align:center}
+    .date-wheel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.wheel-select{height:44px;border:1px solid #dce6e8;border-radius:9px;background:#fff;color:var(--ink);font:inherit;font-size:13px;text-align:center;text-align-last:center;outline:none}.wheel-select:focus{border-color:#73aeb7;box-shadow:0 0 0 3px #e2f1f2}.rate-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px}.rate-tab{height:42px;border:1px solid #dce6e8;border-radius:10px;background:#fff;color:#516270;font:inherit;font-size:13px}.rate-tab.selected{background:#eff9f9;border-color:#74aeb5;color:#135b76;font-weight:700}.rate-entry-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.rate-unit{color:#657684;font-size:13px;padding-right:4px}
+    .repay-row{grid-template-columns:1fr!important}.date-wheel{border-radius:11px;background:#fff;padding:6px 8px 8px;border:1px solid #e1e9eb;position:relative}.wheel-column{min-width:0;text-align:center}.wheel-label{height:18px;line-height:18px;color:#2793b4;font-size:11px;margin-bottom:2px}.wheel-list{height:96px;overflow-y:auto;scroll-snap-type:y mandatory;padding:32px 0;scrollbar-width:none;position:relative}.wheel-list::-webkit-scrollbar{display:none}.wheel-column{position:relative}.wheel-column:before,.wheel-column:after{content:"";position:absolute;left:13%;right:13%;height:1px;background:#39a8d1;z-index:2}.wheel-column:before{top:54px}.wheel-column:after{top:83px}.wheel-item{height:30px;line-height:30px;scroll-snap-align:center;color:#a7b0b7;font-size:14px;border:0;background:transparent;width:100%;font:inherit}.wheel-item.selected{color:#1f2d3a;font-size:16px;font-weight:650}.repay-money{text-align:left!important}
+    .repay-editor{display:grid;gap:10px}.repay-actions{display:grid;grid-template-columns:1fr;gap:8px}.repay-summary{display:grid;gap:7px;margin-top:2px}.repay-summary-item{border:1px solid #e1e9eb;border-radius:9px;background:#fbfdfd;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;color:#4d5e6b;font-size:12px}.repay-summary-item strong{color:#1f2d3a;font-size:13px}.repay-summary-empty{color:#89959f;font-size:12px;text-align:center;padding:9px 0}.repay-clear{border:0;background:transparent;color:#7b8995;font:inherit;font-size:12px;padding:5px}
+    .test-panel{position:fixed;z-index:60;left:12px;right:12px;bottom:70px;max-width:456px;margin:auto;background:#ffffffee;backdrop-filter:blur(10px);border:1px solid #dce9eb;border-radius:14px;box-shadow:0 12px 28px #123c4a25;padding:10px}.test-head{display:flex;align-items:center;justify-content:space-between;color:#135b76;font-size:12px;font-weight:750;margin-bottom:8px}.test-close{border:0;background:transparent;color:#7b8995;font:inherit}.test-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.test-actions button{border:1px solid #dce6e8;background:#f8fbfb;color:#344755;border-radius:9px;padding:9px 6px;font:inherit;font-size:12px}.test-actions button:active{background:#eef7f7}.test-jump{display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px}.test-select{height:38px;border:1px solid #dce6e8;border-radius:9px;background:#fff;color:#344755;font:inherit;font-size:12px;padding:0 8px;min-width:0}.test-jump button{border:0;background:#135b76;color:#fff;border-radius:9px;padding:0 12px;font:inherit;font-size:12px;white-space:nowrap}
+  </style>
+</head>
+<body><div class="app"><header><div class="brand"><span class="mark">诉</span><span>我行我诉</span></div><span class="hint" id="hint"></span></header>
+  <section class="welcome" id="welcome"><div class="eyebrow">民事诉讼 · 分步指引</div><h1>把复杂的诉讼，<br>拆成清晰的每一步。</h1><p>从梳理情况、准备材料，到立案、开庭与执行，<br>我们将依据您的回答逐步提供行动建议。</p><button class="primary" onclick="start()">开始诉讼指导　→</button><div class="note">⌁ 每次只需回答一个问题，全程可随时返回修改</div></section>
+  <section class="hidden" id="guide"><nav class="stages"><div id="journey"></div></nav><main class="area"><article class="card" id="card"></article></main></section>
+</div><button class="human-service" type="button" onclick="humanService()">召唤真人服务</button><script>
+const stageNames=['证据收集','文书撰写','递交立案','缴费通知','开庭通知','判决书解读','申请执行'];
+const progressNames=['案件类型','证据收集','文书撰写','递交立案','缴费通知','开庭通知','判决书解读','申请执行'];
+let queue=[],position=0,answers=[],selectedEvidence=[];
+const input=(title,description,placeholder,stage=1,evidence=false)=>({kind:'input',title,description,placeholder,stage,evidence});
+const form=(title,description,fields,stage=1,evidence=false)=>({kind:'form',title,description,fields,stage,evidence});
+const repaymentList=(title,description,stage=1,evidence=false)=>({kind:'repaymentList',title,description,stage,evidence});
+const rateInput=(title,description,stage=1,evidence=false)=>({kind:'rateInput',title,description,stage,evidence});
+const choice=(title,description,options,stage=1)=>({kind:'choice',title,description,options,stage});
+const note=(title,description,stage=1,action='继续')=>({kind:'note',title,description,stage,action});
+const evidence=(name)=>({kind:'evidence',title:`请选择“${name}”的证据来源`,description:'可单选或多选，请选择与本项事实相对应的真实证据。',stage:1,sameStep:true});
+const human=(reason)=>note('建议召唤人工协助',`${reason}。人工将协助您补齐信息或确认下一步。`,1,'联系人工');
+function guarantorFlow(){return [
+choice('担保签名写的是什么？','用于判断是否是真正的保证人。',[{label:'连带责任保证人',desc:'写明连带责任',add:[]},{label:'担保人或保证人',desc:'只写担保/保证',add:[]},{label:'见证人等',desc:'见证人/介绍人/经手人',add:[]},{label:'看不清',desc:'内容不确定',add:[]}]),
+choice('借条是否写明连带责任？','没有写明时，一般不当然按连带保证处理。',[{label:'写了',desc:'有连带责任字样',add:[]},{label:'没写',desc:'没有连带责任字样',add:[]},{label:'不确定',desc:'需要核实原件',add:[]}]),
+choice('是否还在保证期间内？','没约定时，通常按到期后6个月判断。',[{label:'是',desc:'仍在期间内',add:[]},{label:'可能超过',desc:'可能已超过期间',add:[]},{label:'不确定',desc:'需要核实日期',add:[]}]),
+choice('是否向担保人催要过？','用于判断是否已向担保人主张权利。',[{label:'催要过，有证据',desc:'聊天/录音/短信等',add:[]},{label:'催要过，没证据',desc:'暂缺证明',add:[]},{label:'没有催要过',desc:'未向担保人主张',add:[]}]),
+choice('借款人是否明显无法还款？','用于判断一般保证是否需要人工确认。',[{label:'是',desc:'无力还款或下落不明',add:[]},{label:'否',desc:'暂不能证明无力还款',add:[]},{label:'不确定',desc:'需要核实',add:[]}]),
+note('担保人是否列为被告','系统将根据前面答案给出简短建议。',1,'继续')
+]}
+function jurisdictionFlow(){return [
+choice('是否约定管辖法院？','优先看借条或聊天里有没有约定法院。',[{label:'有，直接填写',desc:'写明了具体法院',add:[input('请填写约定管辖法院','按证据中的法院名称填写。','例如：某某区人民法院',1),note('管辖法院判断','系统将给出简短管辖建议。',1,'继续')]},{label:'没有约定',desc:'继续判断法定管辖',add:[choice('是否知道被告所在地？','包括户籍地或经常居住地。',[{label:'知道，直接填写',desc:'我能提供被告所在地',add:[input('请填写被告所在地','填写被告户籍地或经常居住地。','例如：某省某市某区',1)]},{label:'不清楚',desc:'暂时无法确认',add:[]}]),input('请填写原告所在地','填写原告户籍地或经常居住地。','例如：某省某市某区',1),choice('借款还款方式是什么？','用于判断合同履行地线索。',[{label:'转账还款',desc:'银行或微信支付宝转账',add:[]},{label:'现金还款',desc:'线下现金交付',add:[]},{label:'没约定',desc:'没有明确还款方式',add:[]},{label:'不确定',desc:'需要核实',add:[]}]),note('管辖法院判断','系统将给出简短管辖建议。',1,'继续')]},{label:'不确定',desc:'需要人工确认',add:[human('管辖约定不清，需要核实借条或聊天记录')]}])
+]}
+function partyFlow(){return [
+choice('原告是个人还是单位？','单位或个体户填写企业名称，不填身份证号。',[{label:'个人',desc:'自然人作为原告',add:[form('请填写原告个人身份信息','姓名和身份证号码请分开填写。',[{label:'原告姓名',placeholder:'请输入原告姓名'},{label:'原告身份证号码',placeholder:'请输入原告身份证号码'}],1)]},{label:'公司或个体户',desc:'单位作为原告',add:[input('请填写原告企业名称','填写营业执照或登记信息上的名称。','例如：某某公司 / 某某商行',1)]}]),
+choice('被告是个人还是单位？','先确认被告主体类型。',[{label:'个人',desc:'自然人作为被告',add:[form('请填写被告个人身份信息','姓名和身份证号码请分开填写。',[{label:'被告姓名',placeholder:'请输入被告姓名'},{label:'被告身份证号码',placeholder:'请输入被告身份证号码'}],1)]},{label:'公司或个体户',desc:'单位作为被告',add:[input('请填写被告企业名称','填写营业执照或登记信息上的名称。','例如：某某公司 / 某某商行',1)]},{label:'不确定',desc:'需要人工确认主体',add:[human('无法确认被告是个人还是单位')]}])
+]}
+function deliveryFlow(){return [
+choice('款项如何交付？','用于判断借款是否实际交付。',[{label:'转账交付',desc:'银行/微信/支付宝等转账',add:[]},{label:'现金交付',desc:'需要收条或聊天记录补强',add:[]},{label:'现金加转账',desc:'部分现金、部分转账',add:[]},{label:'不确定',desc:'需要人工核实交付证据',add:[human('款项交付方式不清，需要核实证据')]}])
+]}
+function plaintiffFlow(){return [
+...partyFlow(),
+input('借款本金总金额','请输入借款本金总额。','例如：50000 元',1,true),
+choice('是否掌握借款日期？','借款发生的具体日期。',[{label:'有，直接填写',desc:'我能确定借款日期',add:[input('请填写借款日期','按实际借款日期填写。','例如：2025年1月1日',1,true)]},{label:'没有',desc:'我不能确定借款日期',add:[human('缺少借款日期')]}]),
+input('请填写借款事由','例如资金周转、经营需要等。','请输入借款事由',1,true),
+...deliveryFlow(),
+choice('是否约定还款日期？','请根据借条、聊天或口头约定确认。',[{label:'有，直接填写',desc:'我能确定日期',add:[input('请填写约定还款日期','按双方约定填写。','例如：2025年12月31日',1,true)]},{label:'没有',desc:'双方未约定还款日期',add:[input('请填写第一次催要时间','无还款日期时，用于计算资金占用利息起算点。','例如：2026年7月1日',1,true)]}]),
+choice('是否约定利息？','包括明确的利率或利息计算方式。',[{label:'有，直接填写',desc:'我能明确日息、月息或年息',add:[rateInput('请填写约定利息百分比','先选择利息类型，再填写百分比数字。',1,true),choice('是否约定还款抵扣顺序？','没有约定时，按先抵扣利息、再抵扣本金处理。',[{label:'没有约定',desc:'默认先抵扣利息',add:[]},{label:'先还本金',desc:'双方明确约定先抵扣本金',add:[]},{label:'先还利息',desc:'双方明确约定先抵扣利息',add:[]}]) ]},{label:'没有',desc:'双方未约定利息',add:[]}]),
+choice('是否已还款？','如有已还款，请填写金额和时间。',[{label:'没有还过',desc:'未发生还款',add:[]},{label:'一笔还款',desc:'填写一笔金额和时间',add:[repaymentList('请填写已还款明细','逐笔填写还款时间和金额。',1,true)]},{label:'多笔还款',desc:'按时间逐笔填写',add:[repaymentList('请填写已还款明细','逐笔填写还款时间和金额。',1,true)]}]),
+input('请填写计算诉讼金额的截止时间','用于计算被告截至该日还需要偿还的金额。','例如：2026年8月4日',1),
+note('诉讼金额自动测算如下：','系统将依据借款本金、约定利息、还款时间和抵扣顺序，计算被告还需要还多少钱。',1),
+choice('是否有借款担保人？','担保人需有明确的担保意思表示。',[{label:'有，直接填写',desc:'填写担保人姓名和身份证号',add:[form('请填写担保人身份信息','姓名和身份证号码请分开填写。',[{label:'担保人姓名',placeholder:'请输入担保人姓名'},{label:'担保人身份证号码',placeholder:'请输入担保人身份证号码'}],1,true),...guarantorFlow()]},{label:'有，但信息不全',desc:'姓名或身份证号不清楚',add:[human('缺少担保人身份信息')]},{label:'无担保人',desc:'本案没有担保人',add:[]}]),
+input('请填写最后一次催要时间','填写最近一次催款、催要还款的时间。','例如：2026年7月20日',1,true),
+...jurisdictionFlow(),
+note('第一阶段：证据收集完成','已完成原告信息、借款要素、证据来源及管辖法院信息的收集。',1,'进入文书撰写'),
+choice('需要保全吗？','请根据对方是否可能转移财产等情况决定。',[{label:'保全',desc:'生成保全申请书，并提示联系保险公司购买保函',add:[note('保全准备','将生成保全申请书；请联系保险公司购买保函。',2)]},{label:'不保全',desc:'暂不申请财产保全',add:[]}],2),
+choice('请选择起诉状类型','根据案件情况选择起诉状方式。',[{label:'一般起诉状',desc:'系统分析并生成常规起诉状',add:[note('起诉状要素已梳理','将包含原被告信息、诉讼请求（本金、利息、诉讼费等）、事实与理由、管辖法院、具状人和日期。',2)]},{label:'要素式起诉状',desc:'按照要求逐步选择并填写',add:[note('开始填写要素式起诉状','系统将按要素逐步引导您填写。',2)]}],2),
+note('证据整理','请准备：起诉状、转账凭证、借条、聊天记录、身份证或主体登记材料复印件；各材料打印份数可参考系统提示。',2,'进入递交立案'),
+choice('请选择递交立案方式','可选择网上提交或邮寄提交。',[{label:'网上递交',desc:'系统告知网上立案通道',add:[note('网上递交','系统将告知网上立案通道。',3)]},{label:'邮寄递交',desc:'系统告知邮寄法院和联系地址',add:[note('邮寄递交','系统将告知邮寄的法院和联系地址。',3)]}],3),
+note('保全费','填写保全费金额后，系统将告知如何缴费，并说明最终由谁承担。',4),
+note('诉讼费','填写诉讼费后，系统将告知如何缴费，并说明最终由败诉方承担。',4,'进入开庭通知'),
+choice('是否收到传票？','用于安排开庭前的准备。',[{label:'已收到',desc:'我已收到法院传票',add:[input('请填写开庭日期','收到传票后请填写开庭日期。','例如：2026年8月20日',5),note('开庭前注意事项','系统将告知开庭前注意事项；如需协助可召唤人工。',5)]},{label:'未收到',desc:'暂未收到传票',add:[note('请安心等待开庭通知','暂未收到传票时，请留意法院通知。',5)]}],5),
+choice('是否需要缴交公告费？','按法院通知确认。',[{label:'是',desc:'需要缴交公告费',add:[note('公告费缴纳说明','系统将告知为什么需要公告费及如何缴纳。',5)]},{label:'否',desc:'不需要缴交公告费',add:[note('请安心等待传票','暂不需要缴交公告费。',5)]}],5),
+choice('是否收到判决书？','用于进入判决书解读或等待阶段。',[{label:'是',desc:'我已收到判决书',add:[choice('请选择解读方式','可由人工解读或AI分析。',[{label:'召唤人工解读',desc:'由人工协助判断',add:[note('已转人工解读','人工将协助解读判决书。',6)]},{label:'AI解读',desc:'上传判决书后系统分析',add:[note('请上传判决书','系统分析后将协助判断是否需要上诉。',6)]}],6)]},{label:'否',desc:'尚未收到判决书',add:[note('请继续等待判决书','可继续留意法院送达通知。',6)]}],6),
+note('申请执行','上传判决书后，系统可指导填写执行申请书；如需协助可召唤人工撰写。',7,'完成本次指引')
+]}
+function defendantFlow(){return [choice('是否已经收到传票？','根据您的实际情况选择。',[{label:'已收到',desc:'我已经收到传票',add:[note('请上传传票照片和原告起诉状','系统将进行AI分析；如有需要可召唤人工。',1)]},{label:'还没有',desc:'尚未收到传票',add:[note('请安心等待','请留意法院送达通知。',1)]}]) ]}
+function firstFlow(){return [choice('请选择案件类型','请先选择与您情况一致的案件类型。',[{label:'民间借贷',desc:'进入民间借贷诉讼全流程',add:[choice('您在本案中的身份是？','请选择您在民间借贷纠纷中的身份。',[{label:'原告',desc:'我准备提起诉讼',add:plaintiffFlow()},{label:'被告',desc:'我被他人起诉',add:defendantFlow()}]) ]},{label:'其他案件类型',desc:'其他类型案件将由人工协助',add:[human('当前流程图仅覆盖民间借贷案件')]}],1)]}
+function start(){welcome.classList.add('hidden');guide.classList.remove('hidden');queue=firstFlow();position=0;answers=[];render()}
+function render(){let step=queue[position],stage=step?.stage||7,current=step?.title==='请选择案件类型'?0:stage;document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;document.getElementById('hint').textContent='';let c=document.getElementById('card');if(!step){c.className='card result';c.innerHTML='<div><div class="check">✓</div><p class="stage-name">全流程指引完成</p><h2>已完成本次诉讼指引</h2><p class="desc">您可以重新开始，也可以继续根据系统提示准备材料。</p><button class="primary" onclick="reset()">重新开始　→</button><button class="text" onclick="home()">返回首页</button></div>';return}let pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100),hasInput=['input','form'].includes(step.kind);let top=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2>${hasInput?'':`<p class="desc">${step.description}</p>`}`;if(step.kind==='choice'){c.className='card';c.innerHTML=top+`<div class="options">${step.options.map((o,n)=>`<button class="option" onclick="choose(${n})"><span><strong>${o.label}</strong><small>${o.desc}</small></span><b class="arrow">→</b></button>`).join('')}</div></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='input'){c.className='card';c.innerHTML=top+`<input id="entry" class="entry" placeholder="${step.description}；${step.placeholder}"><button class="primary next" onclick="submitEntry()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='form'){c.className='card';c.innerHTML=top+`<div class="form-fields">${step.fields.map((f,n)=>`<label>${f.label}<input class="entry form-entry" data-index="${n}" placeholder="${n===0?step.description+'；':''}${f.placeholder}"></label>`).join('')}</div><button class="primary next" onclick="submitForm()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='evidence'){selectedEvidence=[];const options=['借条','转账记录','聊天记录','录音','其他'];c.className='card';c.innerHTML=top+`<div class="evidence-picker"><button class="picker-label" type="button">选择证据来源 <span>可多选</span></button><div class="evidence-options">${options.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div></div><div class="evidence-warning"><strong>请如实选择证据来源</strong><br>起诉依靠真实证据。如虚假填写、虚假选择，或因证据不实、不足导致不利后果，应由您自行承担责任。</div><button class="primary next" onclick="submitEvidence()">确认并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="next()">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
+function tagBranch(nodes,parents){return nodes.map(node=>({...node,_branchParents:parents,options:node.options?.map(option=>({...option,add:option.add?tagBranch(option.add,parents):option.add}))}))}function choose(n){let step=queue[position],parents=[...(step._branchParents||[]),position];queue=queue.filter((item,index)=>index<=position||!item._branchParents?.includes(position));let selected=step.options[n];answers.push(selected.label);if(selected.add?.length)queue.splice(position+1,0,...tagBranch(selected.add,parents));position++;render()}function submitEntry(){let val=document.getElementById('entry').value.trim();if(!val){document.getElementById('entry').focus();return}answers.push(val);let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function submitForm(){let fields=[...document.querySelectorAll('.form-entry')];let values=fields.map(x=>x.value.trim());let missing=values.findIndex(x=>!x);if(missing>=0){fields[missing].focus();return}answers.push(values.join('、'));let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function toggleEvidence(n,name){let el=document.getElementById(`evidence-${n}`);if(selectedEvidence.includes(name)){selectedEvidence=selectedEvidence.filter(x=>x!==name);el.classList.remove('selected')}else{selectedEvidence.push(name);el.classList.add('selected')}}function submitEvidence(){if(!selectedEvidence.length)return;answers.push(selectedEvidence.join('、'));position++;render()}function next(){position++;render()}function back(){if(position>0){position--;answers.pop();render()}}function reset(){queue=firstFlow();position=0;answers=[];render()}function home(){welcome.classList.remove('hidden');guide.classList.add('hidden');document.getElementById('hint').textContent=''}
+const baseRender=render;
+render=function(){
+  baseRender();
+  const step=queue[position];
+  if(step?.kind==='form'){
+    document.querySelectorAll('.form-fields label').forEach((label,index)=>{
+      const field=label.querySelector('.form-entry');
+      field.placeholder=step.fields[index].placeholder;
+      label.replaceWith(field);
+    });
+  }
+};
+const subtitleFreeRender=render;
+render=function(){
+  subtitleFreeRender();
+  document.querySelector('.content > .desc')?.remove();
+};
+const cleanFieldsRender=render;
+render=function(){
+  const step=queue[position];
+  if(step?.title==='请填写借款事由') step.placeholder='例如：应急周转、生意投资等';
+  cleanFieldsRender();
+  if(step?.kind==='input'){
+    const entry=document.querySelector('.content .entry');
+    if(entry) entry.placeholder=step.placeholder;
+  }
+  document.querySelectorAll('.entry').forEach(entry=>{
+    if(entry.dataset.flowHint||!entry.placeholder||entry.placeholder.length<18)return;
+    const hint=entry.placeholder;entry.placeholder='';entry.dataset.flowHint='1';
+    const wrap=document.createElement('span');wrap.className='input-wrap';
+    const text=document.createElement('span');text.className='scroll-hint';text.textContent=hint;
+    entry.parentNode.insertBefore(wrap,entry);wrap.append(entry,text);
+  });
+};
+const mergedStepRender=render;
+render=function(){
+  mergedStepRender();
+  const stepNumber=queue.slice(0,position+1).filter(item=>!item.sameStep).length;
+  const progress=document.querySelector('.progress span');
+  if(progress) progress.textContent=`第 ${stepNumber} 步`;
+};
+function humanService(){
+  const message=document.createElement('div');
+  message.className='human-toast';
+  message.textContent='真人服务已呼叫，请稍候。';
+  document.body.append(message);
+  setTimeout(()=>message.remove(),2400);
+}
+const originalSubmitEntry=submitEntry;
+submitEntry=function(){
+  const step=queue[position];
+  if(step?.evidence && queue[position+1]?.sameStep){
+    const field=document.getElementById('entry');
+    const value=field?.value.trim();
+    if(!value){field?.focus();return}
+    answers.push(value);position++;render();return;
+  }
+  originalSubmitEntry();
+};
+const originalSubmitForm=submitForm;
+submitForm=function(){
+  const step=queue[position];
+  if(step?.evidence && queue[position+1]?.sameStep){
+    const fields=[...document.querySelectorAll('.form-entry')];
+    const values=fields.map(field=>field.value.trim());
+    const missing=values.findIndex(value=>!value);
+    if(missing>=0){fields[missing]?.focus();return}
+    answers.push(values.join('、'));position++;render();return;
+  }
+  originalSubmitForm();
+};
+let aiNoticeTimer=null;
+let aiHistory=[];
+let calcRecords=[];
+function rememberCalc(step,answer){
+  if(!step?.title)return;
+  calcRecords.push({title:step.title,kind:step.kind,answer});
+}
+function showAiNotice(text,type=''){
+  document.querySelector('.ai-pill')?.remove();
+  if(!text)return;
+  const node=document.createElement('div');
+  node.className=`ai-pill ${type}`;
+  node.textContent=text;
+  document.body.append(node);
+  clearTimeout(aiNoticeTimer);
+  aiNoticeTimer=setTimeout(()=>node.remove(),type==='human'?4200:2200);
+}
+function stepSnapshot(step){
+  return {
+    title:step?.title||'',
+    description:step?.description||'',
+    kind:step?.kind||'',
+    stage:step?.stage||1,
+    options:(step?.options||[]).map(option=>option.label)
+  };
+}
+function frontFold(text){
+  return String(text||'').trim().replace(/[０-９]/g,char=>String.fromCharCode(char.charCodeAt(0)-65248)).replace(/[，．％（）－　Ｘｘ]/g,char=>({'，':',','．':'.','％':'%','（':'(','）':')','－':'-','　':' ','Ｘ':'X','ｘ':'X'}[char]||char)).toUpperCase();
+}
+function frontIdCandidate(text){
+  const compact=frontFold(text).replace(/[\s\-_/]/g,'');
+  return compact.match(/\d{17}[\dX]|[A-Z][1289]\d{8}|[A-Z]{1,2}\d{6}\(?[0-9A]\)?/)?.[0]||'';
+}
+function frontMainlandIdValid(value){
+  if(!/^\d{17}[\dX]$/.test(value))return false;
+  const y=Number(value.slice(6,10)),m=Number(value.slice(10,12)),d=Number(value.slice(12,14));
+  const date=new Date(y,m-1,d);
+  if(date.getFullYear()!==y||date.getMonth()!==m-1||date.getDate()!==d)return false;
+  const weights=[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2],checks='10X98765432';
+  const total=weights.reduce((sum,w,i)=>sum+Number(value[i])*w,0);
+  return checks[total%11]===value[17];
+}
+function frontHkIdValid(value){
+  const match=value.match(/^([A-Z]{1,2})(\d{6})\(?([0-9A])\)?$/);
+  if(!match)return false;
+  const letters=match[1],digits=match[2],check=match[3];
+  const values=letters.length===1?[36,letters.charCodeAt(0)-55]:[letters.charCodeAt(0)-55,letters.charCodeAt(1)-55];
+  values.push(...digits.split('').map(Number));
+  const total=values.reduce((sum,v,i)=>sum+v*(9-i),0);
+  const expected=(11-total%11)%11;
+  return (expected===10?'A':String(expected))===check;
+}
+function frontTwIdValid(value){
+  if(!/^[A-Z][1289]\d{8}$/.test(value))return false;
+  const codes={A:10,B:11,C:12,D:13,E:14,F:15,G:16,H:17,I:34,J:18,K:19,L:20,M:21,N:22,O:35,P:23,Q:24,R:25,S:26,T:27,U:28,V:29,W:32,X:30,Y:31,Z:33};
+  const code=codes[value[0]];
+  const digits=[Math.floor(code/10),code%10,...value.slice(1).split('').map(Number)];
+  const weights=[1,9,8,7,6,5,4,3,2,1,1];
+  return digits.reduce((sum,digit,index)=>sum+digit*weights[index],0)%10===0;
+}
+function frontClassifyId(text){
+  const item=frontIdCandidate(text);
+  if(!item)return {region:'',valid:false};
+  if(/^\d{17}[\dX]$/.test(item))return {region:'中国大陆居民身份证',valid:frontMainlandIdValid(item)};
+  if(/^[A-Z][1289]\d{8}$/.test(item))return {region:'台湾身份证号',valid:frontTwIdValid(item)};
+  return {region:'香港身份证号',valid:frontHkIdValid(item)};
+}
+function isIdStep(step){
+  return /身份证|身份信息/.test(step?.title||'');
+}
+async function askDeepSeek(step,answer,afterPosition){
+  const record={...stepSnapshot(step),answer};
+  const localId=isIdStep(step)?frontClassifyId(answer):null;
+  if(localId?.valid){
+    aiHistory.push({...record,decision:'continue',normalized_answer:localId.region});
+    showAiNotice('身份证号已通过校验');
+    return;
+  }
+  showAiNotice('AI 正在判断本步信息…');
+  try{
+    const response=await fetch('/api/judge',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({current:stepSnapshot(step),answer,history:aiHistory})
+    });
+    const result=await response.json();
+    if(!result.connected){
+      aiHistory.push({...record,decision:result.decision,normalized_answer:result.normalized_answer||''});
+      showAiNotice('本地 AI 服务未配置密钥，已按流程继续');
+      return;
+    }
+    const message=result.message||'已完成本步判断';
+    if(result.decision==='need_human'){
+      aiHistory.push({...record,decision:result.decision,normalized_answer:result.normalized_answer||''});
+      const insertAt=Math.max(0,Math.min(afterPosition,queue.length));
+      queue.splice(insertAt,0,human(`AI 判断：${message}`));
+      position=insertAt;
+      render();
+      showAiNotice('AI 建议转人工确认','human');
+      return;
+    }
+    if(result.decision==='need_clarify'){
+      calcRecords.pop();
+      if(afterPosition>0){position=afterPosition-1;answers.pop();render();}
+      showAiNotice(`AI 提醒：${message}`,'warn');
+      return;
+    }
+    aiHistory.push({...record,decision:result.decision,normalized_answer:result.normalized_answer||''});
+    showAiNotice('AI 判断通过，已进入下一步');
+  }catch(error){
+    aiHistory.push(record);
+    showAiNotice('AI 判断暂不可用，已按流程继续','warn');
+  }
+}
+const aiChoose=choose;
+choose=function(n){
+  const step=queue[position];
+  const selected=step?.options?.[n];
+  aiChoose(n);
+  rememberCalc(step,selected?.label||'');
+};
+const aiSubmitEntry=submitEntry;
+submitEntry=function(){
+  const step=queue[position];
+  const field=document.getElementById('entry');
+  const answer=field?.value.trim()||'';
+  if(!answer){field?.focus();return}
+  aiSubmitEntry();
+  askDeepSeek(step,answer,position);
+};
+const aiSubmitForm=submitForm;
+submitForm=function(){
+  const step=queue[position];
+  const fields=[...document.querySelectorAll('.form-entry')];
+  const values=fields.map(field=>field.value.trim());
+  const missing=values.findIndex(value=>!value);
+  if(missing>=0){fields[missing]?.focus();return}
+  aiSubmitForm();
+  askDeepSeek(step,values.join('；'),position);
+};
+const aiSubmitEvidence=submitEvidence;
+submitEvidence=function(){
+  const step=queue[position];
+  const answer=selectedEvidence.join('、');
+  if(!answer)return;
+  aiSubmitEvidence();
+  askDeepSeek(step,answer,position);
+};
+const aiBack=back;
+back=function(){
+  if(position>0)aiHistory.pop();
+  if(position>0)calcRecords.pop();
+  aiBack();
+};
+const aiStart=start;
+start=function(){
+  aiHistory=[];
+  calcRecords=[];
+  aiStart();
+};
+const aiReset=reset;
+reset=function(){
+  aiHistory=[];
+  calcRecords=[];
+  aiReset();
+};
+const aiHome=home;
+home=function(){
+  aiHistory=[];
+  calcRecords=[];
+  aiHome();
+};
+const compactEvidenceOptions=['借条','转账','聊天','录音','其他'];
+function evidenceBaseTitle(title){
+  return String(title||'').replace(/^请填写/,'').replace(/^请选择“/,'').replace(/”的证据来源$/,'');
+}
+function isInlineEvidenceStep(step){
+  return step?.kind==='input'&&step.evidence||step?.kind==='form'&&step.evidence;
+}
+function isEvidenceForStep(evidenceStep,sourceStep){
+  return evidenceStep?.kind==='evidence'&&evidenceBaseTitle(evidenceStep.title).includes(evidenceBaseTitle(sourceStep?.title));
+}
+function removeFollowingEvidenceForStep(sourceStep,fromIndex){
+  queue=queue.filter((item,index)=>index<=fromIndex||!isEvidenceForStep(item,sourceStep));
+}
+const inlineEvidenceRender=render;
+render=function(){
+  while(queue[position]?.kind==='evidence'){
+    queue.splice(position,1);
+  }
+  inlineEvidenceRender();
+  const step=queue[position];
+  if(!isInlineEvidenceStep(step))return;
+  selectedEvidence=[];
+  const button=document.querySelector('.content .next');
+  if(!button||document.querySelector('.inline-evidence'))return;
+  const panel=document.createElement('div');
+  panel.className='evidence-picker inline-evidence';
+  panel.innerHTML=`<button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div>`;
+  button.parentNode.insertBefore(panel,button);
+};
+const inlineEvidenceSubmitEntry=submitEntry;
+submitEntry=function(){
+  const step=queue[position];
+  const field=document.getElementById('entry');
+  const plainAnswer=field?.value.trim()||'';
+  if(!isInlineEvidenceStep(step)){
+    if(!plainAnswer){field?.focus();return}
+    rememberCalc(step,plainAnswer);
+    inlineEvidenceSubmitEntry();
+    return;
+  }
+  const answer=plainAnswer;
+  if(!answer){field?.focus();return}
+  if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
+  const evidenceAnswer=selectedEvidence.join('、');
+  removeFollowingEvidenceForStep(step,position);
+  rememberCalc(step,`${answer}；证据来源：${evidenceAnswer}`);
+  answers.push(answer);
+  position++;
+  render();
+  askDeepSeek(step,`${answer}；证据来源：${evidenceAnswer}`,position);
+};
+const inlineEvidenceSubmitForm=submitForm;
+submitForm=function(){
+  const step=queue[position];
+  const fields=[...document.querySelectorAll('.form-entry')];
+  const values=fields.map(field=>field.value.trim());
+  const missing=values.findIndex(value=>!value);
+  if(!isInlineEvidenceStep(step)){
+    if(missing>=0){fields[missing]?.focus();return}
+    rememberCalc(step,values.join('；'));
+    inlineEvidenceSubmitForm();
+    return;
+  }
+  if(missing>=0){fields[missing]?.focus();return}
+  if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
+  const evidenceAnswer=selectedEvidence.join('、');
+  removeFollowingEvidenceForStep(step,position);
+  rememberCalc(step,`${values.join('；')}；证据来源：${evidenceAnswer}`);
+  answers.push(values.join('、'));
+  position++;
+  render();
+  askDeepSeek(step,`${values.join('；')}；证据来源：${evidenceAnswer}`,position);
+};
+function wheelValues(start,end,pad=false){
+  return Array.from({length:end-start+1},(_,i)=>start+i).map(value=>({value:pad?String(value).padStart(2,'0'):String(value),label:String(value)}));
+}
+function wheelColumn(cls,label,values,defaultValue){
+  return `<div class="wheel-column"><div class="wheel-label">${label}</div><div class="wheel-list ${cls}" tabindex="0" data-value="${defaultValue}" onscroll="scheduleWheelSync(this)">${values.map(item=>`<button class="wheel-item" type="button" data-value="${item.value}" onclick="pickWheelValue(this)">${item.label}</button>`).join('')}</div></div>`;
+}
+function dateWheelHtml(n){
+  const now=new Date();
+  const defaultYear=String(Math.min(2040,Math.max(2010,now.getFullYear())));
+  const defaultMonth=String(now.getMonth()+1).padStart(2,'0');
+  const defaultDay=String(now.getDate()).padStart(2,'0');
+  return `<div class="date-wheel" aria-label="第 ${n} 笔还款时间">${wheelColumn('repay-year','年',wheelValues(2010,2040),defaultYear)}${wheelColumn('repay-month','月',wheelValues(1,12,true),defaultMonth)}${wheelColumn('repay-day','日',wheelValues(1,31,true),defaultDay)}</div>`;
+}
+function syncWheelList(list){
+  const items=[...list.querySelectorAll('.wheel-item')];
+  if(!items.length)return;
+  const itemHeight=30;
+  const index=Math.max(0,Math.min(items.length-1,Math.round(list.scrollTop/itemHeight)));
+  const item=items[index];
+  list.dataset.value=item.dataset.value;
+  items.forEach(node=>node.classList.toggle('selected',node===item));
+}
+function scheduleWheelSync(list){
+  clearTimeout(list._wheelTimer);
+  list._wheelTimer=setTimeout(()=>syncWheelList(list),80);
+}
+function pickWheelValue(item){
+  const list=item.closest('.wheel-list');
+  if(!list)return;
+  const items=[...list.querySelectorAll('.wheel-item')];
+  const index=items.indexOf(item);
+  list.dataset.value=item.dataset.value;
+  items.forEach(node=>node.classList.toggle('selected',node===item));
+  list.scrollTo({top:index*30,behavior:'smooth'});
+}
+function initWheelLists(scope=document){
+  scope.querySelectorAll('.wheel-list').forEach(list=>{
+    const items=[...list.querySelectorAll('.wheel-item')];
+    const target=items.findIndex(item=>item.dataset.value===list.dataset.value);
+    const index=target>=0?target:0;
+    list.scrollTop=index*30;
+    syncWheelList(list);
+  });
+}
+function wheelValue(row,selector){
+  return row.querySelector(selector)?.dataset.value||'';
+}
+let repaymentDrafts=[];
+function renderRepaymentList(step){
+  const stage=step?.stage||1,current=stage;
+  document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;
+  const stepNumber=queue.slice(0,position+1).filter(item=>!item.sameStep).length;
+  const pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100);
+  repaymentDrafts=[];
+  selectedEvidence=[];
+  const c=document.getElementById('card');
+  c.className='card';
+  c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="repay-editor"><div class="repay-row" id="repay-editor"><div class="repay-row-title">录入一笔还款</div>${dateWheelHtml(1)}<input class="repay-money" inputmode="decimal" aria-label="还款金额" placeholder="金额 / 元"></div><div class="repay-actions"><button class="add-repay" type="button" onclick="addRepaymentDraft()">+ 添加这一笔</button></div><div class="repay-summary" id="repay-summary"><div class="repay-summary-empty">尚未添加还款明细</div></div></div><div class="evidence-picker inline-evidence"><button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div></div><button class="primary next" onclick="submitRepaymentList()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
+  requestAnimationFrame(()=>initWheelLists(c));
+}
+function renderRepaymentSummary(){
+  const box=document.getElementById('repay-summary');
+  if(!box)return;
+  if(!repaymentDrafts.length){
+    box.innerHTML='<div class="repay-summary-empty">尚未添加还款明细</div>';
+    return;
+  }
+  box.innerHTML=repaymentDrafts.map((item,index)=>`<div class="repay-summary-item"><span>第 ${index+1} 笔：${item.date}</span><strong>${item.amount} 元</strong><button class="repay-clear" type="button" onclick="removeRepaymentDraft(${index})">删除</button></div>`).join('');
+}
+function readRepaymentEditor(requireMoney=true){
+  const row=document.getElementById('repay-editor');
+  if(!row)return null;
+  const money=row.querySelector('.repay-money');
+  const year=wheelValue(row,'.repay-year');
+  const month=wheelValue(row,'.repay-month');
+  const day=wheelValue(row,'.repay-day');
+  const moneyValue=money?.value.trim()||'';
+  if(!moneyValue){
+    if(requireMoney){money?.focus();showAiNotice('请填写这一笔还款金额','warn');}
+    return null;
+  }
+  const dateValue=year&&month&&day?`${year}-${month}-${day}`:'';
+  const parsedDate=new Date(Number(year),Number(month)-1,Number(day));
+  if(!dateValue||parsedDate.getFullYear()!==Number(year)||parsedDate.getMonth()!==Number(month)-1||parsedDate.getDate()!==Number(day)){
+    row.querySelector('.repay-day')?.focus();showAiNotice('请选择正确的还款日期','warn');
+    return null;
+  }
+  const normalizedMoney=moneyValue.replace(/元|人民币|RMB|¥/gi,'').trim();
+  if(!/^\d+(?:\.\d+)?$/.test(normalizedMoney)){money?.focus();showAiNotice('还款金额请填写阿拉伯数字','warn');return null}
+  return {date:dateValue,amount:normalizedMoney};
+}
+function addRepaymentDraft(){
+  const item=readRepaymentEditor(true);
+  if(!item)return;
+  repaymentDrafts.push(item);
+  renderRepaymentSummary();
+  const money=document.querySelector('#repay-editor .repay-money');
+  if(money){money.value='';money.focus();}
+  showAiNotice(`已添加第 ${repaymentDrafts.length} 笔还款`,'human');
+}
+function removeRepaymentDraft(index){
+  repaymentDrafts.splice(index,1);
+  renderRepaymentSummary();
+}
+function collectRepaymentList(){
+  const current=readRepaymentEditor(false);
+  const items=[...repaymentDrafts];
+  if(current)items.push(current);
+  if(!items.length){
+    document.querySelector('#repay-editor .repay-money')?.focus();
+    showAiNotice('请至少添加或填写一笔还款','warn');
+    return null;
+  }
+  return items.map(item=>`${item.date} ${item.amount}元`).join('；');
+}
+function submitRepaymentList(){
+  const step=queue[position];
+  const answer=collectRepaymentList();
+  if(!answer)return;
+  if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
+  const evidenceAnswer=selectedEvidence.join('、');
+  rememberCalc(step,`${answer}；证据来源：${evidenceAnswer}`);
+  answers.push(answer);
+  position++;
+  render();
+  askDeepSeek(step,`${answer}；证据来源：${evidenceAnswer}`,position);
+}
+let selectedRateType='年息';
+function renderRateInput(step){
+  const stage=step?.stage||1,current=stage;
+  document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;
+  const stepNumber=queue.slice(0,position+1).filter(item=>!item.sameStep).length;
+  const pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100);
+  selectedEvidence=[];
+  selectedRateType='年息';
+  const c=document.getElementById('card');
+  c.className='card';
+  c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="rate-tabs"><button class="rate-tab" type="button" onclick="selectRateType('日息',this)">日息</button><button class="rate-tab" type="button" onclick="selectRateType('月息',this)">月息</button><button class="rate-tab selected" type="button" onclick="selectRateType('年息',this)">年息</button></div><div class="rate-entry-wrap"><input id="rate-entry" class="entry" inputmode="decimal" placeholder="例如：7"><span class="rate-unit">%</span></div><div class="evidence-picker inline-evidence"><button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div></div><button class="primary next" onclick="submitRateInput()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
+}
+function selectRateType(type,button){
+  selectedRateType=type;
+  document.querySelectorAll('.rate-tab').forEach(item=>item.classList.remove('selected'));
+  button?.classList.add('selected');
+}
+function submitRateInput(){
+  const step=queue[position];
+  const field=document.getElementById('rate-entry');
+  const raw=field?.value.trim()||'';
+  if(!/^\d+(?:\.\d+)?$/.test(raw)){field?.focus();showAiNotice('利息百分比请填写阿拉伯数字','warn');return}
+  if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
+  const answer=`${selectedRateType} ${raw}%`;
+  const evidenceAnswer=selectedEvidence.join('、');
+  rememberCalc(step,`${answer}；证据来源：${evidenceAnswer}`);
+  answers.push(answer);
+  position++;
+  render();
+  askDeepSeek(step,`${answer}；证据来源：${evidenceAnswer}`,position);
+}
+const repaymentListRender=render;
+render=function(){
+  while(queue[position]?.kind==='evidence'){
+    queue.splice(position,1);
+  }
+  const step=queue[position];
+  if(step?.kind==='repaymentList'){
+    renderRepaymentList(step);
+    return;
+  }
+  repaymentListRender();
+};
+const rateInputRender=render;
+render=function(){
+  while(queue[position]?.kind==='evidence'){
+    queue.splice(position,1);
+  }
+  const step=queue[position];
+  if(step?.kind==='rateInput'){
+    renderRateInput(step);
+    return;
+  }
+  rateInputRender();
+};
+function latestRecord(keyword){
+  return [...calcRecords].reverse().find(item=>item.title.includes(keyword));
+}
+function guarantorDecision(){
+  const identity=(latestRecord('担保签名')||latestRecord('担保人签名身份'))?.answer||'';
+  const joint=latestRecord('借条是否写明连带责任')?.answer||'';
+  const period=latestRecord('是否还在保证期间内')?.answer||'';
+  const demand=latestRecord('是否向担保人催要过')?.answer||'';
+  const debtor=latestRecord('借款人是否明显无法还款')?.answer||'';
+  if(identity==='见证人等')return {level:'warn',title:'暂不建议列为被告',detail:'签名更像见证/介绍，不足以直接认定担保责任。'};
+  if(identity==='看不清'||joint==='不确定'||period==='不确定')return {level:'warn',title:'建议人工核实',detail:'担保身份、连带责任或保证期间不清。'};
+  if(period==='可能超过')return {level:'warn',title:'暂不建议直接列为被告',detail:'保证期间可能已过，先核实是否还能主张。'};
+  if(identity==='连带责任保证人'||joint==='写了')return {level:'ok',title:'建议列为共同被告',detail:'有连带保证迹象，且仍在保证期间内。'};
+  if(debtor==='是')return {level:'mid',title:'可考虑列为共同被告',detail:'更像一般保证，借款人明显无力还款时再确认。'};
+  if(demand==='催要过，有证据')return {level:'mid',title:'可考虑列为被告',detail:'但保证方式可能是一般保证，诉请要谨慎。'};
+  return {level:'warn',title:'建议人工确认后再列',detail:'未写连带责任时，通常不直接按连带保证处理。'};
+}
+function jurisdictionDecision(){
+  const agreed=latestRecord('是否约定管辖法院')?.answer||'';
+  const court=latestRecord('约定管辖法院')?.answer||'';
+  const defendant=latestRecord('被告所在地')?.answer||'';
+  const plaintiff=latestRecord('原告所在地')?.answer||'';
+  const payWay=latestRecord('借款还款方式')?.answer||'';
+  if(agreed==='有，直接填写'&&court)return {level:'ok',title:'优先按约定法院',detail:`优先考虑：${court}。仍需确认该约定有效且与争议有实际联系。`};
+  if(defendant&&plaintiff){
+    const payTip=payWay==='不确定'?'还款方式不清，建议人工确认合同履行地。':payWay==='现金还款'?'现金还款时，合同履行地要结合证据再确认。':'可同时保留合同履行地线索。';
+    return {level:'mid',title:'优先看被告所在地法院',detail:`可优先考虑被告所在地法院；原告所在地可作为备选线索。${payTip}`};
+  }
+  if(defendant)return {level:'mid',title:'优先看被告所在地法院',detail:'原告所在地和还款方式不完整，建议补齐后再确认备选法院。'};
+  if(plaintiff)return {level:'warn',title:'建议人工确认管辖',detail:'仅有原告所在地，缺少被告所在地，管辖判断不够稳。'};
+  return {level:'warn',title:'暂不能判断管辖法院',detail:'请补充约定法院或被告所在地。'};
+}
+function moneyValue(text){
+  const value=String(text||'').replace(/，/g,'').match(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/i);
+  if(!value)return null;
+  return Number(value[1])*(value[2]?10000:1);
+}
+function moneyValues(text){
+  return [...String(text||'').replace(/，/g,'').matchAll(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/gi)]
+    .map(match=>Number(match[1])*(match[2]?10000:1));
+}
+function dateValue(text){
+  const raw=String(text||'').replace(/[年月.\/]/g,'-').replace(/日/g,'');
+  const found=raw.match(/(20\d{2}|19\d{2})-(\d{1,2})-(\d{1,2})/);
+  if(!found)return null;
+  const date=new Date(Number(found[1]),Number(found[2])-1,Number(found[3]));
+  return Number.isNaN(date.getTime())?null:date;
+}
+function dateValues(text){
+  const raw=String(text||'').replace(/[年月.\/]/g,'-').replace(/日/g,'');
+  return [...raw.matchAll(/(20\d{2}|19\d{2})-(\d{1,2})-(\d{1,2})/g)]
+    .map(match=>new Date(Number(match[1]),Number(match[2])-1,Number(match[3])))
+    .filter(date=>!Number.isNaN(date.getTime()));
+}
+function stripDates(text){
+  return String(text||'').replace(/(20\d{2}|19\d{2})[年.\/-]\d{1,2}[月.\/-]\d{1,2}日?/g,' ');
+}
+function rateValue(text){
+  const raw=String(text||'');
+  const found=raw.match(/(\d+(?:\.\d+)?)\s*%/);
+  if(!found)return null;
+  const n=Number(found[1])/100;
+  const daily=/日息|日利率|每日|\/日|天息|日/.test(raw);
+  const monthly=/月息|月利率|每月|\/月|月/.test(raw);
+  const annual=/年息|年利率|每年|\/年|年/.test(raw);
+  if(daily)return {annual:n*365,label:`日息 ${Number(found[1])}%`};
+  if(monthly)return {annual:n*12,label:`月息 ${Number(found[1])}%`};
+  if(annual)return {annual:n,label:`年息 ${Number(found[1])}%`};
+  return null;
+}
+function daysBetween(start,end){
+  return Math.max(0,Math.round((end-start)/86400000));
+}
+function yuan(n){
+  return `${Math.max(0,n).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2})} 元`;
+}
+const defaultLprAnnualRate=0.03;
+function calcLogicText(calc){
+  if(calc.noInterest)return `无约定利息时，从${calc.interestStartLabel}起按 LPR 一倍估算资金占用利息。`;
+  if(calc.repaid>0&&calc.orderLabel.includes('先本'))return '已还款按约定先抵扣本金，剩余本金继续按约定利率计算利息。';
+  if(calc.repaid>0)return '已还款先抵扣还款时已经产生的利息，剩余部分再抵扣本金，剩余本金继续计息。';
+  return '按借款本金、约定利率和计算截止日作单利估算；最终以证据和法院认定为准。';
+}
+function repaymentItems(record){
+  const text=String(record?.answer||'');
+  if(!text)return [];
+  const chunks=text.split(/[；;\n]+/).map(part=>part.trim()).filter(Boolean);
+  const parsed=chunks.map(chunk=>{
+    const amount=moneyValue(stripDates(chunk));
+    const date=dateValue(chunk);
+    return amount&&date?{amount,date}:null;
+  }).filter(Boolean);
+  if(parsed.length)return parsed.sort((a,b)=>a.date-b.date);
+  const amounts=moneyValues(stripDates(text));
+  const dates=dateValues(text);
+  return amounts.map((amount,index)=>dates[index]?{amount,date:dates[index]}:null).filter(Boolean).sort((a,b)=>a.date-b.date);
+}
+function repaymentOrder(noInterest=false){
+  if(noInterest)return {mode:'interestFirst',label:'资金占用利息，先息后本'};
+  const answer=latestRecord('是否约定还款抵扣顺序')?.answer;
+  if(answer==='先还本金')return {mode:'principalFirst',label:'先还本金'};
+  if(answer==='先还利息')return {mode:'interestFirst',label:'先还利息'};
+  return {mode:'interestFirst',label:'未约定，先息后本'};
+}
+function computeRepayment(){
+  const missing=[];
+  const principalRecord=latestRecord('借款本金总金额')||latestRecord('借款总金额');
+  const principal=moneyValue(principalRecord?.answer);
+  if(principal==null)missing.push('借款本金金额');
+  const cutoff=dateValue((latestRecord('计算诉讼金额的截止时间')||latestRecord('计算截止日期'))?.answer);
+  if(!cutoff)missing.push('计算诉讼金额的截止时间');
+  const noInterest=latestRecord('是否约定利息')?.answer==='没有';
+  const rateRecord=latestRecord('约定利息百分比');
+  const dueDate=dateValue(latestRecord('约定还款日期')?.answer);
+  const firstDemandDate=dateValue(latestRecord('第一次催要时间')?.answer);
+  const rate=noInterest?{annual:defaultLprAnnualRate,label:`LPR一倍（暂按年化 ${(defaultLprAnnualRate*100).toFixed(2)}%）`}:rateValue(rateRecord?.answer);
+  if(!noInterest&&!rate)missing.push('日息、月息或年息百分比');
+  const loanDate=dateValue(latestRecord('借款日期')?.answer);
+  let interestStart=loanDate;
+  let interestStartLabel='借款日期';
+  if(noInterest){
+    interestStart=dueDate||firstDemandDate;
+    interestStartLabel=dueDate?'约定还款日期':'第一次催要时间';
+    if(!interestStart)missing.push('约定还款日期或第一次催要时间');
+  }
+  if(rate?.annual>0&&!interestStart)missing.push(noInterest?'资金占用利息起算时间':'借款日期');
+  const repaymentChoice=latestRecord('是否已还款')?.answer;
+  const repaymentRecord=latestRecord('已还款明细')||latestRecord('已还款情况')||latestRecord('已还款金额和时间')||latestRecord('已还款金额');
+  const repayments=repaymentChoice==='没有还过'?[]:repaymentItems(repaymentRecord);
+  const rawRepaid=moneyValues(stripDates(repaymentRecord?.answer)).reduce((sum,value)=>sum+value,0);
+  if(repaymentChoice&&repaymentChoice!=='没有还过'&&!repayments.length)missing.push('每笔已还款金额和时间');
+  if(missing.length)return {ok:false,missing};
+  const baseStart=interestStart||cutoff;
+  const order=repaymentOrder(noInterest);
+  let principalBalance=principal;
+  let unpaidInterest=0;
+  let currentDate=baseStart;
+  let overpay=0;
+  let repaid=0;
+  const accrueTo=(targetDate)=>{
+    if(rate.annual>0){
+      unpaidInterest+=principalBalance*rate.annual*daysBetween(currentDate,targetDate)/365;
+    }
+    currentDate=targetDate;
+  };
+  repayments.filter(item=>item.date<=cutoff).forEach(item=>{
+    accrueTo(item.date<currentDate?currentDate:item.date);
+    repaid+=item.amount;
+    let payment=item.amount;
+    if(order.mode==='principalFirst'){
+      const principalPaid=Math.min(principalBalance,payment);
+      principalBalance-=principalPaid;
+      payment-=principalPaid;
+      const interestPaid=Math.min(unpaidInterest,payment);
+      unpaidInterest-=interestPaid;
+      payment-=interestPaid;
+    }else{
+      const interestPaid=Math.min(unpaidInterest,payment);
+      unpaidInterest-=interestPaid;
+      payment-=interestPaid;
+      const principalPaid=Math.min(principalBalance,payment);
+      principalBalance-=principalPaid;
+      payment-=principalPaid;
+    }
+    overpay+=payment;
+  });
+  accrueTo(cutoff);
+  if(rawRepaid>0&&repaid===0)repaid=rawRepaid;
+  const warning=overpay>0?'已还款可能已经覆盖本息，请核实是否存在多还或录入错误。':'';
+  return {ok:true,principal,remainingPrincipal:principalBalance,repaid,interest:unpaidInterest,total:principalBalance+unpaidInterest,rateLabel:rate.label,orderLabel:order.label,warning,noInterest,interestStartLabel};
+}
+const calculationRender=render;
+render=function(){
+  calculationRender();
+  const step=queue[position];
+  if(step?.title!=='诉讼金额自动测算如下：')return;
+  const desc=document.querySelector('.result .desc');
+  if(!desc)return;
+  const calc=computeRepayment();
+  if(calc.ok){
+    desc.outerHTML=`<div class="calc-box ${calc.warning?'calc-warn':''}"><div class="calc-title">还款金额参考</div><div class="calc-row"><span>剩余未还本金</span><strong>${yuan(calc.remainingPrincipal)}</strong></div><div class="calc-row"><span>剩余未还利息</span><strong>${yuan(calc.interest)}</strong></div><div class="calc-row total"><span>合计参考金额</span><strong>${yuan(calc.total)}</strong></div><div class="calc-logic">${calcLogicText(calc)}${calc.warning?`<br>${calc.warning}`:''}</div></div><p class="calc-help">如对计算结果有疑问，可以召唤真人服务。</p>`;
+  }else{
+    const items=(calc.warning?[calc.warning]:calc.missing).map(item=>`<li>${item}</li>`).join('');
+    desc.outerHTML=`<div class="calc-box calc-warn"><div>暂时不能准确计算还款金额</div><ul>${items}</ul><small>补齐这些必要项后，才能计算被告还需要还多少钱。</small></div><p class="calc-help">如对计算结果有疑问，可以召唤真人服务。</p>`;
+  }
+};
+const guarantorResultRender=render;
+render=function(){
+  guarantorResultRender();
+  const step=queue[position];
+  if(step?.title!=='担保人是否列为被告')return;
+  const desc=document.querySelector('.result .desc');
+  if(!desc)return;
+  const decision=guarantorDecision();
+  desc.outerHTML=`<div class="calc-box ${decision.level==='warn'?'calc-warn':''}"><div class="calc-title">${decision.title}</div><div class="calc-logic">${decision.detail}</div></div>`;
+};
+const jurisdictionResultRender=render;
+render=function(){
+  jurisdictionResultRender();
+  const step=queue[position];
+  if(step?.title!=='管辖法院判断')return;
+  const desc=document.querySelector('.result .desc');
+  if(!desc)return;
+  const decision=jurisdictionDecision();
+  desc.outerHTML=`<div class="calc-box ${decision.level==='warn'?'calc-warn':''}"><div class="calc-title">${decision.title}</div><div class="calc-logic">${decision.detail}</div></div>`;
+};
+function showTestStep(step,extraAnswers=[]){
+  welcome.classList.add('hidden');
+  guide.classList.remove('hidden');
+  queue=[step];
+  position=0;
+  answers=[...extraAnswers];
+  selectedEvidence=[];
+  render();
+}
+function showTestCalculation(records){
+  welcome.classList.add('hidden');
+  guide.classList.remove('hidden');
+  calcRecords=records;
+  aiHistory=[];
+  queue=[note('诉讼金额自动测算如下：','测试模式：直接展示计算结果。',1)];
+  position=0;
+  answers=[];
+  render();
+}
+function showTestNote(title,description,records){
+  welcome.classList.add('hidden');
+  guide.classList.remove('hidden');
+  calcRecords=records;
+  aiHistory=[];
+  queue=[note(title,description,1)];
+  position=0;
+  answers=[];
+  render();
+}
+function testOpenRepayment(){
+  showTestStep(repaymentList('请填写已还款明细','逐笔填写还款时间和金额。',1,true),['多笔还款']);
+}
+function testOpenRate(){
+  showTestStep(rateInput('请填写约定利息百分比','先选择利息类型，再填写百分比数字。',1,true));
+}
+function testAnnualCase(){
+  showTestCalculation([
+    {title:'借款本金总金额',answer:'10000元'},
+    {title:'请填写借款日期',answer:'2025-01-01'},
+    {title:'请填写约定还款日期',answer:'2026-03-01'},
+    {title:'是否约定利息？',answer:'有，直接填写'},
+    {title:'请填写约定利息百分比',answer:'年息 7%'},
+    {title:'是否约定还款抵扣顺序？',answer:'没有约定'},
+    {title:'是否已还款？',answer:'一笔还款'},
+    {title:'请填写已还款明细',answer:'2025-08-01 3000元'},
+    {title:'请填写计算诉讼金额的截止时间',answer:'2026-07-31'}
+  ]);
+}
+function testNoInterestDue(){
+  showTestCalculation([
+    {title:'借款本金总金额',answer:'10000元'},
+    {title:'请填写约定还款日期',answer:'2026-03-01'},
+    {title:'是否约定利息？',answer:'没有'},
+    {title:'是否已还款？',answer:'没有还过'},
+    {title:'请填写计算诉讼金额的截止时间',answer:'2026-07-31'}
+  ]);
+}
+function testNoInterestDemand(){
+  showTestCalculation([
+    {title:'借款本金总金额',answer:'10000元'},
+    {title:'请填写第一次催要时间',answer:'2026-07-01'},
+    {title:'是否约定利息？',answer:'没有'},
+    {title:'是否已还款？',answer:'没有还过'},
+    {title:'请填写计算诉讼金额的截止时间',answer:'2026-08-01'}
+  ]);
+}
+function testGuarantorCase(){
+  showTestNote('担保人是否列为被告','测试模式：担保人判断。',[
+    {title:'担保签名写的是什么？',answer:'连带责任保证人'},
+    {title:'借条是否写明连带责任？',answer:'写了'},
+    {title:'是否还在保证期间内？',answer:'是'},
+    {title:'是否向担保人催要过？',answer:'催要过，有证据'},
+    {title:'借款人是否明显无法还款？',answer:'不确定'}
+  ]);
+}
+function testJurisdictionCase(){
+  showTestNote('管辖法院判断','测试模式：管辖判断。',[
+    {title:'是否约定管辖法院？',answer:'没有约定'},
+    {title:'请填写被告所在地',answer:'广东省深圳市南山区'},
+    {title:'请填写原告所在地',answer:'广东省广州市天河区'},
+    {title:'借款还款方式是什么？',answer:'转账还款'}
+  ]);
+}
+const testChoiceDefaults={
+  '请选择案件类型':'民间借贷',
+  '您在本案中的身份是？':'原告',
+  '原告是个人还是单位？':'个人',
+  '被告是个人还是单位？':'个人',
+  '是否掌握借款日期？':'有，直接填写',
+  '款项如何交付？':'转账交付',
+  '是否约定还款日期？':'有，直接填写',
+  '是否约定利息？':'有，直接填写',
+  '是否约定还款抵扣顺序？':'没有约定',
+  '是否已还款？':'一笔还款',
+  '是否有借款担保人？':'有，直接填写',
+  '担保签名写的是什么？':'连带责任保证人',
+  '借条是否写明连带责任？':'写了',
+  '是否还在保证期间内？':'是',
+  '是否向担保人催要过？':'催要过，有证据',
+  '借款人是否明显无法还款？':'不确定',
+  '是否约定管辖法院？':'没有约定',
+  '是否知道被告所在地？':'知道，直接填写',
+  '借款还款方式是什么？':'转账还款',
+  '需要保全吗？':'不保全',
+  '请选择起诉状类型':'一般起诉状',
+  '请选择递交立案方式':'网上递交',
+  '是否收到传票？':'未收到',
+  '是否需要缴交公告费？':'否',
+  '是否收到判决书？':'否'
+};
+const testAnswerDefaults={
+  '请填写原告个人身份信息':'张三；11010519491231002X',
+  '请填写原告企业名称':'某某科技有限公司',
+  '请填写被告个人身份信息':'李四；11010519491231002X',
+  '请填写被告企业名称':'某某贸易商行',
+  '借款本金总金额':'10000元；证据来源：借条、转账',
+  '请填写借款事由':'应急周转；证据来源：聊天',
+  '请填写借款日期':'2025-01-01；证据来源：借条、转账',
+  '请填写约定还款日期':'2026-03-01；证据来源：借条',
+  '请填写约定利息百分比':'年息 7%；证据来源：借条',
+  '请填写已还款明细':'2025-08-01 3000元；证据来源：转账',
+  '请填写担保人身份信息':'王五；11010519491231002X；证据来源：借条',
+  '担保人是否列为被告':'系统根据担保信息判断',
+  '请填写最后一次催要时间':'2026-07-20；证据来源：聊天',
+  '请填写计算诉讼金额的截止时间':'2026-08-07',
+  '诉讼金额自动测算如下：':'系统自动测算',
+  '请填写约定管辖法院':'某某区人民法院',
+  '请填写被告所在地':'广东省深圳市南山区',
+  '请填写原告所在地':'广东省广州市天河区',
+  '管辖法院判断':'系统根据管辖信息判断',
+  '第一阶段：证据收集完成':'完成',
+  '起诉状要素已梳理':'完成',
+  '证据整理':'完成',
+  '网上递交':'完成',
+  '保全费':'完成',
+  '诉讼费':'完成',
+  '请安心等待开庭通知':'完成',
+  '请安心等待传票':'完成',
+  '请继续等待判决书':'完成',
+  '申请执行':'完成'
+};
+function testEscape(text){
+  return String(text||'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function testCloneStep(step){
+  const cloned={...step};
+  if(step.options){
+    cloned.options=step.options.map(option=>({label:option.label,desc:option.desc,add:[]}));
+  }
+  delete cloned._branchParents;
+  return cloned;
+}
+function testBuildLinearQueue(nodes,out=[]){
+  nodes.forEach(node=>{
+    out.push(testCloneStep(node));
+    if(node.kind==='choice'){
+      const target=testChoiceDefaults[node.title];
+      const selected=node.options.find(option=>option.label===target)||node.options.find(option=>option.add?.length);
+      if(selected?.add?.length)testBuildLinearQueue(selected.add,out);
+    }
+  });
+  return out;
+}
+function testLinearQueue(){
+  return testBuildLinearQueue(firstFlow(),[]);
+}
+function testAnswerForStep(step){
+  if(testAnswerDefaults[step.title])return testAnswerDefaults[step.title];
+  if(step.kind==='choice')return testChoiceDefaults[step.title]||step.options?.[0]?.label||'';
+  if(step.kind==='form')return (step.fields||[]).map(field=>field.placeholder||field.label).join('；');
+  if(step.kind==='input')return step.placeholder||'测试内容';
+  if(step.kind==='rateInput')return '年息 7%；证据来源：借条';
+  if(step.kind==='repaymentList')return '2025-08-01 3000元；证据来源：转账';
+  return '完成';
+}
+function testSeedBefore(index,steps){
+  calcRecords=[];
+  aiHistory=[];
+  answers=[];
+  steps.slice(0,index).forEach(step=>{
+    const answer=testAnswerForStep(step);
+    answers.push(answer);
+    if(step.title)calcRecords.push({title:step.title,kind:step.kind,answer});
+  });
+}
+function testStepOptionsHtml(){
+  return testLinearQueue().map((step,index)=>`<option value="${index}">第 ${index+1} 步：${testEscape(step.title)}</option>`).join('');
+}
+function testJumpToSelectedStep(){
+  const select=document.getElementById('test-step-select');
+  const steps=testLinearQueue();
+  const index=Math.max(0,Math.min(steps.length-1,Number(select?.value||0)));
+  welcome.classList.add('hidden');
+  guide.classList.remove('hidden');
+  queue=steps;
+  position=index;
+  selectedEvidence=[];
+  testSeedBefore(index,steps);
+  render();
+  showAiNotice(`已跳到第 ${index+1} 步`,'human');
+}
+function testRestart(){
+  calcRecords=[];
+  aiHistory=[];
+  start();
+}
+function installTestPanel(){
+  const params=new URLSearchParams(location.search);
+  if(params.get('test')!=='1'||document.querySelector('.test-panel'))return;
+  const panel=document.createElement('div');
+  panel.className='test-panel';
+  panel.innerHTML=`<div class="test-head"><span>测试模式</span><button class="test-close" type="button" onclick="this.closest('.test-panel').remove()">收起</button></div><div class="test-jump"><select id="test-step-select" class="test-select">${testStepOptionsHtml()}</select><button type="button" onclick="testJumpToSelectedStep()">跳到这步</button></div><div class="test-actions"><button type="button" onclick="testOpenRepayment()">多笔还款页</button><button type="button" onclick="testOpenRate()">利息填写页</button><button type="button" onclick="testAnnualCase()">年息+还款计算</button><button type="button" onclick="testNoInterestDue()">无息+还款日</button><button type="button" onclick="testNoInterestDemand()">无息+催要日</button><button type="button" onclick="testGuarantorCase()">担保人判断</button><button type="button" onclick="testJurisdictionCase()">管辖判断</button><button type="button" onclick="testRestart()">从头测试</button></div>`;
+  document.body.append(panel);
+}
+installTestPanel();
+</script></body></html>
