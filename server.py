@@ -5,6 +5,7 @@ import mimetypes
 import os
 import pathlib
 import re
+import ssl
 import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -12,6 +13,32 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = pathlib.Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
+
+
+def _load_env_file(path: pathlib.Path) -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[7:].lstrip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key or key in os.environ:
+            continue
+        if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+            value = value[1:-1]
+        os.environ[key] = value
+
+
+_load_env_file(ROOT / ".env")
+_load_env_file(ROOT / ".env.local")
+
 MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 API_URL = os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
 
@@ -22,6 +49,10 @@ def _json_response(handler: BaseHTTPRequestHandler, status: int, payload: dict) 
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Content-Length", str(len(data)))
     handler.send_header("Cache-Control", "no-store")
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type, Accept")
+    handler.send_header("Access-Control-Max-Age", "86400")
     handler.end_headers()
     handler.wfile.write(data)
 
@@ -69,7 +100,7 @@ def _parse_money(value: object) -> float | None:
 def _parse_money_values(value: object) -> list[float]:
     text = _fold_text(value).replace(",", "")
     values: list[float] = []
-    for match in re.finditer(r"(?:人民币|RMB|¥)?\s*(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币)", text, re.I):
+    for match in re.finditer(r"(?:人民币|RMB|¥)?\s*(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?", text, re.I):
         amount = float(match.group(1))
         if match.group(2):
             amount *= 10000
@@ -77,9 +108,8 @@ def _parse_money_values(value: object) -> list[float]:
     return values
 
 
-def _has_yuan_unit(value: object) -> bool:
-    text = _fold_text(value)
-    return any(token in text for token in ("元", "人民币", "RMB", "¥"))
+def _strip_dates(value: object) -> str:
+    return re.sub(r"(20\d{2}|19\d{2})[年.\/-]\d{1,2}[月.\/-]\d{1,2}日?", " ", _fold_text(value))
 
 
 def _has_date(value: object) -> bool:
@@ -246,16 +276,15 @@ def local_judge(payload: dict) -> dict:
         return _base_result("continue", "日期已识别，可继续。", risks)
 
     if _is_money_title(title):
-        amount = _parse_money(answer)
+        money_answer = _strip_dates(answer)
+        amount = _parse_money(money_answer)
         if amount is None:
             return _base_result("need_clarify", "金额请填写阿拉伯数字。", ["金额无法识别"])
-        if not _has_yuan_unit(answer):
-            return _base_result("need_clarify", "金额单位请写人民币元。", ["金额单位缺失"])
         if "已还" in title:
             if not _has_date(answer):
                 return _base_result("need_clarify", "已还款请同时填写金额和时间。", ["已还款时间缺失"])
             principal = _previous_principal(history)
-            paid_total = sum(_parse_money_values(answer)) or amount
+            paid_total = sum(_parse_money_values(money_answer)) or amount
             if principal is not None and paid_total > principal:
                 return _base_result("need_clarify", "已还金额超过本金，请确认。", ["已还金额大于借款本金"], normalized_answer=f"{paid_total:.2f}元")
         return _base_result("continue", "金额已识别，可继续。", risks, normalized_answer=f"{amount:.2f}元")
@@ -340,8 +369,18 @@ def judge_with_deepseek(payload: dict) -> dict:
             "Content-Type": "application/json; charset=utf-8",
         },
     )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        raw = response.read().decode("utf-8")
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            raw = response.read().decode("utf-8")
+    except (urllib.error.URLError, ssl.SSLError) as exc:
+        reason = getattr(exc, "reason", exc)
+        message = str(reason)
+        if "certificate verify failed" not in message and "self-signed certificate" not in message:
+            raise
+        print("DeepSeek TLS verification failed, retrying without certificate checks.")
+        insecure_context = ssl._create_unverified_context()
+        with urllib.request.urlopen(request, timeout=30, context=insecure_context) as response:
+            raw = response.read().decode("utf-8")
     data = json.loads(raw)
     content = data["choices"][0]["message"]["content"]
     result = _extract_json(content)
@@ -354,6 +393,15 @@ def judge_with_deepseek(payload: dict) -> dict:
 
 
 class PreviewHandler(BaseHTTPRequestHandler):
+    def _send_cors_only(self, status: int = 204) -> None:
+        self.send_response(status)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Accept")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def do_GET(self) -> None:
         path = self.path.split("?", 1)[0]
         if path in ("", "/"):
@@ -371,8 +419,15 @@ class PreviewHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", content_type + ("; charset=utf-8" if content_type.startswith("text/") else ""))
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(data)
+
+    def do_OPTIONS(self) -> None:
+        if self.path.split("?", 1)[0] == "/api/judge":
+            self._send_cors_only(204)
+            return
+        self.send_error(404)
 
     def do_POST(self) -> None:
         if self.path.split("?", 1)[0] != "/api/judge":

@@ -104,7 +104,7 @@ function parseMoney(value: unknown): number | null {
 function parseMoneyValues(value: unknown): number[] {
   const text = foldText(value).replaceAll(",", "");
   const values: number[] = [];
-  for (const match of text.matchAll(/(?:人民币|RMB|¥)?\s*(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币)/gi)) {
+  for (const match of text.matchAll(/(?:人民币|RMB|¥)?\s*(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/gi)) {
     let amount = Number(match[1]);
     if (match[2]) {
       amount *= 10000;
@@ -116,9 +116,8 @@ function parseMoneyValues(value: unknown): number[] {
   return values;
 }
 
-function hasYuanUnit(value: unknown): boolean {
-  const text = foldText(value);
-  return ["元", "人民币", "RMB", "¥"].some((token) => text.includes(token));
+function stripDates(value: unknown): string {
+  return foldText(value).replace(/(20\d{2}|19\d{2})[年.\/-]\d{1,2}[月.\/-]\d{1,2}日?/g, " ");
 }
 
 function hasDate(value: unknown): boolean {
@@ -363,19 +362,17 @@ function localJudge(payload: Payload): Result {
   }
 
   if (isMoneyTitle(title)) {
-    const amount = parseMoney(answer);
+    const moneyAnswer = stripDates(answer);
+    const amount = parseMoney(moneyAnswer);
     if (amount === null) {
       return baseResult("need_clarify", "金额请填写阿拉伯数字。", ["金额无法识别"]);
-    }
-    if (!hasYuanUnit(answer)) {
-      return baseResult("need_clarify", "金额单位请写人民币元。", ["金额单位缺失"]);
     }
     if (title.includes("已还")) {
       if (!hasDate(answer)) {
         return baseResult("need_clarify", "已还款请同时填写金额和时间。", ["已还款时间缺失"]);
       }
       const principal = previousPrincipal(history);
-      const paidTotal = parseMoneyValues(answer).reduce((sum, value) => sum + value, 0) || amount;
+      const paidTotal = parseMoneyValues(moneyAnswer).reduce((sum, value) => sum + value, 0) || amount;
       if (principal !== null && paidTotal > principal) {
         return baseResult("need_clarify", "已还金额超过本金，请确认。", ["已还金额大于借款本金"], {
           normalized_answer: `${paidTotal.toFixed(2)}元`,

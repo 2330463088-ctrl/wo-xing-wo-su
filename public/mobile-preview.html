@@ -52,7 +52,7 @@ choice('款项如何交付？','用于判断借款是否实际交付。',[{label
 ]}
 function plaintiffFlow(){return [
 ...partyFlow(),
-input('借款本金总金额','请输入借款本金总额。','例如：50000 元',1,true),
+input('借款本金总金额','请输入借款本金总额。','例如：50000',1,true),
 choice('是否掌握借款日期？','借款发生的具体日期。',[{label:'有，直接填写',desc:'我能确定借款日期',add:[input('请填写借款日期','按实际借款日期填写。','例如：2025年1月1日',1,true)]},{label:'没有',desc:'我不能确定借款日期',add:[human('缺少借款日期')]}]),
 input('请填写借款事由','例如资金周转、经营需要等。','请输入借款事由',1,true),
 ...deliveryFlow(),
@@ -232,7 +232,8 @@ async function askDeepSeek(step,answer,afterPosition){
   }
   showAiNotice('AI 正在判断本步信息…');
   try{
-    const response=await fetch('/api/judge',{
+    const judgeUrl=location.protocol==='file:'?'http://127.0.0.1:8765/api/judge':'/api/judge';
+    const response=await fetch(judgeUrl,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({current:stepSnapshot(step),answer,history:aiHistory})
@@ -495,7 +496,7 @@ function renderRepaymentList(step){
   selectedEvidence=[];
   const c=document.getElementById('card');
   c.className='card';
-  c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="repay-editor"><div class="repay-row" id="repay-editor"><div class="repay-row-title">录入一笔还款</div>${dateWheelHtml(1)}<input class="repay-money" inputmode="decimal" aria-label="还款金额" placeholder="金额 / 元"></div><div class="repay-actions"><button class="add-repay" type="button" onclick="addRepaymentDraft()">+ 添加这一笔</button></div><div class="repay-summary" id="repay-summary"><div class="repay-summary-empty">尚未添加还款明细</div></div></div><div class="evidence-picker inline-evidence"><button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div></div><button class="primary next" onclick="submitRepaymentList()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
+  c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="repay-editor"><div class="repay-row" id="repay-editor"><div class="repay-row-title">录入一笔还款</div>${dateWheelHtml(1)}<input class="repay-money" inputmode="decimal" aria-label="还款金额" placeholder="例如：3000"></div><div class="repay-actions"><button class="add-repay" type="button" onclick="addRepaymentDraft()">+ 添加这一笔</button></div><div class="repay-summary" id="repay-summary"><div class="repay-summary-empty">尚未添加还款明细</div></div></div><div class="evidence-picker inline-evidence"><button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div></div><button class="primary next" onclick="submitRepaymentList()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
   requestAnimationFrame(()=>initWheelLists(c));
 }
 function renderDateInput(step){
@@ -867,20 +868,20 @@ function testOpenRate(){
 }
 function testAnnualCase(){
   showTestCalculation([
-    {title:'借款本金总金额',answer:'10000元'},
+    {title:'借款本金总金额',answer:'10000'},
     {title:'请填写借款日期',answer:'2025-01-01'},
     {title:'请填写约定还款日期',answer:'2026-03-01'},
     {title:'是否约定利息？',answer:'有，直接填写'},
     {title:'请填写约定利息百分比',answer:'年息 7%'},
     {title:'是否约定还款抵扣顺序？',answer:'没有约定'},
     {title:'是否已还款？',answer:'一笔还款'},
-    {title:'请填写已还款明细',answer:'2025-08-01 3000元'},
+    {title:'请填写已还款明细',answer:'2025-08-01 3000'},
     {title:'请填写计算诉讼金额的截止时间',answer:'2026-07-31'}
   ]);
 }
 function testNoInterestDue(){
   showTestCalculation([
-    {title:'借款本金总金额',answer:'10000元'},
+    {title:'借款本金总金额',answer:'10000'},
     {title:'请填写约定还款日期',answer:'2026-03-01'},
     {title:'是否约定利息？',answer:'没有'},
     {title:'是否已还款？',answer:'没有还过'},
@@ -889,7 +890,7 @@ function testNoInterestDue(){
 }
 function testNoInterestDemand(){
   showTestCalculation([
-    {title:'借款本金总金额',answer:'10000元'},
+    {title:'借款本金总金额',answer:'10000'},
     {title:'请填写第一次催要时间',answer:'2026-07-01'},
     {title:'是否约定利息？',answer:'没有'},
     {title:'是否已还款？',answer:'没有还过'},
@@ -945,12 +946,12 @@ const testAnswerDefaults={
   '请填写原告企业名称':'某某科技有限公司',
   '请填写被告个人身份信息':'李四；11010519491231002X',
   '请填写被告企业名称':'某某贸易商行',
-  '借款本金总金额':'10000元；证据来源：借条、转账',
+  '借款本金总金额':'10000；证据来源：借条、转账',
   '请填写借款事由':'应急周转；证据来源：聊天',
   '请填写借款日期':'2025-01-01；证据来源：借条、转账',
   '请填写约定还款日期':'2026-03-01；证据来源：借条',
   '请填写约定利息百分比':'年息 7%；证据来源：借条',
-  '请填写已还款明细':'2025-08-01 3000元；证据来源：转账',
+  '请填写已还款明细':'2025-08-01 3000；证据来源：转账',
   '请填写担保人身份信息':'王五；11010519491231002X；证据来源：借条',
   '担保人是否列为被告':'系统根据担保信息判断',
   '请填写最后一次催要时间':'2026-07-20；证据来源：聊天',
@@ -1002,7 +1003,7 @@ function testAnswerForStep(step){
   if(step.kind==='form')return (step.fields||[]).map(field=>field.placeholder||field.label).join('；');
   if(step.kind==='input')return step.placeholder||'测试内容';
   if(step.kind==='rateInput')return '年息 7%；证据来源：借条';
-  if(step.kind==='repaymentList')return '2025-08-01 3000元；证据来源：转账';
+  if(step.kind==='repaymentList')return '2025-08-01 3000；证据来源：转账';
   return '完成';
 }
 function testSeedBefore(index,steps){
@@ -1018,30 +1019,53 @@ function testSeedBefore(index,steps){
 function testStepOptionsHtml(){
   return testLinearQueue().map((step,index)=>`<option value="${index}">第 ${index+1} 步：${testEscape(step.title)}</option>`).join('');
 }
+function testJumpToIndex(index,announce=true){
+  const steps=testLinearQueue();
+  const safeIndex=Math.max(0,Math.min(steps.length-1,Number(index||0)));
+  welcome.classList.add('hidden');
+  guide.classList.remove('hidden');
+  queue=steps;
+  position=safeIndex;
+  selectedEvidence=[];
+  testSeedBefore(safeIndex,steps);
+  render();
+  if(announce)showAiNotice(`已跳到第 ${safeIndex+1} 步`,'human');
+  return {index:safeIndex,title:steps[safeIndex]?.title||'',total:steps.length};
+}
 function testJumpToSelectedStep(){
   const select=document.getElementById('test-step-select');
   const steps=testLinearQueue();
   const index=Math.max(0,Math.min(steps.length-1,Number(select?.value||0)));
-  welcome.classList.add('hidden');
-  guide.classList.remove('hidden');
-  queue=steps;
-  position=index;
-  selectedEvidence=[];
-  testSeedBefore(index,steps);
-  render();
-  showAiNotice(`已跳到第 ${index+1} 步`,'human');
+  testJumpToIndex(index);
 }
 function testRestart(){
   calcRecords=[];
   aiHistory=[];
   start();
 }
+window.flowTestApi={
+  showTestStep,
+  showTestCalculation,
+  showTestNote,
+  testOpenRepayment,
+  testOpenRate,
+  testAnnualCase,
+  testNoInterestDue,
+  testNoInterestDemand,
+  testGuarantorCase,
+  testJurisdictionCase,
+  testLinearQueue,
+  testSeedBefore,
+  testJumpToIndex,
+  testJumpToSelectedStep,
+  testRestart,
+};
 function installTestPanel(){
   const params=new URLSearchParams(location.search);
-  if(params.get('test')!=='1'||document.querySelector('.test-panel'))return;
+  if(params.get('lab')==='1'||params.get('test')!=='1'||document.querySelector('.test-panel'))return;
   const panel=document.createElement('div');
   panel.className='test-panel';
-  panel.innerHTML=`<div class="test-head"><span>测试模式</span><button class="test-close" type="button" onclick="this.closest('.test-panel').remove()">收起</button></div><div class="test-jump"><select id="test-step-select" class="test-select">${testStepOptionsHtml()}</select><button type="button" onclick="testJumpToSelectedStep()">跳到这步</button></div><div class="test-actions"><button type="button" onclick="testOpenRepayment()">多笔还款页</button><button type="button" onclick="testOpenRate()">利息填写页</button><button type="button" onclick="testAnnualCase()">年息+还款计算</button><button type="button" onclick="testNoInterestDue()">无息+还款日</button><button type="button" onclick="testNoInterestDemand()">无息+催要日</button><button type="button" onclick="testGuarantorCase()">担保人判断</button><button type="button" onclick="testJurisdictionCase()">管辖判断</button><button type="button" onclick="testRestart()">从头测试</button></div>`;
+  panel.innerHTML=`<div class="test-head"><span>测试模式</span><button class="test-close" type="button" onclick="this.closest('.test-panel').remove()">收起</button></div><div class="test-jump"><select id="test-step-select" class="test-select">${testStepOptionsHtml()}</select><button type="button" onclick="testJumpToSelectedStep()">跳到这步</button></div><div class="test-actions"><button type="button" onclick="testOpenRepayment()">多笔还款页</button><button type="button" onclick="testOpenRate()">利息填写页</button><button type="button" onclick="testAnnualCase()">年息+还款计算</button><button type="button" onclick="testNoInterestDue()">无息+还款日</button><button type="button" onclick="testNoInterestDemand()">无息+催要日</button><button type="button" onclick="testGuarantorCase()">担保人判断</button><button type="button" onclick="testJurisdictionCase()">管辖判断</button><button type="button" onclick="window.open(new URL('test-lab.html', location.href).href,'_blank')">独立测试台</button><button type="button" onclick="testRestart()">从头测试</button></div>`;
   document.body.append(panel);
 }
 installTestPanel();
