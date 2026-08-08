@@ -174,6 +174,17 @@ def _name_suspicious(name: str) -> bool:
     return not re.fullmatch(r"[\u4e00-\u9fffA-Za-z]{2,20}", clean)
 
 
+def _split_identity_parts(value: object) -> list[str]:
+    return [part.strip() for part in re.split(r"[;；、,，\n]+", str(value or "")) if part.strip()]
+
+
+def _pick_name_part(parts: list[str]) -> str | None:
+    for part in parts:
+        if re.search(r"[\u4e00-\u9fffA-Za-z]{2,}", part) and not re.fullmatch(r"(不详|未知|暂无|不清楚|无|待补|待定)", part, re.I):
+            return part
+    return None
+
+
 def _previous_principal(history: list) -> float | None:
     for item in reversed(history or []):
         if isinstance(item, dict):
@@ -200,6 +211,21 @@ def local_judge(payload: dict) -> dict:
 
     if kind == "choice":
         return _base_result("continue", "选择已记录，可继续。", risks)
+
+    if title == "请填写被告个人身份信息":
+        parts = _split_identity_parts(answer)
+        name_part = _pick_name_part(parts)
+        if not name_part:
+            return _base_result("need_clarify", "请先填写被告姓名。", ["被告姓名缺失"])
+        region, valid = _classify_id(answer)
+        if region and valid:
+            return _base_result("continue", "被告身份信息已记录，可继续。", [*risks, f"已识别为{region}"], normalized_answer=name_part)
+        return _base_result(
+            "continue",
+            "被告姓名已记录，身份证号可后补。" if not region else "被告姓名已记录，身份证号待核实。",
+            [*risks, "被告身份证号暂缺" if not region else "被告身份证号待核实"],
+            normalized_answer=name_part,
+        )
 
     if "姓名" in title:
         names = [part.strip() for part in re.split(r"[;；、,，\s]+", answer) if part.strip()]
@@ -257,6 +283,10 @@ def judge_with_deepseek(payload: dict) -> dict:
     current = payload.get("current") or {}
     title = str(current.get("title", ""))
     answer = _fold_text(payload.get("answer", ""))
+
+    if title == "请填写被告个人身份信息":
+        return rule_result
+
     if _is_id_title(title) and _classify_id(answer)[1]:
         rule_result["message"] = "身份证号已通过本地校验。"
         return rule_result

@@ -45,7 +45,7 @@ choice('是否约定管辖法院？','优先看借条或聊天里有没有约定
 ]}
 function partyFlow(){return [
 choice('原告是个人还是单位？','单位或个体户填写企业名称，不填身份证号。',[{label:'个人',desc:'自然人作为原告',add:[form('请填写原告个人身份信息','姓名和身份证号码请分开填写。',[{label:'原告姓名',placeholder:'请输入原告姓名'},{label:'原告身份证号码',placeholder:'请输入原告身份证号码'}],1)]},{label:'公司或个体户',desc:'单位作为原告',add:[input('请填写原告企业名称','填写营业执照或登记信息上的名称。','例如：某某公司 / 某某商行',1)]}]),
-choice('被告是个人还是单位？','先确认被告主体类型。',[{label:'个人',desc:'自然人作为被告',add:[form('请填写被告个人身份信息','姓名和身份证号码请分开填写。',[{label:'被告姓名',placeholder:'请输入被告姓名'},{label:'被告身份证号码',placeholder:'请输入被告身份证号码'}],1)]},{label:'公司或个体户',desc:'单位作为被告',add:[input('请填写被告企业名称','填写营业执照或登记信息上的名称。','例如：某某公司 / 某某商行',1)]},{label:'不确定',desc:'需要人工确认主体',add:[human('无法确认被告是个人还是单位')]}])
+choice('被告是个人还是单位？','先确认被告主体类型。',[{label:'个人',desc:'自然人作为被告',add:[form('请填写被告个人身份信息','姓名必填；身份证号码如暂时不清楚，可先填“不详”继续。',[{label:'被告姓名',placeholder:'请输入被告姓名'},{label:'被告身份证号码',placeholder:'暂不清楚可填“不详”'}],1)]},{label:'公司或个体户',desc:'单位作为被告',add:[input('请填写被告企业名称','填写营业执照或登记信息上的名称。','例如：某某公司 / 某某商行',1)]},{label:'不确定',desc:'需要人工确认主体',add:[human('无法确认被告是个人还是单位')]}])
 ]}
 function deliveryFlow(){return [
 choice('款项如何交付？','用于判断借款是否实际交付。',[{label:'转账交付',desc:'银行/微信/支付宝等转账',add:[]},{label:'现金交付',desc:'需要收条或聊天记录补强',add:[]},{label:'现金加转账',desc:'部分现金、部分转账',add:[]},{label:'不确定',desc:'需要人工核实交付证据',add:[human('款项交付方式不清，需要核实证据')]}])
@@ -260,7 +260,7 @@ async function askDeepSeek(step,answer,afterPosition){
       return;
     }
     aiHistory.push({...record,decision:result.decision,normalized_answer:result.normalized_answer||''});
-    showAiNotice('AI 判断通过，已进入下一步');
+    showAiNotice(result.message||'AI 判断通过，已进入下一步');
   }catch(error){
     aiHistory.push(record);
     showAiNotice('AI 判断暂不可用，已按流程继续','warn');
@@ -287,7 +287,12 @@ submitForm=function(){
   const step=queue[position];
   const fields=[...document.querySelectorAll('.form-entry')];
   const values=fields.map(field=>field.value.trim());
-  const missing=values.findIndex(value=>!value);
+  const autoFillDefendantId=step?.title==='请填写被告个人身份信息'&&!values[1];
+  if(autoFillDefendantId){
+    values[1]='不详';
+    if(fields[1])fields[1].value='不详';
+  }
+  const missing=values.findIndex((value,index)=>!value&&!(autoFillDefendantId&&index===1));
   if(missing>=0){fields[missing]?.focus();return}
   aiSubmitForm();
   askDeepSeek(step,values.join('；'),position);

@@ -252,6 +252,22 @@ function nameSuspicious(name: string): boolean {
   return !/^[\u4e00-\u9fffA-Za-z]{2,20}$/.test(clean);
 }
 
+function splitIdentityParts(value: string): string[] {
+  return String(value ?? "")
+    .split(/[;；、,，\n]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function pickNamePart(parts: string[]): string | null {
+  for (const part of parts) {
+    if (/[\u4e00-\u9fffA-Za-z]{2,}/.test(part) && !/^(不详|未知|暂无|不清楚|无|待补|待定)$/i.test(part)) {
+      return part;
+    }
+  }
+  return null;
+}
+
 function previousPrincipal(history: unknown[]): number | null {
   for (const item of [...history].reverse()) {
     if (item && typeof item === "object") {
@@ -292,6 +308,28 @@ function localJudge(payload: Payload): Result {
 
   if (kind === "choice") {
     return baseResult("continue", "选择已记录，可继续。", risks);
+  }
+
+  if (title === "请填写被告个人身份信息") {
+    const parts = splitIdentityParts(answer);
+    const namePart = pickNamePart(parts);
+    if (!namePart) {
+      return baseResult("need_clarify", "请先填写被告姓名。", ["被告姓名缺失"]);
+    }
+    const [region, valid] = classifyId(answer);
+    if (region && valid) {
+      return baseResult("continue", "被告身份信息已记录，可继续。", [...risks, `已识别为${region}`], {
+        normalized_answer: namePart,
+      });
+    }
+    return baseResult(
+      "continue",
+      region ? "被告姓名已记录，身份证号待核实。" : "被告姓名已记录，身份证号可后补。",
+      region ? [...risks, "被告身份证号待核实"] : [...risks, "被告身份证号暂缺"],
+      {
+        normalized_answer: namePart,
+      },
+    );
   }
 
   if (title.includes("姓名")) {
@@ -394,6 +432,10 @@ async function judgeWithDeepSeek(payload: Payload): Promise<Result> {
   const current = payload.current ?? {};
   const title = String(current.title ?? "");
   const answer = foldText(payload.answer);
+
+  if (title === "请填写被告个人身份信息") {
+    return ruleResult;
+  }
 
   if (isIdTitle(title) && classifyId(answer)[1]) {
     return {
