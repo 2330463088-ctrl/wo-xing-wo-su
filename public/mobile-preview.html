@@ -79,7 +79,7 @@ note('申请执行','上传判决书后，系统可指导填写执行申请书�
 function defendantFlow(){return [choice('是否已经收到传票？','根据您的实际情况选择。',[{label:'已收到',desc:'我已经收到传票',add:[note('请上传传票照片和原告起诉状','系统将进行AI分析；如有需要可召唤人工。',1)]},{label:'还没有',desc:'尚未收到传票',add:[note('请安心等待','请留意法院送达通知。',1)]}]) ]}
 function firstFlow(){return [choice('请选择案件类型','请先选择与您情况一致的案件类型。',[{label:'民间借贷',desc:'进入民间借贷诉讼全流程',add:[choice('您在本案中的身份是？','请选择您在民间借贷纠纷中的身份。',[{label:'原告',desc:'我准备提起诉讼',add:plaintiffFlow()},{label:'被告',desc:'我被他人起诉',add:defendantFlow()}]) ]},{label:'其他案件类型',desc:'其他类型案件将由人工协助',add:[human('当前流程图仅覆盖民间借贷案件')]}],1)]}
 function start(){welcome.classList.add('hidden');guide.classList.remove('hidden');queue=firstFlow();position=0;answers=[];render()}
-function render(){let step=queue[position],stage=step?.stage||7,current=step?.title==='请选择案件类型'?0:stage;document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;document.getElementById('hint').textContent='';let c=document.getElementById('card');if(!step){c.className='card result';c.innerHTML='<div><div class="check">✓</div><p class="stage-name">全流程指引完成</p><h2>已完成本次诉讼指引</h2><p class="desc">您可以重新开始，也可以继续根据系统提示准备材料。</p><button class="primary" onclick="reset()">重新开始　→</button><button class="text" onclick="home()">返回首页</button></div>';return}let pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100),hasInput=['input','form'].includes(step.kind);let top=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2>${hasInput?'':`<p class="desc">${step.description}</p>`}`;if(step.kind==='choice'){c.className='card';c.innerHTML=top+`<div class="options">${step.options.map((o,n)=>`<button class="option" onclick="choose(${n})"><span><strong>${o.label}</strong><small>${o.desc}</small></span><b class="arrow">→</b></button>`).join('')}</div></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='input'){c.className='card';c.innerHTML=top+`<input id="entry" class="entry" placeholder="${step.description}；${step.placeholder}"><button class="primary next" onclick="submitEntry()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='form'){c.className='card';c.innerHTML=top+`<div class="form-fields">${step.fields.map((f,n)=>`<label>${f.label}<input class="entry form-entry" data-index="${n}" placeholder="${n===0?step.description+'；':''}${f.placeholder}"></label>`).join('')}</div><button class="primary next" onclick="submitForm()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='evidence'){selectedEvidence=[];const options=['借条','转账记录','聊天记录','录音','其他'];c.className='card';c.innerHTML=top+`<div class="evidence-picker"><button class="picker-label" type="button">选择证据来源 <span>可多选</span></button><div class="evidence-options">${options.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div></div><div class="evidence-warning"><strong>请如实选择证据来源</strong><br>起诉依靠真实证据。如虚假填写、虚假选择，或因证据不实、不足导致不利后果，应由您自行承担责任。</div><button class="primary next" onclick="submitEvidence()">确认并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="next()">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
+function render(){let step=queue[position],stage=step?.stage||7,current=step?.title==='请选择案件类型'?0:stage;document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;document.getElementById('hint').textContent='';let c=document.getElementById('card');if(!step){c.className='card result';c.innerHTML='<div><div class="check">✓</div><p class="stage-name">全流程指引完成</p><h2>已完成本次诉讼指引</h2><p class="desc">您可以重新开始，也可以继续根据系统提示准备材料。</p><button class="primary" onclick="reset()">重新开始　→</button><button class="text" onclick="home()">返回首页</button></div>';return}let pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100),hasInput=['input','form'].includes(step.kind);let top=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2>${hasInput?'':`<p class="desc">${step.description}</p>`}`;if(step.kind==='choice'){c.className='card';c.innerHTML=top+`<div class="options">${step.options.map((o,n)=>`<button class="option" onclick="choose(${n})"><span><strong>${o.label}</strong><small>${o.desc}</small></span><b class="arrow">→</b></button>`).join('')}</div></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='input'){if(isDateInputStep(step)){renderDateInput(step);return}c.className='card';c.innerHTML=top+`<input id="entry" class="entry" placeholder="${step.description}；${step.placeholder}"><button class="primary next" onclick="submitEntry()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='form'){c.className='card';c.innerHTML=top+`<div class="form-fields">${step.fields.map((f,n)=>`<label>${f.label}<input class="entry form-entry" data-index="${n}" placeholder="${n===0?step.description+'；':''}${f.placeholder}"></label>`).join('')}</div><button class="primary next" onclick="submitForm()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}if(step.kind==='evidence'){selectedEvidence=[];const options=['借条','转账记录','聊天记录','录音','其他'];c.className='card';c.innerHTML=top+`<div class="evidence-picker"><button class="picker-label" type="button">选择证据来源 <span>可多选</span></button><div class="evidence-options">${options.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div></div><div class="evidence-warning"><strong>请如实选择证据来源</strong><br>起诉依靠真实证据。如虚假填写、虚假选择，或因证据不实、不足导致不利后果，应由您自行承担责任。</div><button class="primary next" onclick="submitEvidence()">确认并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;return}c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="next()">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
 function tagBranch(nodes,parents){return nodes.map(node=>({...node,_branchParents:parents,options:node.options?.map(option=>({...option,add:option.add?tagBranch(option.add,parents):option.add}))}))}function choose(n){let step=queue[position],parents=[...(step._branchParents||[]),position];queue=queue.filter((item,index)=>index<=position||!item._branchParents?.includes(position));let selected=step.options[n];answers.push(selected.label);if(selected.add?.length)queue.splice(position+1,0,...tagBranch(selected.add,parents));position++;render()}function submitEntry(){let val=document.getElementById('entry').value.trim();if(!val){document.getElementById('entry').focus();return}answers.push(val);let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function submitForm(){let fields=[...document.querySelectorAll('.form-entry')];let values=fields.map(x=>x.value.trim());let missing=values.findIndex(x=>!x);if(missing>=0){fields[missing].focus();return}answers.push(values.join('、'));let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function toggleEvidence(n,name){let el=document.getElementById(`evidence-${n}`);if(selectedEvidence.includes(name)){selectedEvidence=selectedEvidence.filter(x=>x!==name);el.classList.remove('selected')}else{selectedEvidence.push(name);el.classList.add('selected')}}function submitEvidence(){if(!selectedEvidence.length)return;answers.push(selectedEvidence.join('、'));position++;render()}function next(){position++;render()}function back(){if(position>0){position--;answers.pop();render()}}function reset(){queue=firstFlow();position=0;answers=[];render()}function home(){welcome.classList.remove('hidden');guide.classList.add('hidden');document.getElementById('hint').textContent=''}
 const baseRender=render;
 render=function(){
@@ -361,6 +361,24 @@ render=function(){
 const inlineEvidenceSubmitEntry=submitEntry;
 submitEntry=function(){
   const step=queue[position];
+  if(isDateInputStep(step)){
+    const row=document.getElementById('date-editor');
+    const dateValue=readWheelDate(row,'date','请选择正确的日期');
+    if(!dateValue)return;
+    if(step.evidence && !selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
+    const evidenceAnswer=selectedEvidence.join('、');
+    const answer=dateValue;
+    if(step.evidence){
+      rememberCalc(step,`${answer}；证据来源：${evidenceAnswer}`);
+    }else{
+      rememberCalc(step,answer);
+    }
+    answers.push(answer);
+    position++;
+    render();
+    askDeepSeek(step,step.evidence?`${answer}；证据来源：${evidenceAnswer}`:answer,position);
+    return;
+  }
   const field=document.getElementById('entry');
   const plainAnswer=field?.value.trim()||'';
   if(!isInlineEvidenceStep(step)){
@@ -408,12 +426,12 @@ function wheelValues(start,end,pad=false){
 function wheelColumn(cls,label,values,defaultValue){
   return `<div class="wheel-column"><div class="wheel-label">${label}</div><div class="wheel-list ${cls}" tabindex="0" data-value="${defaultValue}" onscroll="scheduleWheelSync(this)">${values.map(item=>`<button class="wheel-item" type="button" data-value="${item.value}" onclick="pickWheelValue(this)">${item.label}</button>`).join('')}</div></div>`;
 }
-function dateWheelHtml(n){
+function dateWheelHtml(n,prefix='repay',ariaLabel=`第 ${n} 笔还款时间`){
   const now=new Date();
   const defaultYear=String(Math.min(2040,Math.max(2010,now.getFullYear())));
   const defaultMonth=String(now.getMonth()+1).padStart(2,'0');
   const defaultDay=String(now.getDate()).padStart(2,'0');
-  return `<div class="date-wheel" aria-label="第 ${n} 笔还款时间">${wheelColumn('repay-year','年',wheelValues(2010,2040),defaultYear)}${wheelColumn('repay-month','月',wheelValues(1,12,true),defaultMonth)}${wheelColumn('repay-day','日',wheelValues(1,31,true),defaultDay)}</div>`;
+  return `<div class="date-wheel" aria-label="${ariaLabel}">${wheelColumn(`${prefix}-year`,'年',wheelValues(2010,2040),defaultYear)}${wheelColumn(`${prefix}-month`,'月',wheelValues(1,12,true),defaultMonth)}${wheelColumn(`${prefix}-day`,'日',wheelValues(1,31,true),defaultDay)}</div>`;
 }
 function syncWheelList(list){
   const items=[...list.querySelectorAll('.wheel-item')];
@@ -449,6 +467,24 @@ function initWheelLists(scope=document){
 function wheelValue(row,selector){
   return row.querySelector(selector)?.dataset.value||'';
 }
+function isDateInputStep(step){
+  const title=String(step?.title||'');
+  return step?.kind==='input' && (title.includes('日期') || title.includes('时间')) && !title.includes('身份证') && !title.includes('身份信息');
+}
+function readWheelDate(row,prefix,errorMessage='请选择正确的日期'){
+  if(!row)return null;
+  const year=wheelValue(row,`.${prefix}-year`);
+  const month=wheelValue(row,`.${prefix}-month`);
+  const day=wheelValue(row,`.${prefix}-day`);
+  const dateValue=year&&month&&day?`${year}-${month}-${day}`:'';
+  const parsedDate=new Date(Number(year),Number(month)-1,Number(day));
+  if(!dateValue||parsedDate.getFullYear()!==Number(year)||parsedDate.getMonth()!==Number(month)-1||parsedDate.getDate()!==Number(day)){
+    row.querySelector(`.${prefix}-day`)?.focus();
+    showAiNotice(errorMessage,'warn');
+    return null;
+  }
+  return dateValue;
+}
 let repaymentDrafts=[];
 function renderRepaymentList(step){
   const stage=step?.stage||1,current=stage;
@@ -460,6 +496,17 @@ function renderRepaymentList(step){
   const c=document.getElementById('card');
   c.className='card';
   c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="repay-editor"><div class="repay-row" id="repay-editor"><div class="repay-row-title">录入一笔还款</div>${dateWheelHtml(1)}<input class="repay-money" inputmode="decimal" aria-label="还款金额" placeholder="金额 / 元"></div><div class="repay-actions"><button class="add-repay" type="button" onclick="addRepaymentDraft()">+ 添加这一笔</button></div><div class="repay-summary" id="repay-summary"><div class="repay-summary-empty">尚未添加还款明细</div></div></div><div class="evidence-picker inline-evidence"><button class="picker-label" type="button">证据来源 <span>可多选</span></button><div class="evidence-options">${compactEvidenceOptions.map((name,n)=>`<button id="evidence-${n}" class="evidence-option" type="button" onclick="toggleEvidence(${n},'${name}')"><i></i>${name}</button>`).join('')}</div><div class="evidence-warning"><strong>请如实选择</strong><br>证据必须真实；虚假或证据不足产生的不利后果，由您自行承担。</div></div><button class="primary next" onclick="submitRepaymentList()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
+  requestAnimationFrame(()=>initWheelLists(c));
+}
+function renderDateInput(step){
+  const stage=step?.stage||1,current=stage;
+  document.getElementById('journey').innerHTML=`<ol class="progress-nodes">${progressNames.map((name,index)=>`<li class="${index<current?'done':index===current?'active':''}"><i>${index<current?'✓':''}</i><span>${name}</span></li>`).join('')}</ol>`;
+  const stepNumber=queue.slice(0,position+1).filter(item=>!item.sameStep).length;
+  const pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100);
+  selectedEvidence=[];
+  const c=document.getElementById('card');
+  c.className='card';
+  c.innerHTML=`<div class="progress"><span>第 ${stepNumber} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2><div class="repay-editor"><div class="repay-row" id="date-editor"><div class="repay-row-title">轮动选择日期</div>${dateWheelHtml(1,'date',step.title.replace(/^请填写/,'日期选择：'))}</div></div><button class="primary next" onclick="submitEntry()">保存并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
   requestAnimationFrame(()=>initWheelLists(c));
 }
 function renderRepaymentSummary(){
@@ -475,20 +522,13 @@ function readRepaymentEditor(requireMoney=true){
   const row=document.getElementById('repay-editor');
   if(!row)return null;
   const money=row.querySelector('.repay-money');
-  const year=wheelValue(row,'.repay-year');
-  const month=wheelValue(row,'.repay-month');
-  const day=wheelValue(row,'.repay-day');
   const moneyValue=money?.value.trim()||'';
   if(!moneyValue){
     if(requireMoney){money?.focus();showAiNotice('请填写这一笔还款金额','warn');}
     return null;
   }
-  const dateValue=year&&month&&day?`${year}-${month}-${day}`:'';
-  const parsedDate=new Date(Number(year),Number(month)-1,Number(day));
-  if(!dateValue||parsedDate.getFullYear()!==Number(year)||parsedDate.getMonth()!==Number(month)-1||parsedDate.getDate()!==Number(day)){
-    row.querySelector('.repay-day')?.focus();showAiNotice('请选择正确的还款日期','warn');
-    return null;
-  }
+  const dateValue=readWheelDate(row,'repay','请选择正确的还款日期');
+  if(!dateValue)return null;
   const normalizedMoney=moneyValue.replace(/元|人民币|RMB|¥/gi,'').trim();
   if(!/^\d+(?:\.\d+)?$/.test(normalizedMoney)){money?.focus();showAiNotice('还款金额请填写阿拉伯数字','warn');return null}
   return {date:dateValue,amount:normalizedMoney};
