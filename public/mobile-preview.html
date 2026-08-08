@@ -240,7 +240,7 @@ async function askDeepSeek(step,answer,afterPosition){
     const result=await response.json();
     if(!result.connected){
       aiHistory.push({...record,decision:result.decision,normalized_answer:result.normalized_answer||''});
-      showAiNotice('本地 AI 服务未配置密钥，已按流程继续');
+      showAiNotice(result.message||'AI 服务暂不可用，已按流程继续','warn');
       return;
     }
     const message=result.message||'已完成本步判断';
