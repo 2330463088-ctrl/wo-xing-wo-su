@@ -349,7 +349,7 @@
     });
 
     document.getElementById('open-main-btn').addEventListener('click', () => {
-      window.open(resolvePreviewUrl('mobile-preview.html'), '_blank');
+      window.open(resolvePreviewUrl('mobile-preview-v2.html'), '_blank');
     });
 
     document.getElementById('reload-btn').addEventListener('click', () => {
@@ -360,7 +360,7 @@
       return new URL(pathWithQuery, location.href).href;
     }
 
-    iframe.src = resolvePreviewUrl('mobile-preview.html?lab=1');
+    iframe.src = resolvePreviewUrl('mobile-preview-v2.html?lab=1');
 
     iframe.addEventListener('load', () => {
       const tryBuild = () => {
