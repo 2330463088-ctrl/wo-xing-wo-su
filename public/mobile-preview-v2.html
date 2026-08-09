@@ -496,6 +496,8 @@ function buildComplaintDraftText() {
       : `二、请求依法判令被告向原告支付自${interestStart}起至实际清偿之日止的资金占用利息，暂计人民币XXXX元（以人民币${amountLabel}元为基数，按照同期LPR等依法计算至实际清偿之日止）；`,
     '三、请求依法判令被告承担本案诉讼费、保全费、保函费、公告费等全部费用。',
   ];
+    const totalLabel = 'XXXX元';
+  const totalLine = `以上数额暂计：人民币${totalLabel}（大写：______）。`;
   const facts = [];
   facts.push(`${loanDate}，被告因${loanReason}向原告借款人民币${amountLabel}元，原告已通过${deliveryMethod}方式向被告交付借款。`);
   if (hasInterest) {
@@ -522,7 +524,7 @@ function buildComplaintDraftText() {
   if (guarantorChoice && guarantorChoice !== '无担保人' && guarantorInfo) {
     facts.push(`另有担保人${complaintSplitParts(guarantorInfo)[0] || 'XXXX'}，其担保责任依法亦应承担。`);
   }
-  facts.push('为维护原告合法权益，依据《中华人民共和国民法典》《中华人民共和国民事诉讼法》等相关规定，特向贵院提起诉讼，请依法支持原告全部诉讼请求。');
+  facts.push('综上所述，被告拒不返还借款的行为已严重侵害原告的合法权益。原告为维护自身合法权益，依据《中华人民共和国民法典》《中华人民共和国民事诉讼法》及相关司法解释之规定，特向贵院提起诉讼，请贵院依法判如所请。');
   const evidence = complaintBuildEvidenceList(map);
   const plaintiffSign = String(plaintiffType || '').includes('公司') || String(plaintiffType || '').includes('单位')
     ? `${plaintiffName}（盖章）`
@@ -536,11 +538,10 @@ function buildComplaintDraftText() {
     '诉讼请求：',
     ...claims,
     '',
+    totalLine,
+    '',
     '事实与理由：',
     ...facts,
-    '',
-    '证据和证据来源：',
-    ...evidence.map((item, index) => `${index + 1}、${item}。`),
     '',
     '此致',
     courtName,
