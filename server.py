@@ -127,7 +127,9 @@ def _is_money_title(title: str) -> bool:
 
 
 def _is_date_title(title: str) -> bool:
-    return any(token in title for token in ("日期", "时间")) and not _is_money_title(title)
+    # A date question may mention what the date is used to calculate, such as
+    # "计算诉讼金额的截止时间". The answer is still a date, not an amount.
+    return any(token in title for token in ("日期", "时间"))
 
 
 def _is_id_title(title: str) -> bool:

@@ -216,6 +216,17 @@ function complaintCurrentDate() {
   return `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
 }
 
+function complaintBirthDateFromMainlandId(value) {
+  const id = String(value || '').toUpperCase().replace(/\s+/g, '');
+  if (!/^\d{17}[\dX]$/.test(id)) return '';
+  const year = Number(id.slice(6, 10));
+  const month = Number(id.slice(10, 12));
+  const day = Number(id.slice(12, 14));
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return '';
+  return `${year}年${month}月${day}日`;
+}
+
 function complaintBuildPartyLine(role, type, raw, residence) {
   const parts = complaintSplitParts(raw);
   const name = parts[0] || 'XXX';
@@ -223,7 +234,8 @@ function complaintBuildPartyLine(role, type, raw, residence) {
     return `${role}：${name}，住所地：${residence || 'XXXX'}，统一社会信用代码：XXXX，法定代表人：XXXX，联系电话：XXXX。`;
   }
   const id = parts[1] || 'XXXXXXXXXXXXXXXXXX';
-  return `${role}：${name}，男/女，汉族，XXXX年XX月XX日生，住${residence || 'XXXX'}，身份证号码：${id}，联系电话：XXXX。`;
+  const birthDate = complaintBirthDateFromMainlandId(id) || 'XXXX年XX月XX日';
+  return `${role}：${name}，男/女，汉族，${birthDate}生，住${residence || 'XXXX'}，身份证号码：${id}，联系电话：XXXX。`;
 }
 
 function complaintBuildEvidenceList(map) {
@@ -242,16 +254,17 @@ function complaintBuildEvidenceList(map) {
 }
 
 const complaintPageSpec = {
-  width: 816,
-  height: 1056,
+  width: 794,
+  height: 1123,
   scale: 2,
-  marginLeft: 68,
-  marginRight: 68,
-  marginTop: 76,
-  marginBottom: 76,
+  marginLeft: 82,
+  marginRight: 62,
+  marginTop: 92,
+  marginBottom: 72,
 };
 
-const complaintFontStack = '"STHeiti", "PingFang SC", "Heiti SC", "Microsoft YaHei", "SimHei", "Songti SC", serif';
+const complaintTitleFontStack = '"FZXiaoBiaoSong-B05S", "方正小标宋简体", "SimSun", "Songti SC", serif';
+const complaintFontStack = '"FangSong_GB2312", "仿宋_GB2312", "FangSong", "STFangsong", "Songti SC", serif';
 
 function complaintCreateCanvasPage() {
   const canvas = document.createElement('canvas');
@@ -273,8 +286,8 @@ function complaintCreateCanvasPage() {
   };
 }
 
-function complaintCanvasFont(size, bold = false) {
-  return `${bold ? '700 ' : ''}${size}px ${complaintFontStack}`;
+function complaintCanvasFont(size, bold = false, fontFamily = complaintFontStack) {
+  return `${bold ? '700 ' : ''}${size}px ${fontFamily}`;
 }
 
 function complaintWrapText(ctx, text, maxWidth) {
@@ -299,8 +312,9 @@ function complaintParagraphStyle(line, index) {
   if (index === 0 && /民事起诉状/.test(line)) {
     return {
       align: 'center',
-      fontSize: 34,
-      bold: true,
+      fontSize: 35,
+      bold: false,
+      fontFamily: complaintTitleFontStack,
       before: 0,
       after: 26,
       indent: 0,
@@ -310,7 +324,7 @@ function complaintParagraphStyle(line, index) {
   if (line === '诉讼请求：' || line === '事实与理由：' || line === '证据和证据来源：' || line === '证据清单：' || line === '附：证据目录') {
     return {
       align: 'left',
-      fontSize: 26,
+      fontSize: 21,
       bold: true,
       before: 14,
       after: 10,
@@ -321,7 +335,7 @@ function complaintParagraphStyle(line, index) {
   if (line === '此致') {
     return {
       align: 'left',
-      fontSize: 24,
+      fontSize: 21,
       bold: false,
       before: 20,
       after: 8,
@@ -332,7 +346,7 @@ function complaintParagraphStyle(line, index) {
   if (/^(具状人：|20\d{2}年\d{1,2}月\d{1,2}日|19\d{2}年\d{1,2}月\d{1,2}日|XXXX年XX月XX日)$/.test(line)) {
     return {
       align: 'right',
-      fontSize: 24,
+      fontSize: 21,
       bold: false,
       before: 6,
       after: 6,
@@ -343,7 +357,7 @@ function complaintParagraphStyle(line, index) {
   if (/^(一|二|三|四|五|六|七|八|九|十)+、/.test(line) || /^\d+[、.．]/.test(line)) {
     return {
       align: 'left',
-      fontSize: 24,
+      fontSize: 21,
       bold: false,
       before: 4,
       after: 8,
@@ -354,7 +368,7 @@ function complaintParagraphStyle(line, index) {
   if (/^(原告|被告|法定代表人|委托诉讼代理人|住所地|住址|联系电话|身份证号码|统一社会信用代码|具状人|法院)/.test(line)) {
     return {
       align: 'left',
-      fontSize: 24,
+      fontSize: 21,
       bold: false,
       before: 2,
       after: 8,
@@ -364,11 +378,11 @@ function complaintParagraphStyle(line, index) {
   }
   return {
     align: 'left',
-    fontSize: 24,
+    fontSize: 21,
     bold: false,
     before: 2,
     after: 8,
-    indent: 0,
+    indent: 42,
     wrap: true,
   };
 }
@@ -384,11 +398,14 @@ function complaintDrawParagraph(page, line, index) {
   }
 
   const style = complaintParagraphStyle(text, index);
-  page.ctx.font = complaintCanvasFont(style.fontSize, style.bold);
+  page.ctx.font = complaintCanvasFont(style.fontSize, style.bold, style.fontFamily);
   page.ctx.fillStyle = '#111';
-  const usableWidth = complaintPageSpec.width - complaintPageSpec.marginLeft - complaintPageSpec.marginRight - style.indent;
+  const usableWidth = Math.min(
+    complaintPageSpec.width - complaintPageSpec.marginLeft - complaintPageSpec.marginRight - style.indent,
+    style.wrap === false ? Number.POSITIVE_INFINITY : style.fontSize * 28,
+  );
   const parts = style.wrap === false ? [text] : complaintWrapText(page.ctx, text, usableWidth);
-  const lineHeight = Math.round(style.fontSize * 1.58);
+  const lineHeight = Math.round(style.fontSize * 1.8);
 
   if (page.y + style.before > complaintPageSpec.height - complaintPageSpec.marginBottom) {
     page = complaintStartNewPage(page);
@@ -399,7 +416,7 @@ function complaintDrawParagraph(page, line, index) {
     if (page.y + lineHeight > complaintPageSpec.height - complaintPageSpec.marginBottom) {
       page = complaintStartNewPage(page);
     }
-    page.ctx.font = complaintCanvasFont(style.fontSize, style.bold);
+    page.ctx.font = complaintCanvasFont(style.fontSize, style.bold, style.fontFamily);
     page.ctx.textAlign = style.align;
     const x = style.align === 'center'
       ? complaintPageSpec.width / 2
@@ -605,7 +622,7 @@ function copyComplaintDraft() {
 }
 
 function complaintDownloadFallback() {
-  const html = `<!doctype html><html><head><meta charset="utf-8"><title>民事起诉状</title><style>body{font-family:"STHeiti","PingFang SC","Heiti SC","SimHei","Microsoft YaHei",sans-serif;font-size:14pt;line-height:1.85;margin:2.5cm;color:#111;white-space:pre-wrap;}</style></head><body>${complaintEscapeHtml(complaintDraftText)}</body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>民事起诉状</title><style>@page{size:A4;margin:3.1cm 2.6cm 2.6cm 3.2cm}body{font-family:"仿宋_GB2312","FangSong_GB2312","FangSong",serif;font-size:16pt;line-height:30pt;margin:0;color:#111;white-space:pre-wrap;}</style></head><body>${complaintEscapeHtml(complaintDraftText)}</body></html>`;
   const blob = new Blob([html], { type: 'application/msword;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -620,7 +637,6 @@ function complaintDownloadFallback() {
 async function downloadComplaintDraft() {
   if (!complaintDraftText) return;
   try {
-    const pages = await complaintRenderPages(complaintDraftText);
     const endpoints = location.protocol === 'file:'
       ? [
           'http://localhost:3000/api/complaint-docx',
@@ -635,7 +651,6 @@ async function downloadComplaintDraft() {
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             text: complaintDraftText,
-            pages,
             filename: '民事起诉状.docx',
           }),
         });
@@ -1474,7 +1489,20 @@ function render(){let step=queue[position],stage=step?.stage||7,current=step?.ti
 <button class="download-btn" onclick="downloadComplaintDraft()">下载 Word</button>
 </div>
 </div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;setTimeout(function(){generateComplaintDraft();},300);return}c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="next()">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
-function tagBranch(nodes,parents){return nodes.map(node=>({...node,_branchParents:parents,options:node.options?.map(option=>({...option,add:option.add?tagBranch(option.add,parents):option.add}))}))}function choose(n){let step=queue[position],parents=[...(step._branchParents||[]),position];queue=queue.filter((item,index)=>index<=position||!item._branchParents?.includes(position));let selected=step.options[n];answers.push(selected.label);if(selected.add?.length)queue.splice(position+1,0,...tagBranch(selected.add,parents));position++;render()}function submitEntry(){let val=document.getElementById('entry').value.trim();if(!val){document.getElementById('entry').focus();return}answers.push(val);let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function submitForm(){let fields=[...document.querySelectorAll('.form-entry')];let values=fields.map(x=>x.value.trim());let missing=values.findIndex(x=>!x);if(missing>=0){fields[missing].focus();return}answers.push(values.join('、'));let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function toggleEvidence(n,name){let el=document.getElementById(`evidence-${n}`);if(selectedEvidence.includes(name)){selectedEvidence=selectedEvidence.filter(x=>x!==name);el.classList.remove('selected')}else{selectedEvidence.push(name);el.classList.add('selected')}}function submitEvidence(){if(!selectedEvidence.length)return;answers.push(selectedEvidence.join('、'));position++;render()}function next(){position++;render()}function back(){if(position>0){position--;answers.pop();render()}}function reset(){queue=firstFlow();position=0;answers=[];render()}function home(){welcome.classList.remove('hidden');guide.classList.add('hidden');document.getElementById('hint').textContent=''}
+function tagBranch(nodes,parents){return nodes.map(node=>({...node,_branchParents:parents,options:node.options?.map(option=>({...option,add:option.add?tagBranch(option.add,parents):option.add}))}))}
+const uniqueIdentityStepTitles=new Set(['请填写原告个人身份信息','请填写原告企业名称','请填写被告个人身份信息','请填写被告企业名称','请填写担保人身份信息']);
+function uniqueIdentityStepKey(step){return uniqueIdentityStepTitles.has(step?.title)?step.title:''}
+function uniqueBranchNodes(nodes,parents){
+  const existing=new Set(queue.slice(0,position+1).map(uniqueIdentityStepKey).filter(Boolean));
+  return tagBranch(nodes,parents).filter(node=>{
+    const key=uniqueIdentityStepKey(node);
+    if(!key)return true;
+    if(existing.has(key))return false;
+    existing.add(key);
+    return true;
+  });
+}
+function choose(n){let step=queue[position],parents=[...(step._branchParents||[]),position];queue=queue.filter((item,index)=>index<=position||!item._branchParents?.includes(position));let selected=step.options[n];answers.push(selected.label);if(selected.add?.length){const branchNodes=uniqueBranchNodes(selected.add,parents);if(branchNodes.length)queue.splice(position+1,0,...branchNodes)}position++;render()}function submitEntry(){let val=document.getElementById('entry').value.trim();if(!val){document.getElementById('entry').focus();return}answers.push(val);let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function submitForm(){let fields=[...document.querySelectorAll('.form-entry')];let values=fields.map(x=>x.value.trim());let missing=values.findIndex(x=>!x);if(missing>=0){fields[missing].focus();return}answers.push(values.join('、'));let step=queue[position];if(step.evidence)queue.splice(position+1,0,{...evidence(step.title.replace('请填写','').replace('的证据来源','')),_branchParents:step._branchParents});position++;render()}function toggleEvidence(n,name){let el=document.getElementById(`evidence-${n}`);if(selectedEvidence.includes(name)){selectedEvidence=selectedEvidence.filter(x=>x!==name);el.classList.remove('selected')}else{selectedEvidence.push(name);el.classList.add('selected')}}function submitEvidence(){if(!selectedEvidence.length)return;answers.push(selectedEvidence.join('、'));position++;render()}function next(){position++;render()}function back(){if(position>0){position--;answers.pop();render()}}function reset(){queue=firstFlow();position=0;answers=[];render()}function home(){welcome.classList.remove('hidden');guide.classList.add('hidden');document.getElementById('hint').textContent=''}
 const baseRender=render;
 render=function(){
   baseRender();
@@ -1616,8 +1644,17 @@ function frontClassifyId(text){
 function isIdStep(step){
   return /身份证|身份信息/.test(step?.title||'');
 }
+function isImmediateValidatedStep(step){
+  const title=String(step?.title||'');
+  const isDateQuestion=/日期|时间/.test(title);
+  return isDateQuestion||isIdStep(step)||/金额|本金|诉讼费|保全费/.test(title);
+}
 async function askDeepSeek(step,answer,afterPosition){
   const record={...stepSnapshot(step),answer};
+  if(isImmediateValidatedStep(step)){
+    aiHistory.push({...record,decision:'continue'});
+    return;
+  }
   const localId=isIdStep(step)?frontClassifyId(answer):null;
   if(localId?.valid){
     aiHistory.push({...record,decision:'continue',normalized_answer:localId.region});
@@ -1754,12 +1791,27 @@ render=function(){
   button.parentNode.insertBefore(panel,button);
 };
 const inlineEvidenceSubmitEntry=submitEntry;
+function validateCurrentEntry(step,field,value){
+  const title=String(step?.title||'');
+  const isDateQuestion=/日期|时间/.test(title);
+  const isMoneyQuestion=!isDateQuestion&&/金额|本金|诉讼费|保全费/.test(title);
+  if(!isMoneyQuestion)return true;
+  const normalized=String(value||'').replace(/[,，\s]|人民币|RMB|¥|元/gi,'');
+  if(/^\d+(?:\.\d+)?$/.test(normalized)){
+    showAiNotice('');
+    return true;
+  }
+  field?.focus();
+  showAiNotice('金额请填写阿拉伯数字','warn');
+  return false;
+}
 submitEntry=function(){
   const step=queue[position];
   if(isDateInputStep(step)){
     const row=document.getElementById('date-editor');
     const dateValue=readWheelDate(row,'date','请选择正确的日期');
     if(!dateValue)return;
+    showAiNotice('');
     if(step.evidence && !selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
     const evidenceAnswer=selectedEvidence.join('、');
     const answer=dateValue;
@@ -1778,12 +1830,14 @@ submitEntry=function(){
   const plainAnswer=field?.value.trim()||'';
   if(!isInlineEvidenceStep(step)){
     if(!plainAnswer){field?.focus();return}
+    if(!validateCurrentEntry(step,field,plainAnswer))return;
     rememberCalc(step,plainAnswer);
     inlineEvidenceSubmitEntry();
     return;
   }
   const answer=plainAnswer;
   if(!answer){field?.focus();return}
+  if(!validateCurrentEntry(step,field,answer))return;
   if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
   const evidenceAnswer=selectedEvidence.join('、');
   removeFollowingEvidenceForStep(step,position);
@@ -1794,18 +1848,52 @@ submitEntry=function(){
   askDeepSeek(step,`${answer}；证据来源：${evidenceAnswer}`,position);
 };
 const inlineEvidenceSubmitForm=submitForm;
+function frontNameValid(value){
+  const name=String(value||'').trim();
+  return /^[\u3400-\u9fff·•]{2,20}$/.test(name)||/^[A-Za-z][A-Za-z .'-]{1,49}$/.test(name);
+}
+function validateIdentityForm(step,fields,values){
+  if(!isIdStep(step))return true;
+  const name=values[0]||'';
+  const id=frontFold(values[1]||'');
+  if(!frontNameValid(name)){
+    fields[0]?.focus();
+    showAiNotice('姓名格式不正确，请填写真实姓名','warn');
+    return false;
+  }
+  if(step?.title==='请填写被告个人身份信息'&&id==='不详'){
+    showAiNotice('');
+    return true;
+  }
+  const result=frontClassifyId(id);
+  if(!result.valid){
+    fields[1]?.focus();
+    showAiNotice('身份证号码格式或校验码不正确','warn');
+    return false;
+  }
+  values[1]=frontIdCandidate(id);
+  if(fields[1])fields[1].value=values[1];
+  showAiNotice('');
+  return true;
+}
 submitForm=function(){
   const step=queue[position];
   const fields=[...document.querySelectorAll('.form-entry')];
   const values=fields.map(field=>field.value.trim());
+  if(step?.title==='请填写被告个人身份信息'&&!values[1]){
+    values[1]='不详';
+    if(fields[1])fields[1].value='不详';
+  }
   const missing=values.findIndex(value=>!value);
   if(!isInlineEvidenceStep(step)){
     if(missing>=0){fields[missing]?.focus();return}
+    if(!validateIdentityForm(step,fields,values))return;
     rememberCalc(step,values.join('；'));
     inlineEvidenceSubmitForm();
     return;
   }
   if(missing>=0){fields[missing]?.focus();return}
+  if(!validateIdentityForm(step,fields,values))return;
   if(!selectedEvidence.length){showAiNotice('请先选择证据来源','warn');return}
   const evidenceAnswer=selectedEvidence.join('、');
   removeFollowingEvidenceForStep(step,position);

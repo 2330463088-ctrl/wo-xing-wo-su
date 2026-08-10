@@ -6,7 +6,8 @@ type Payload = {
   pages?: string[];
 };
 
-const FONT = "STHeiti";
+const BODY_FONT = "仿宋_GB2312";
+const TITLE_FONT = "方正小标宋简体";
 const PAGE_WIDTH = 816;
 const PAGE_HEIGHT = 1056;
 
@@ -51,50 +52,50 @@ function paragraphForLine(line: string, index: number): Paragraph {
     return new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 260 },
-      children: [new TextRun({ text, font: FONT, size: 32, bold: true })],
+      children: [new TextRun({ text, font: TITLE_FONT, size: 52, bold: false })],
     });
   }
   if (text === "诉讼请求：" || text === "事实与理由：" || text === "证据和证据来源：" || text === "证据清单：" || text === "附：证据目录") {
     return new Paragraph({
       alignment: AlignmentType.LEFT,
       spacing: { before: 120, after: 100 },
-      children: [new TextRun({ text, font: FONT, size: 26, bold: true })],
+      children: [new TextRun({ text, font: BODY_FONT, size: 32, bold: true })],
     });
   }
   if (text === "此致") {
     return new Paragraph({
       alignment: AlignmentType.LEFT,
       spacing: { before: 160, after: 60 },
-      children: [new TextRun({ text, font: FONT, size: 24 })],
+      children: [new TextRun({ text, font: BODY_FONT, size: 32 })],
     });
   }
   if (/^(具状人：|20\d{2}年\d{1,2}月\d{1,2}日|19\d{2}年\d{1,2}月\d{1,2}日|XXXX年XX月XX日)$/.test(text)) {
     return new Paragraph({
       alignment: AlignmentType.RIGHT,
       spacing: { after: 80 },
-      children: [new TextRun({ text, font: FONT, size: 24 })],
+      children: [new TextRun({ text, font: BODY_FONT, size: 32 })],
     });
   }
   if (/^(一|二|三|四|五|六|七|八|九|十)+、/.test(text) || /^\d+[、.．]/.test(text)) {
     return new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       indent: { left: 720, hanging: 360 },
-      spacing: { after: 80 },
-      children: [new TextRun({ text, font: FONT, size: 24 })],
+      spacing: { line: 600, after: 0 },
+      children: [new TextRun({ text, font: BODY_FONT, size: 32 })],
     });
   }
   if (/^(原告|被告|法定代表人|委托诉讼代理人|住所地|住址|联系电话|身份证号码|统一社会信用代码|具状人|法院)/.test(text)) {
     return new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
-      spacing: { after: 80 },
-      children: [new TextRun({ text, font: FONT, size: 24 })],
+      spacing: { line: 600, after: 0 },
+      children: [new TextRun({ text, font: BODY_FONT, size: 32 })],
     });
   }
   return new Paragraph({
     alignment: AlignmentType.JUSTIFIED,
-    indent: { firstLine: 480 },
-    spacing: { line: 360, after: 80 },
-      children: [new TextRun({ text, font: FONT, size: 24 })],
+    indent: { firstLine: 640 },
+    spacing: { line: 600, after: 0 },
+      children: [new TextRun({ text, font: BODY_FONT, size: 32 })],
   });
 }
 
@@ -122,10 +123,10 @@ function buildImageDocument(pages: string[]): Document {
         document: {
           run: {
             font: {
-              ascii: FONT,
-              hAnsi: FONT,
-              eastAsia: FONT,
-              cs: FONT,
+              ascii: BODY_FONT,
+              hAnsi: BODY_FONT,
+              eastAsia: BODY_FONT,
+              cs: BODY_FONT,
             },
             size: 24,
             sizeComplexScript: 24,
@@ -167,9 +168,9 @@ function buildDocument(text: string): Document {
       default: {
         document: {
           run: {
-            font: FONT,
-            size: 24,
-            sizeComplexScript: 24,
+            font: BODY_FONT,
+            size: 32,
+            sizeComplexScript: 32,
             language: {
               value: "zh-CN",
               eastAsia: "zh-CN",
@@ -182,11 +183,15 @@ function buildDocument(text: string): Document {
       {
         properties: {
           page: {
+            size: {
+              width: convertInchesToTwip(8.27),
+              height: convertInchesToTwip(11.69),
+            },
             margin: {
-              top: 1440,
-              right: 1440,
-              bottom: 1440,
-              left: 1440,
+              top: convertInchesToTwip(1.22),
+              right: convertInchesToTwip(1.02),
+              bottom: convertInchesToTwip(1.02),
+              left: convertInchesToTwip(1.26),
             },
           },
         },

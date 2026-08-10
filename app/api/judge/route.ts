@@ -138,7 +138,8 @@ function isMoneyTitle(title: string): boolean {
 }
 
 function isDateTitle(title: string): boolean {
-  return (title.includes("日期") || title.includes("时间")) && !isMoneyTitle(title);
+  // A calculation cut-off title can contain “金额”; its answer is still a date.
+  return title.includes("日期") || title.includes("时间");
 }
 
 function isIdTitle(title: string): boolean {
