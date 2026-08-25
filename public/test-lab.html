@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>我行我诉 - 独立测试台</title>
+  <style>
+    :root{
+      --ink:#20303d;
+      --muted:#657684;
+      --line:#dde7ea;
+      --deep:#135b76;
+      --blue:#1d7895;
+      --bg:#edf2f2;
+      --panel:#ffffff;
+      --soft:#f6fafb;
+      --shadow:0 16px 40px rgba(19,91,118,.11);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7fbfb 0,#ecf2f3 100%);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif}
+    body{overflow-x:hidden}
+    .shell{display:grid;grid-template-columns:minmax(320px,360px) minmax(0,1fr);min-height:100svh}
+    .sidebar{
+      position:sticky;top:0;height:100svh;overflow:auto;
+      padding:26px 20px 22px;
+      background:rgba(255,255,255,.82);
+      border-right:1px solid var(--line);
+      backdrop-filter:blur(14px);
+    }
+    .kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--blue);margin-bottom:12px;
+    }
+    .kicker:before{
+      content:"";
+      width:9px;height:9px;border-radius:50%;
+      background:linear-gradient(135deg,var(--blue),#5bb1bf);
+      box-shadow:0 0 0 4px rgba(29,120,149,.12);
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:32px;line-height:1.12;letter-spacing:-.04em;font-weight:780;
+    }
+    .lead{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .card{
+      margin-top:18px;padding:16px;
+      border:1px solid var(--line);border-radius:18px;background:var(--panel);
+      box-shadow:var(--shadow);
+    }
+    .field{display:grid;gap:7px;margin-bottom:12px}
+    .label{font-size:12px;font-weight:700;color:#546270}
+    .select,.input,.button{
+      width:100%;height:44px;border-radius:12px;border:1px solid #d8e4e7;
+      background:#fff;color:var(--ink);font:inherit;padding:0 12px;
+    }
+    .select,.input{outline:none}
+    .select:focus,.input:focus{border-color:#74aeb5;box-shadow:0 0 0 3px #e2f1f2}
+    .button{
+      display:inline-flex;align-items:center;justify-content:center;
+      border:0;background:var(--deep);color:#fff;font-weight:750;cursor:pointer;
+      box-shadow:0 10px 20px rgba(19,91,118,.16);
+    }
+    .button.secondary{background:#f4f8f8;color:var(--deep);border:1px solid #d4e3e5;box-shadow:none}
+    .button.ghost{background:transparent;color:#5d7180;border:1px dashed #bfd1d5;box-shadow:none}
+    .actions{display:grid;gap:9px;margin-top:10px}
+    .note{
+      margin-top:12px;padding:10px 12px;border-radius:12px;
+      background:#f7fbfb;border:1px solid #dbe9eb;color:#4e5f6b;
+      font-size:12px;line-height:1.6;
+    }
+    .status{
+      margin-top:12px;min-height:46px;padding:11px 12px;border-radius:12px;
+      border:1px solid #dbe9eb;background:#fbfefe;color:#40515f;
+      font-size:12px;line-height:1.6;
+    }
+    .meta{
+      margin-top:10px;
+      font-size:12px;color:var(--muted);line-height:1.6;
+      word-break:break-word;
+    }
+    .preview{
+      min-width:0;
+      padding:20px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+    .frame-shell{
+      width:min(480px,100%);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:0 20px 60px rgba(35,49,60,.12);
+    }
+    .frame-top{
+      height:54px;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;
+      border-bottom:1px solid var(--line);
+      background:#fff;
+      font-size:14px;font-weight:750;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid #d1e7ea;background:#edf7f8;color:var(--blue);
+      font-size:12px;font-weight:700;
+    }
+    .badge:before{
+      content:"";
+      width:8px;height:8px;border-radius:50%;
+      background:var(--blue);
+    }
+    iframe{
+      display:block;
+      width:100%;
+      height:calc(100svh - 74px);
+      border:0;
+      background:#fff;
+    }
+    .step-chip{
+      margin-top:10px;
+      display:flex;align-items:center;gap:8px;
+      flex-wrap:wrap;
+      color:#37515b;font-size:12px;
+    }
+    .step-chip strong{font-size:13px}
+    .tiny{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+    .hint-row{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;
+    }
+    .hint-row .button{flex:1 1 48%}
+    @media (max-width: 980px){
+      .shell{grid-template-columns:1fr}
+      .sidebar{
+        position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);
+      }
+      .preview{padding:12px}
+      iframe{height:calc(100svh - 168px)}
+      .hint-row .button{flex:1 1 100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="kicker">Test Lab</div>
+      <h1>任意一步续测</h1>
+      <p class="lead">这个页面专门给你做回归测试用。选中任意一步后，它会自动补齐前置状态并把正式预览跳到那一步，方便你继续往后测。</p>
+
+      <div class="card">
+        <div class="field">
+          <label class="label" for="step-select">选择要跳转的步骤</label>
+          <select id="step-select" class="select" disabled>
+            <option>正在加载步骤列表…</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="step-number">或者直接输入步骤号</label>
+          <input id="step-number" class="input" inputmode="numeric" placeholder="例如：18" />
+        </div>
+        <div class="actions">
+          <button id="jump-btn" class="button" type="button" disabled>从这一步继续</button>
+          <button id="repayment-btn" class="button secondary" type="button">多笔还款页</button>
+          <button id="rate-btn" class="button secondary" type="button">利息填写页</button>
+          <button id="annual-btn" class="button secondary" type="button">年息 + 还款计算</button>
+          <button id="no-interest-due-btn" class="button secondary" type="button">无息 + 还款日</button>
+          <button id="no-interest-demand-btn" class="button secondary" type="button">无息 + 催要日</button>
+          <button id="guarantor-btn" class="button secondary" type="button">担保人判断</button>
+          <button id="jurisdiction-btn" class="button secondary" type="button">管辖判断</button>
+          <button id="restart-btn" class="button ghost" type="button">从头测试</button>
+        </div>
+        <div class="hint-row">
+          <button id="open-main-btn" class="button ghost" type="button">打开正式预览</button>
+          <button id="reload-btn" class="button ghost" type="button">重载预览</button>
+        </div>
+        <div class="note">提示：右侧是正式预览页。这个测试台只负责跳步和续测，不会改动正式流程。</div>
+        <div id="status" class="status">正在连接预览页…</div>
+        <div id="step-meta" class="meta"></div>
+        <div class="tiny">如果你想只看某一步，也可以直接在地址栏里加 `?step=18` 打开第 18 步。默认会自动跳过去。</div>
+      </div>
+    </aside>
+
+    <main class="preview">
+      <div class="frame-shell">
+        <div class="frame-top">
+          <span>我行我诉 预览</span>
+          <span class="badge">独立测试台</span>
+        </div>
+        <iframe id="preview" title="我行我诉 预览"></iframe>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const iframe = document.getElementById('preview');
+    const stepSelect = document.getElementById('step-select');
+    const stepNumber = document.getElementById('step-number');
+    const jumpBtn = document.getElementById('jump-btn');
+    const statusBox = document.getElementById('status');
+    const stepMeta = document.getElementById('step-meta');
+    const query = new URLSearchParams(location.search);
+
+    const helperButtons = [
+      ['repayment-btn', 'testOpenRepayment'],
+      ['rate-btn', 'testOpenRate'],
+      ['annual-btn', 'testAnnualCase'],
+      ['no-interest-due-btn', 'testNoInterestDue'],
+      ['no-interest-demand-btn', 'testNoInterestDemand'],
+      ['guarantor-btn', 'testGuarantorCase'],
+      ['jurisdiction-btn', 'testJurisdictionCase'],
+      ['restart-btn', 'testRestart'],
+    ];
+
+    let steps = [];
+    let activeIndex = 0;
+    let pendingIndex = Number.parseInt(query.get('step') || '1', 10) - 1;
+    if (!Number.isFinite(pendingIndex) || pendingIndex < 0) pendingIndex = 0;
+
+    function escapeHtml(text) {
+      return String(text ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[char]));
+    }
+
+    function setStatus(text) {
+      statusBox.textContent = text;
+    }
+
+    function getApi() {
+      try {
+        return iframe.contentWindow?.flowTestApi || iframe.contentWindow;
+      } catch {
+        return null;
+      }
+    }
+
+    function syncMeta(index) {
+      const step = steps[index];
+      if (!step) {
+        stepMeta.textContent = '';
+        return;
+      }
+      stepMeta.innerHTML = `<strong>当前：</strong>第 ${index + 1} 步 · ${escapeHtml(step.title)}<br><span>类型：</span>${escapeHtml(step.kind || 'unknown')}`;
+    }
+
+    function syncNumberField(index) {
+      stepNumber.value = String(index + 1);
+    }
+
+    function syncSelect(index) {
+      stepSelect.value = String(index);
+      syncNumberField(index);
+      syncMeta(index);
+    }
+
+    function buildStepOptions() {
+      const api = getApi();
+      if (!api || typeof api.testLinearQueue !== 'function') {
+        return false;
+      }
+      steps = api.testLinearQueue();
+      stepSelect.innerHTML = steps.map((step, index) => `<option value="${index}">第 ${index + 1} 步：${escapeHtml(step.title)}</option>`).join('');
+      stepSelect.disabled = false;
+      jumpBtn.disabled = false;
+
+      if (pendingIndex >= steps.length) pendingIndex = steps.length - 1;
+      if (pendingIndex < 0) pendingIndex = 0;
+
+      activeIndex = pendingIndex;
+      syncSelect(activeIndex);
+      setStatus(`已加载 ${steps.length} 个步骤，可以直接跳步测试。`);
+
+      if (query.get('autojump') !== '0') {
+        jumpToIndex(activeIndex, false);
+      }
+      return true;
+    }
+
+    function jumpToIndex(index, announce = true) {
+      const api = getApi();
+      if (!api || typeof api.testJumpToIndex !== 'function') {
+        setStatus('预览页还在加载，请稍等一下。');
+        return;
+      }
+      if (!steps.length) {
+        setStatus('步骤列表还没准备好，请稍等。');
+        return;
+      }
+      const safeIndex = Math.max(0, Math.min(steps.length - 1, Number(index) || 0));
+      activeIndex = safeIndex;
+      syncSelect(safeIndex);
+      api.testJumpToIndex(safeIndex, false);
+      const step = steps[safeIndex];
+      setStatus(step ? `已跳到第 ${safeIndex + 1} 步：${step.title}` : `已跳到第 ${safeIndex + 1} 步。`);
+      if (announce && typeof api.showAiNotice === 'function') {
+        api.showAiNotice(`已跳到第 ${safeIndex + 1} 步`,'human');
+      }
+    }
+
+    function jumpFromSelect() {
+      jumpToIndex(Number(stepSelect.value || activeIndex));
+    }
+
+    function jumpFromNumber() {
+      const raw = Number(stepNumber.value);
+      if (!Number.isFinite(raw)) return;
+      const index = Math.max(0, Math.min(Math.max(steps.length - 1, 0), raw - 1));
+      jumpToIndex(index);
+    }
+
+    stepSelect.addEventListener('change', () => {
+      activeIndex = Number(stepSelect.value || 0);
+      syncNumberField(activeIndex);
+      syncMeta(activeIndex);
+    });
+
+    stepNumber.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        jumpFromNumber();
+      }
+    });
+
+    jumpBtn.addEventListener('click', jumpFromSelect);
+    stepNumber.addEventListener('change', jumpFromNumber);
+
+    helperButtons.forEach(([id, method]) => {
+      document.getElementById(id).addEventListener('click', () => {
+        const api = getApi();
+        if (!api || typeof api[method] !== 'function') {
+          setStatus('预览页还在加载，请稍等。');
+          return;
+        }
+        api[method]();
+        setStatus(`已打开：${document.getElementById(id).textContent}`);
+      });
+    });
+
+    document.getElementById('open-main-btn').addEventListener('click', () => {
+      window.open(resolvePreviewUrl('mobile-preview-v2.html'), '_blank');
+    });
+
+    document.getElementById('reload-btn').addEventListener('click', () => {
+      iframe.contentWindow?.location?.reload();
+    });
+
+    function resolvePreviewUrl(pathWithQuery) {
+      return new URL(pathWithQuery, location.href).href;
+    }
+
+    iframe.src = resolvePreviewUrl('mobile-preview-v2.html?lab=1');
+
+    iframe.addEventListener('load', () => {
+      const tryBuild = () => {
+        if (buildStepOptions()) return;
+        requestAnimationFrame(tryBuild);
+      };
+      tryBuild();
+    });
+  </script>
+</body>
+</html>
