@@ -2656,6 +2656,7 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
   line-height: 1.7;
 }
 .assessment-checkpoint{display:grid;gap:7px;margin:12px 0 4px;padding:12px 13px;border:1px solid #dce7e8;border-radius:11px;background:#f8fbfb;text-align:left;color:#5f7079;font-size:12px;line-height:1.65}.assessment-checkpoint strong{color:#1f3a44;font-size:13px}.assessment-checkpoint .assessment-checkpoint-risk{color:#8a5b25}.assessment-checkpoint .assessment-checkpoint-ok{color:#277051}
+.draft-ready-banner{margin:4px 0 16px;padding:12px 14px;border:1px solid #b9dfe0;border-radius:12px;background:#f0fbfa;color:#28636b;font-size:13px;line-height:1.65;text-align:left}.draft-ready-banner strong{display:block;margin-bottom:4px;color:#155b68;font-size:15px}
 
 .form-fields.other-security-form .other-security-textarea:focus::placeholder,
 .content .important-situation-textarea:focus::placeholder {
@@ -5686,7 +5687,7 @@ render=function(){
   paymentGateRender();refreshPaymentUi();renderCaseList();
   const step=queue[position];if(step?.kind!=='paymentGate')return;
   const c=document.getElementById('card');if(!c)return;const approved=paymentIsApproved();c.className='card result';
-  c.innerHTML=`<div><div class="check">${approved?'✓':'￥'}</div><p class="stage-name">付款开通节点</p><h2>${approved?'付款已审核通过':'请先完成付款开通'}</h2><p class="desc">${approved?'已解锁正式起诉状生成，可以继续下一步。':'在正式生成起诉状前，需要完成 99 元付款并提交付款记录。'}</p><div class="payment-meta"><div><span>唯一付款金额</span><strong>99 元</strong></div><div><span>付款方</span><strong>范晓军〔铭天律所〕</strong></div><div><span>当前状态</span><strong>${approved?'已开通':'待付款或待审核'}</strong></div></div><button class="primary next" type="button" onclick="${approved?'continueAfterPaymentGate()':'openAccount(\'payment\')'}">${approved?'继续生成起诉状　→':'打开付款开通　→'}</button></div><button class="text" type="button" onclick="back()">返回上一步</button>`;mountStickyActions();
+  c.innerHTML=`<div><div class="check">${approved?'✓':'文'}</div><p class="stage-name">${approved?'付款已完成':'案件信息已准备完成'}</p><h2>${approved?'付款已审核通过':'可以生成要素式起诉状'}</h2>${approved?'<p class="desc">付款审核已通过，现在可以继续生成正式起诉状。</p>':'<div class="draft-ready-banner"><strong>根据您填写的信息，现在可以直接生成要素式起诉状</strong>案件事实、当事人信息和相关材料已经完成收集。若需生成正式起诉状，请先完成付款开通。</div>'}<div class="payment-meta"><div><span>唯一付款金额</span><strong>99 元</strong></div><div><span>付款方</span><strong>范晓军〔铭天律所〕</strong></div><div><span>当前状态</span><strong>${approved?'已开通':'待付款或待审核'}</strong></div></div><button class="primary next" type="button" onclick="${approved?'continueAfterPaymentGate()':'openAccount(\'payment\')'}">${approved?'继续生成起诉状　→':'完成付款开通　→'}</button></div><button class="text" type="button" onclick="back()">返回上一步</button>`;mountStickyActions();
 };
 function continueAfterPaymentGate(){if(!paymentIsApproved()){openAccount('payment');return}answers.push('付款审核通过，已开通正式起诉状生成');position++;render()}
 const originalStartForCase=start;start=function(){currentCaseId=`case_${Date.now()}`;originalStartForCase()};
