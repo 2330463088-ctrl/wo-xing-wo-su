@@ -4727,6 +4727,18 @@ function showTestNote(title,description,records){
   answers=[];
   render();
 }
+function testOpenAccount(){openAccount('login')}
+function testOpenPayment(){
+  writePaymentRecord({status:'pending',amount:99,payer:'范晓军〔铭天律所〕',proofName:'测试付款记录.png',proofType:'image/png',proofDataUrl:'',email:'test@example.com',submittedAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
+  openAccount('payment');showPaymentStatus('测试付款记录已准备，可直接模拟审核通过','pending');
+}
+function testApprovePayment(){
+  const old=readPaymentRecord()||{proofName:'测试付款记录.png',proofType:'image/png',email:'test@example.com'};
+  writePaymentRecord({...old,status:'approved',amount:99,payer:'范晓军〔铭天律所〕',approvedAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
+  refreshPaymentUi();showAiNotice('测试付款审核已通过，可继续生成正式起诉状','human');
+  if(queue[position]?.kind==='paymentGate')render();
+}
+function testClearPayment(){localStorage.removeItem(paymentStorageKey);activePaymentProof=null;refreshPaymentUi();showAiNotice('测试付款状态已清除','human')}
 function testOpenRepayment(){
   showTestStep(repaymentList('请填写已还款明细','逐笔填写还款时间和金额。',1,true),['多笔还款']);
 }
@@ -5264,7 +5276,7 @@ function installTestPanel(){
   if(params.get('lab')==='1'||!testModeEnabled()||document.querySelector('.test-panel'))return;
   const panel=document.createElement('div');
   panel.className='test-panel';
-  panel.innerHTML=`<div class="test-head"><button class="test-close" type="button" onclick="this.closest('.test-panel').classList.toggle('expanded')">测试工具　⌃</button><span><button class="test-close" type="button" onclick="exitTestMode()">退出测试</button><button class="test-close" type="button" onclick="this.closest('.test-panel').classList.remove('expanded')">收起</button></span></div><div class="test-jump"><select id="test-step-select" class="test-select">${testStepOptionsHtml()}</select><button type="button" onclick="testJumpToSelectedStep()">跳到这步</button></div><div class="test-actions"><button type="button" onclick="testOpenRepayment()">多笔还款页</button><button type="button" onclick="testOpenRate()">利息填写页</button><button type="button" onclick="testAnnualCase()">年息+还款计算</button><button type="button" onclick="testPreCivilCodeCase()">2021年前借款计算</button><button type="button" onclick="testNoInterestDue()">无息+还款日</button><button type="button" onclick="testNoInterestDemand()">无息+催要日</button><button type="button" onclick="testGuarantorCase()">担保人判断</button><button type="button" onclick="testJurisdictionCase()">被告所在地管辖</button><button type="button" onclick="testEnforcementDraft()">强制执行申请书</button><button type="button" onclick="window.open(new URL('test-lab.html', location.href).href,'_blank')">独立测试台</button><button type="button" onclick="testRestart()">从头测试</button></div>`;
+  panel.innerHTML=`<div class="test-head"><button class="test-close" type="button" onclick="this.closest('.test-panel').classList.toggle('expanded')">测试工具　⌃</button><span><button class="test-close" type="button" onclick="exitTestMode()">退出测试</button><button class="test-close" type="button" onclick="this.closest('.test-panel').classList.remove('expanded')">收起</button></span></div><div class="test-jump"><select id="test-step-select" class="test-select">${testStepOptionsHtml()}</select><button type="button" onclick="testJumpToSelectedStep()">跳到这步</button></div><div class="test-actions"><button type="button" onclick="testOpenAccount()">账号中心</button><button type="button" onclick="testOpenPayment()">付款节点</button><button type="button" onclick="testApprovePayment()">模拟审核通过</button><button type="button" onclick="testClearPayment()">清除付款状态</button><button type="button" onclick="testOpenRepayment()">多笔还款页</button><button type="button" onclick="testOpenRate()">利息填写页</button><button type="button" onclick="testAnnualCase()">年息+还款计算</button><button type="button" onclick="testPreCivilCodeCase()">2021年前借款计算</button><button type="button" onclick="testNoInterestDue()">无息+还款日</button><button type="button" onclick="testNoInterestDemand()">无息+催要日</button><button type="button" onclick="testGuarantorCase()">担保人判断</button><button type="button" onclick="testJurisdictionCase()">被告所在地管辖</button><button type="button" onclick="testEnforcementDraft()">强制执行申请书</button><button type="button" onclick="window.open(new URL('test-lab.html', location.href).href,'_blank')">独立测试台</button><button type="button" onclick="testRestart()">从头测试</button></div>`;
   document.body.append(panel);
 }
 
