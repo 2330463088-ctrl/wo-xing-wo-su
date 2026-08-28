@@ -3088,8 +3088,10 @@ render=function(){
         textarea.dataset.index=String(index);
         textarea.rows=4;
         textarea.maxLength=500;
-        textarea.placeholder=step.fields[index].placeholder;
+        textarea.placeholder='例如：第三方代为还款、以货物抵债、股权质押、保证金、口头约定的其他担保方式；请写明担保内容和时间。';
         textarea.setAttribute('aria-label',step.fields[index].label);
+        const help=document.createElement('small');help.className='field-help other-security-help';help.textContent='一般填写：担保的具体方式、担保物或担保人、担保时间，以及对方承担的责任。没有其他担保时，请返回上一步选择“无”。';
+        textarea.insertAdjacentElement('afterend',help);
         label.replaceWith(textarea);
       }else if(identityForm){
         label.classList.add('identity-field');
@@ -5191,6 +5193,11 @@ function testAdvance(answer){
   position++;
   render();
 }
+function validateFormForTest(step){
+  const missing=step.fields.findIndex((field,index)=>!field.optional&&!document.querySelector(`.form-entry[data-index="${index}"]`)?.value.trim());
+  if(missing<0)return true;
+  const input=document.querySelector(`.form-entry[data-index="${missing}"]`);input?.focus();showAiNotice(`请先填写${step.fields[missing].label}`,'warn');return false;
+}
 function testSubmitCurrent(event){
   event?.preventDefault?.();
   const step=queue[position];
@@ -5200,6 +5207,7 @@ function testSubmitCurrent(event){
     return;
   }
   if(step.kind==='form'){
+    if(!validateFormForTest(step))return;
     const values=[...document.querySelectorAll('.form-entry')].map(field=>field.value.trim());
     testAdvance(values.join('；'));
     return;
@@ -5252,6 +5260,7 @@ const productionSubmitForm=submitForm;
 submitForm=function(){
   if(!testModeEnabled())return productionSubmitForm();
   const values=[...document.querySelectorAll('.form-entry')].map(field=>field.value.trim());
+  if(!validateFormForTest(queue[position]))return;
   testAdvance(values.join('；'));
 };
 const productionSubmitEvidence=submitEvidence;
