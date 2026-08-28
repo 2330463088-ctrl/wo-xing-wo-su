@@ -2671,7 +2671,11 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
 .account-form{display:grid;gap:11px}
 .account-field{display:grid;gap:6px;color:#526169;font-size:11px;font-weight:600}
 .account-field input{width:100%!important;height:48px!important;border:1px solid #dce4e5!important;border-radius:11px!important;padding:0 13px!important;background:#fff!important;color:#1f2d33;font:inherit;font-size:14px!important;outline:none}
-.account-field input:focus{border-color:#789ea4!important;box-shadow:0 0 0 3px rgba(68,123,133,.1)!important}
+    .account-field input:focus{border-color:#789ea4!important;box-shadow:0 0 0 3px rgba(68,123,133,.1)!important}
+    .auth-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 13px;padding:4px;border-radius:10px;background:#f3f6f6}
+    .auth-mode-tab{height:34px;border:0;border-radius:8px;background:transparent;color:#748187;font:inherit;font-size:12px}
+    .auth-mode-tab.active{background:#fff;color:#1e2d34;font-weight:700;box-shadow:0 3px 10px rgba(30,48,56,.08)}
+    .register-only{display:none}.auth-register .register-only{display:grid}
 .account-code-row{display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:8px}
 .account-code-row input{text-align:center!important;letter-spacing:.12em}
 .account-send-code{height:48px;border:1px solid #cfdcde;border-radius:11px;background:#f8fbfb;color:#23414c;font:inherit;font-size:12px;font-weight:700;white-space:nowrap}
@@ -2730,27 +2734,58 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
     body.sticky-actions-visible .test-panel{bottom:calc(74px + env(safe-area-inset-bottom))!important}
     @media(max-width:360px){header,#guide .stages,.sticky-action-bar{left:8px;right:8px}header .brand .mark{display:none}.account-trigger{left:10px}.human-service,body.sticky-actions-visible .human-service{right:10px!important}}
     @media(max-width:350px){.sticky-action-bar{grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:8px;padding-left:8px;padding-right:8px}.sticky-action-bar .back,.sticky-action-bar .text,.sticky-action-bar .primary{font-size:13px!important;padding:0 7px!important}}
+    .account-drawer-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:0 0 17px;padding:4px;border-radius:12px;background:#f3f6f6}
+    .account-drawer-tab{height:36px;border:0;border-radius:9px;background:transparent;color:#748187;font:inherit;font-size:12px}
+    .account-drawer-tab.active{background:#fff;color:#1e2d34;font-weight:700;box-shadow:0 3px 10px rgba(30,48,56,.08)}
+    .account-panel{display:none}.account-panel.active{display:block}
+    .payment-card{border:1px solid #dce6e8;border-radius:14px;background:#fbfdfd;padding:14px;text-align:center}
+    .payment-card h3{margin:0;color:#1f2d33;font-size:17px}.payment-card p{margin:7px 0;color:#68777a;font-size:12px;line-height:1.6}
+    .payment-qr{display:block;width:min(100%,240px);margin:13px auto 11px;border-radius:10px;background:#08c765}
+    .payment-amount{font-size:24px!important;font-weight:800!important;color:#135b76!important;margin:5px 0!important}.payment-party{font-weight:700;color:#293b42!important}
+    .payment-meta{display:grid;gap:7px;margin:13px 0;text-align:left}.payment-meta div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1f2;padding:7px 0;color:#718087;font-size:12px}.payment-meta strong{color:#1f2d33}
+    .payment-upload{margin-top:13px;padding:13px;border:1px dashed #b8c8cc;border-radius:11px;background:#fff;text-align:center}.payment-upload input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.payment-upload label{display:block;color:#135b76;font-size:13px;font-weight:700;cursor:pointer}.payment-proof-preview{display:none;width:100%;max-height:180px;margin-top:10px;object-fit:contain;border-radius:8px;background:#f3f6f6}.payment-status{min-height:19px;margin:10px 0 0;text-align:center;color:#6b797e;font-size:11px;line-height:1.5}.payment-status.pending{color:#94642c}.payment-status.approved{color:#277051;font-weight:700}.payment-status.rejected{color:#a24c43}.payment-button{width:100%;margin-top:12px}.payment-test-button{width:100%;margin-top:8px;border:1px dashed #b9c8ca;border-radius:10px;background:#f8fbfb;color:#526970;padding:10px;font:inherit;font-size:12px}.case-toolbar{display:grid;gap:9px}.case-save-button{width:100%;height:44px;border:0;border-radius:11px;background:#101414;color:#fff;font:inherit;font-size:13px;font-weight:700}.case-list{display:grid;gap:8px;margin-top:14px}.case-empty{padding:22px 10px;text-align:center;color:#89959f;font-size:12px}.case-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid #dce6e8;border-radius:10px;background:#fbfdfd}.case-item-main{min-width:0}.case-item-title{color:#273940;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.case-item-date{margin-top:4px;color:#89959f;font-size:10px}.case-item button{flex:0 0 auto;border:1px solid #dce4e5;border-radius:8px;background:#fff;color:#526169;padding:7px 9px;font:inherit;font-size:11px}
+    .human-service-modal{position:fixed;z-index:180;inset:0;display:grid;place-items:center;padding:22px;background:rgba(18,29,34,.38)}
+    .human-service-dialog{width:min(100%,350px);padding:24px 20px 20px;border-radius:18px;background:#fff;box-shadow:0 20px 55px rgba(20,38,45,.28);text-align:center}
+    .human-service-dialog h2{margin:0 0 12px;color:#1f2d33;font-size:20px}.human-service-dialog p{margin:8px 0;color:#68777a;font-size:13px;line-height:1.7}.human-service-price{font-size:27px!important;font-weight:800;color:#135b76!important;margin:12px 0!important}.human-service-phone{display:block;margin:14px 0;color:#135b76;font-size:21px;font-weight:800;letter-spacing:.04em;text-decoration:none}.human-service-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.human-service-actions button,.human-service-actions a{height:44px;border:1px solid #dce4e5;border-radius:10px;background:#fff;color:#526169;font:inherit;font-size:13px;display:grid;place-items:center;text-decoration:none}.human-service-actions .human-service-accept{border-color:#101414;background:#101414;color:#fff}
+    .human-service-modal{border:0!important;border-radius:0!important;background:rgba(18,29,34,.38)!important;color:inherit!important;box-shadow:none!important}
+    .human-service-dialog{border:0!important;border-radius:18px!important;background:#fff!important;color:var(--ink)!important;box-shadow:0 20px 55px rgba(20,38,45,.28)!important}
+    .human-service-actions{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:inherit!important}
   </style>
 </head>
 <body><div class="app"><header><div class="brand"><span class="mark">诉</span><span>我行我诉</span></div><span class="hint" id="hint"></span></header>
   <section class="welcome" id="welcome"><button class="splash-enter" type="button" onclick="start()" aria-label="轻触进入我行我诉"><span class="splash-logo"><span class="splash-mark">诉</span><span class="splash-name">我行我诉</span></span><span class="splash-prompt">轻触进入</span></button></section>
   <section class="hidden" id="guide"><nav class="stages"><div id="journey"></div></nav><main class="area"><article class="card" id="card"></article></main></section>
 </div>
-<button class="account-trigger" id="account-trigger" type="button" onclick="openAccount()">邮箱登录</button>
+<button class="account-trigger" id="account-trigger" type="button" onclick="openAccount('login')">账号</button>
 <div class="account-overlay hidden" id="account-overlay" onclick="accountBackdrop(event)">
   <section class="account-sheet" role="dialog" aria-modal="true" aria-labelledby="account-title">
     <button class="account-close" type="button" onclick="closeAccount()" aria-label="关闭">×</button>
-    <div id="account-guest">
-      <h2 class="account-title" id="account-title">邮箱登录</h2>
-      <form class="account-form" id="login-form" onsubmit="loginAccount(event)">
-        <label class="account-field">邮箱<input id="login-email" type="email" autocomplete="email" placeholder="请输入邮箱"></label>
-        <label class="account-field">验证码<span class="account-code-row"><input id="login-code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6位验证码"><button class="account-send-code" id="send-code-button" type="button" onclick="sendEmailCode()">发送验证码</button></span></label>
-        <p class="account-mail-tip">未注册邮箱会自动创建账号</p>
-        <label class="account-agree"><input id="login-agree" type="checkbox"><span>我已阅读并同意 <button class="account-link" type="button" onclick="openTerms()">《用户协议》</button></span></label>
-        <p class="account-message" id="login-message"></p><button class="account-submit" type="submit">邮箱登录</button>
-      </form>
+    <h2 class="account-title" id="account-title">账号中心</h2>
+    <div class="account-drawer-tabs" role="tablist" aria-label="账号中心功能">
+      <button class="account-drawer-tab active" id="account-tab-login" type="button" onclick="switchAccountPanel('login')">登录注册</button>
+      <button class="account-drawer-tab" id="account-tab-payment" type="button" onclick="switchAccountPanel('payment')">付款开通</button>
+      <button class="account-drawer-tab" id="account-tab-cases" type="button" onclick="switchAccountPanel('cases')">我的案例</button>
     </div>
-    <div class="account-signed hidden" id="account-signed"><div class="account-avatar" id="account-avatar">用</div><h3 id="account-name">用户</h3><p id="account-email"></p><button class="account-secondary" type="button" onclick="logoutAccount()">退出登录</button></div>
+    <div class="account-panel active" id="account-panel-login">
+      <div id="account-guest">
+        <h3 class="account-title" id="auth-form-title" style="font-size:17px;margin-top:0">邮箱登录</h3>
+        <div class="auth-mode-tabs" role="tablist" aria-label="登录注册切换"><button class="auth-mode-tab active" id="auth-login-tab" type="button" onclick="switchAuthMode('login')">登录</button><button class="auth-mode-tab" id="auth-register-tab" type="button" onclick="switchAuthMode('register')">注册</button></div>
+        <form class="account-form" id="login-form" onsubmit="loginAccount(event)">
+        <label class="account-field">邮箱<input id="login-email" type="email" autocomplete="email" placeholder="请输入邮箱"></label>
+        <label class="account-field">密码<input id="login-password" type="password" autocomplete="current-password" placeholder="请输入登录密码"></label>
+        <label class="account-field register-only">确认密码<input id="register-password-confirm" type="password" autocomplete="new-password" placeholder="请再次输入密码"></label>
+        <label class="account-field register-only">注册验证码<span class="account-code-row"><input id="login-code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6位验证码"><button class="account-send-code" id="send-code-button" type="button" onclick="sendEmailCode()">发送验证码</button></span></label>
+        <p class="account-mail-tip" id="auth-mail-tip">使用注册时设置的邮箱和密码登录</p>
+        <label class="account-agree"><input id="login-agree" type="checkbox"><span>我已阅读并同意 <button class="account-link" type="button" onclick="openTerms()">《用户协议》</button></span></label>
+        <p class="account-message" id="login-message"></p><button class="account-submit" id="auth-submit-button" type="submit">邮箱登录</button>
+      </form>
+      </div>
+      <div class="account-signed hidden" id="account-signed"><div class="account-avatar" id="account-avatar">用</div><h3 id="account-name">用户</h3><p id="account-email"></p><button class="account-secondary" type="button" onclick="logoutAccount()">退出登录</button></div>
+    </div>
+    <div class="account-panel" id="account-panel-payment">
+      <div class="payment-card"><h3>开通诉讼文书服务</h3><p>完成付款并提交付款记录，审核通过后解锁正式起诉状生成。</p><img class="payment-qr" src="payment-qr.jpg" alt="微信付款二维码"><p class="payment-amount">99 元</p><p class="payment-party">付款方：范晓军〔铭天律所〕</p><div class="payment-meta"><div><span>唯一付款金额</span><strong>99 元</strong></div><div><span>审核状态</span><strong id="payment-state-label">未提交</strong></div></div><div class="payment-upload"><input id="payment-proof-file" type="file" accept="image/*,application/pdf" onchange="handlePaymentProof(event)"><label for="payment-proof-file">上传付款记录<small>支持付款截图或 PDF</small></label><img id="payment-proof-preview" class="payment-proof-preview" alt="付款记录预览"></div><p class="payment-status" id="payment-status"></p><button class="account-submit payment-button" type="button" onclick="submitPaymentRecord()">提交付款记录审核</button><button class="payment-test-button hidden" id="payment-test-approve" type="button" onclick="simulatePaymentApproval()">测试模式：模拟审核通过</button></div>
+    </div>
+    <div class="account-panel" id="account-panel-cases"><div class="case-toolbar"><p class="account-mail-tip">一个案子保存为一条案例，包含已填信息、当前步骤和付款状态。</p><button class="case-save-button" type="button" onclick="saveCurrentCase()">保存当前案例</button></div><div class="case-list" id="case-list"></div></div>
   </section>
 </div>
 <div class="account-overlay hidden" id="terms-overlay" onclick="termsBackdrop(event)">
@@ -2914,8 +2949,10 @@ input('请填写计算诉讼金额的截止时间','选择欠款和利息暂时�
 note('诉讼金额自动测算如下：','系统将依据实际交付本金、利息、还款时间和抵扣顺序计算。',1),
 ...jurisdictionFlow(),
 choice('需要申请财产保全吗？','财产保全就是申请法院先查封、冻结对方财产，通常需要提供担保。',[{label:'需要',desc:'直接生成诉前财产保全申请书',add:[{kind:'preservationDraft',title:'诉前财产保全申请书',description:'已使用前面填写的信息生成，不需要重复填写。',stage:2}]},{label:'暂不需要',desc:'目前不申请查封或冻结财产',add:[]}],2),
-...commonComplaintInfoFlow(),
-note('要素式起诉状信息已收集完成','表格中的适用要素已填写，不再重复询问。',1,'生成要素式起诉状'),
+  ...commonComplaintInfoFlow(),
+  note('能否起诉初步分析完成','系统已根据你填写的事实、证据和时间信息完成初步判断。开通服务后，才能进入正式起诉状生成。',2,'进入付款开通'),
+  {kind:'paymentGate',title:'付款后生成正式起诉状',description:'请完成 99 元付款并提交付款记录，审核通过后继续。',stage:2},
+  note('要素式起诉状信息已收集完成','表格中的适用要素已填写，不再重复询问。',1,'生成要素式起诉状'),
 ...elementComplaintFlow(),
 note('核对立案材料','系统将根据被告人数、证据来源和保全选择，自动列出材料及份数。',3,'下一步：整理证据'),
 note('请按要求整理证据','系统只显示您前面选择过的证据，并说明打印方法。',3,'进入网上立案'),
@@ -3116,11 +3153,17 @@ render=function(){
   if(progress) progress.textContent=`第 ${stepNumber} 步`;
 };
 function humanService(){
-  const message=document.createElement('div');
-  message.className='human-toast';
-  message.textContent='真人服务已呼叫，请稍候。';
-  document.body.append(message);
-  setTimeout(()=>message.remove(),2400);
+  document.getElementById('human-service-modal')?.remove();
+  const modal=document.createElement('div');
+  modal.id='human-service-modal';modal.className='human-service-modal';
+  modal.innerHTML='<section class="human-service-dialog" role="dialog" aria-modal="true" aria-labelledby="human-service-title"><h2 id="human-service-title">全程付费指导</h2><p>真人服务将根据你的案件情况提供全流程指导。</p><p class="human-service-price">299 元</p><p>如果你可以接受该服务费用，请先联系工作人员确认服务内容。</p><div class="human-service-actions"><button type="button" onclick="document.getElementById(\'human-service-modal\')?.remove()">暂不联系</button><button type="button" class="human-service-accept" onclick="showHumanServiceContact()">接受并联系</button></div></section>';
+  modal.addEventListener('click',event=>{if(event.target===modal)modal.remove()});
+  document.body.append(modal);
+}
+function showHumanServiceContact(){
+  const dialog=document.querySelector('#human-service-modal .human-service-dialog');
+  if(!dialog)return;
+  dialog.innerHTML='<h2>请联系真人服务</h2><p>全程付费指导费用：</p><p class="human-service-price">299 元</p><p>请先电话确认服务内容和付款方式。</p><a class="human-service-phone" href="tel:13901509038">13901509038</a><div class="human-service-actions"><button type="button" onclick="document.getElementById(\'human-service-modal\')?.remove()">关闭</button><a class="human-service-accept" href="tel:13901509038">拨打电话</a></div>';
 }
 const originalSubmitEntry=submitEntry;
 submitEntry=function(){
@@ -5216,12 +5259,78 @@ function installTestPanel(){
   document.body.append(panel);
 }
 
+const paymentStorageKey='woxingwosu_payment_record_v1';
+const caseStorageKey='woxingwosu_cases_v1';
+let activePaymentProof=null;
+let currentCaseId='';
+function readPaymentRecord(){try{return JSON.parse(localStorage.getItem(paymentStorageKey)||'null')}catch{return null}}
+function writePaymentRecord(record){try{localStorage.setItem(paymentStorageKey,JSON.stringify(record))}catch{}}
+function paymentIsApproved(){return readPaymentRecord()?.status==='approved'}
+function handlePaymentProof(event){
+  const file=event.target.files?.[0];
+  if(!file)return;
+  if(!(file.type.startsWith('image/')||file.type==='application/pdf')||file.size>10*1024*1024){showPaymentStatus('请上传 10MB 以内的图片或 PDF','rejected');event.target.value='';return}
+  activePaymentProof={name:file.name,type:file.type,size:file.size,dataUrl:''};
+  if(file.type.startsWith('image/')){
+    const reader=new FileReader();
+    reader.onload=()=>{activePaymentProof.dataUrl=String(reader.result||'');const preview=document.getElementById('payment-proof-preview');if(preview){preview.src=activePaymentProof.dataUrl;preview.style.display='block'}};
+    reader.readAsDataURL(file);
+  }
+  showPaymentStatus(`已选择：${file.name}`,'');
+}
+function showPaymentStatus(text,type=''){const node=document.getElementById('payment-status');if(node){node.textContent=text||'';node.className=`payment-status${type?' '+type:''}`}}
+function submitPaymentRecord(){
+  const account=readLocalAccount();
+  if(!account){showPaymentStatus('请先在“登录注册”中登录后再提交付款记录','rejected');switchAccountPanel('login');return}
+  if(!activePaymentProof&&!readPaymentRecord()?.proofName){showPaymentStatus('请先上传付款截图或 PDF','rejected');return}
+  const old=readPaymentRecord()||{};
+  writePaymentRecord({status:'pending',amount:99,payer:'范晓军〔铭天律所〕',proofName:activePaymentProof?.name||old.proofName,proofType:activePaymentProof?.type||old.proofType,proofDataUrl:activePaymentProof?.dataUrl||old.proofDataUrl||'',email:account.email,submittedAt:old.submittedAt||new Date().toISOString(),updatedAt:new Date().toISOString()});
+  refreshPaymentUi();showPaymentStatus('付款记录已提交，当前等待审核','pending');
+}
+function simulatePaymentApproval(){
+  const old=readPaymentRecord()||{};
+  if(!old.proofName){showPaymentStatus('请先上传付款记录再模拟审核','rejected');return}
+  writePaymentRecord({...old,status:'approved',amount:99,payer:'范晓军〔铭天律所〕',approvedAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
+  refreshPaymentUi();showPaymentStatus('测试审核通过，已开通正式起诉状生成','approved');
+}
+function refreshPaymentUi(){
+  const record=readPaymentRecord();
+  const label=document.getElementById('payment-state-label');
+  if(label)label.textContent=record?.status==='approved'?'已开通':record?.status==='pending'?'待审核':record?.status==='rejected'?'未通过':'未提交';
+  document.getElementById('payment-test-approve')?.classList.toggle('hidden',!testModeEnabled());
+  if(record?.proofDataUrl&&!activePaymentProof){const preview=document.getElementById('payment-proof-preview');if(preview){preview.src=record.proofDataUrl;preview.style.display='block'}}
+}
+function readCaseRecords(){try{return JSON.parse(localStorage.getItem(caseStorageKey)||'[]')||[]}catch{return []}}
+function writeCaseRecords(records){try{localStorage.setItem(caseStorageKey,JSON.stringify(records))}catch{}}
+function currentCaseSnapshot(){return {queue:cloneJsonSafe(queue,[]),position,answers:cloneJsonSafe(answers,[]),selectedEvidence:cloneJsonSafe(selectedEvidence,[]),selectedMultiChoice:cloneJsonSafe(selectedMultiChoice,[]),selectedCostTypes:cloneJsonSafe(selectedCostTypes,[]),costDraftValues:cloneJsonSafe(costDraftValues,{}),payment:cloneJsonSafe(readPaymentRecord(),null)}}
+function saveCurrentCase(){
+  const account=readLocalAccount();
+  const records=readCaseRecords();
+  const id=currentCaseId||`case_${Date.now()}`;currentCaseId=id;
+  const existing=records.find(item=>item.id===id);
+  const record={id,title:existing?.title||`民间借贷案例 ${new Date().toLocaleDateString('zh-CN')}`,email:account?.email||'',savedAt:new Date().toISOString(),snapshot:currentCaseSnapshot()};
+  writeCaseRecords([record,...records.filter(item=>item.id!==id)]);renderCaseList();showPaymentStatus('当前案例已保存到本设备','approved');
+  if(account)saveCloudDraft(account);
+}
+function formatCaseTime(value){try{return new Date(value).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+function renderCaseList(){
+  const list=document.getElementById('case-list');if(!list)return;
+  const records=readCaseRecords();
+  if(!records.length){list.innerHTML='<div class="case-empty">还没有保存的案例</div>';return}
+  list.innerHTML=records.map(item=>`<div class="case-item"><div class="case-item-main"><div class="case-item-title">${complaintEscapeHtml(item.title||'未命名案例')}</div><div class="case-item-date">${formatCaseTime(item.savedAt)} · 第 ${(Number(item.snapshot?.position)||0)+1} 步</div></div><button type="button" onclick="loadCase('${item.id}')">继续</button></div>`).join('');
+}
+function loadCase(id){
+  const record=readCaseRecords().find(item=>item.id===id);const snapshot=record?.snapshot;if(!snapshot)return;
+  queue=cloneJsonSafe(snapshot.queue,[]);position=Number(snapshot.position)||0;answers=cloneJsonSafe(snapshot.answers,[]);selectedEvidence=cloneJsonSafe(snapshot.selectedEvidence,[]);selectedMultiChoice=cloneJsonSafe(snapshot.selectedMultiChoice,[]);selectedCostTypes=cloneJsonSafe(snapshot.selectedCostTypes,[]);costDraftValues=cloneJsonSafe(snapshot.costDraftValues,{});currentCaseId=record.id;
+  document.getElementById('account-overlay')?.classList.add('hidden');welcome.classList.add('hidden');guide.classList.remove('hidden');render();
+}
 const localAccountKey='woxingwosu_email_accounts_v1';
 const localSessionKey='woxingwosu_email_session_v1';
 const emailChallengeKey='woxingwosu_email_challenge_v1';
 const emailLocalCodeKey='woxingwosu_email_local_code_v1';
 const platformAccountSyncKey='woxingwosu_platform_account_synced_v1';
 let emailCodeTimer=0;
+let authMode='login';
 function normalizeEmail(value){return String(value||'').trim().toLowerCase()}
 function isValidEmail(value){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value))}
 function readEmailAccounts(){try{return JSON.parse(localStorage.getItem(localAccountKey)||'{}')||{}}catch{return {}}}
@@ -5243,6 +5352,21 @@ function randomSixDigitCode(){
   const values=new Uint32Array(1);
   try{crypto.getRandomValues(values)}catch{values[0]=Math.floor(Math.random()*1000000)}
   return String(values[0]%1000000).padStart(6,'0');
+}
+async function hashPassword(value){
+  const text=String(value||'');
+  if(globalThis.crypto?.subtle){const data=new TextEncoder().encode(text);const digest=await crypto.subtle.digest('SHA-256',data);return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
+  return btoa(unescape(encodeURIComponent(text)));
+}
+function switchAuthMode(mode='login'){
+  authMode=mode==='register'?'register':'login';
+  const form=document.getElementById('login-form');form?.classList.toggle('auth-register',authMode==='register');
+  document.getElementById('auth-login-tab')?.classList.toggle('active',authMode==='login');
+  document.getElementById('auth-register-tab')?.classList.toggle('active',authMode==='register');
+  const title=document.getElementById('auth-form-title');if(title)title.textContent=authMode==='register'?'注册我行我诉':'邮箱登录';
+  const tip=document.getElementById('auth-mail-tip');if(tip)tip.textContent=authMode==='register'?'注册时验证邮箱，之后使用邮箱和密码登录':'使用注册时设置的邮箱和密码登录';
+  const submit=document.getElementById('auth-submit-button');if(submit)submit.textContent=authMode==='register'?'注册并登录':'邮箱登录';
+  if(authMode==='login'){const code=document.getElementById('login-code');if(code)code.value='';writeAccountMessage('login-message','')}
 }
 function setSendCodeButton(text,disabled){
   const button=document.getElementById('send-code-button');
@@ -5366,7 +5490,15 @@ function refreshAccountUi(){
     document.getElementById('account-avatar').textContent=(account.name||account.email||'用').slice(0,1).toUpperCase();
   }
 }
-function openAccount(){refreshAccountUi();document.getElementById('account-overlay')?.classList.remove('hidden')}
+function openAccount(panel='login'){refreshAccountUi();switchAccountPanel(panel);document.getElementById('account-overlay')?.classList.remove('hidden')}
+function switchAccountPanel(panel='login'){
+  ['login','payment','cases'].forEach(name=>{
+    document.getElementById(`account-panel-${name}`)?.classList.toggle('active',name===panel);
+    document.getElementById(`account-tab-${name}`)?.classList.toggle('active',name===panel);
+  });
+  if(panel==='payment')refreshPaymentUi();
+  if(panel==='cases')renderCaseList();
+}
 function closeAccount(){document.getElementById('account-overlay')?.classList.add('hidden');writeAccountMessage('login-message','')}
 function accountBackdrop(event){if(event.target?.id==='account-overlay')closeAccount()}
 function openTerms(){document.getElementById('terms-overlay')?.classList.remove('hidden')}
@@ -5410,10 +5542,10 @@ async function verifyEmailCode(email,code){
   }
   return {ok:false,message:'验证码不正确或已过期'};
 }
-function saveEmailAccount(email,name){
+function saveEmailAccount(email,name,passwordHash=''){
   const accounts=readEmailAccounts();
   const old=accounts[email]||{};
-  accounts[email]={...old,email,name:old.name||name||displayNameForEmail(email),lastLoginAt:new Date().toISOString(),createdAt:old.createdAt||new Date().toISOString()};
+  accounts[email]={...old,email,name:old.name||name||displayNameForEmail(email),...(passwordHash?{passwordHash}:{}),lastLoginAt:new Date().toISOString(),createdAt:old.createdAt||new Date().toISOString()};
   writeEmailAccounts(accounts);
   try{sessionStorage.setItem(localSessionKey,email)}catch{}
   setTimeout(()=>{loadCloudDraftForAccount(email);scheduleCloudDraftSave()},0);
@@ -5421,15 +5553,31 @@ function saveEmailAccount(email,name){
 async function loginAccount(event){
   event.preventDefault();
   const email=normalizeEmail(document.getElementById('login-email')?.value);
-  const code=String(document.getElementById('login-code')?.value||'').trim();
   if(!isValidEmail(email)){writeAccountMessage('login-message','请填写正确的邮箱');return}
-  if(!/^\d{6}$/.test(code)){writeAccountMessage('login-message','请填写6位验证码');return}
   if(!document.getElementById('login-agree')?.checked){writeAccountMessage('login-message','请先阅读并同意《用户协议》');return}
   writeAccountMessage('login-message','正在验证...');
-  const result=await verifyEmailCode(email,code);
-  if(!result.ok){writeAccountMessage('login-message',result.message||'验证码不正确或已过期');return}
-  saveEmailAccount(result.email,result.name);
-  try{sessionStorage.removeItem(emailChallengeKey);sessionStorage.removeItem(emailLocalCodeKey)}catch{}
+  const accounts=readEmailAccounts();
+  if(authMode==='register'){
+    const password=String(document.getElementById('login-password')?.value||'');
+    const confirm=String(document.getElementById('register-password-confirm')?.value||'');
+    const code=String(document.getElementById('login-code')?.value||'').trim();
+    if(password.length<6){writeAccountMessage('login-message','密码至少需要6位');return}
+    if(password!==confirm){writeAccountMessage('login-message','两次输入的密码不一致');return}
+    if(!/^\d{6}$/.test(code)){writeAccountMessage('login-message','请填写注册验证码');return}
+    const result=await verifyEmailCode(email,code);
+    if(!result.ok){writeAccountMessage('login-message',result.message||'验证码不正确或已过期');return}
+    saveEmailAccount(result.email,result.name,await hashPassword(password));
+    try{sessionStorage.removeItem(emailChallengeKey);sessionStorage.removeItem(emailLocalCodeKey)}catch{}
+    writeAccountMessage('login-message','注册成功，已登录');
+  }else{
+    const password=String(document.getElementById('login-password')?.value||'');
+    const account=accounts[email];
+    if(!account){writeAccountMessage('login-message','该邮箱还没有注册，请先切换到“注册”');return}
+    if(!account.passwordHash){writeAccountMessage('login-message','该账号尚未设置密码，请重新注册后再登录');return}
+    if(account.passwordHash!==await hashPassword(password)){writeAccountMessage('login-message','邮箱或密码不正确');return}
+    saveEmailAccount(email,account.name||displayNameForEmail(email));
+    writeAccountMessage('login-message','登录成功');
+  }
   refreshAccountUi();
 }
 function logoutAccount(){try{sessionStorage.removeItem(localSessionKey)}catch{}refreshAccountUi()}
@@ -5551,6 +5699,28 @@ render=function(){
   mountStickyActions();
   scheduleCloudDraftSave();
 };
+const paymentGateRender=render;
+render=function(){
+  paymentGateRender();
+  refreshPaymentUi();
+  renderCaseList();
+  const step=queue[position];
+  if(step?.kind!=='paymentGate')return;
+  const c=document.getElementById('card');
+  if(!c)return;
+  const approved=paymentIsApproved();
+  c.className='card result';
+  c.innerHTML=`<div><div class="check">${approved?'✓':'￥'}</div><p class="stage-name">付款开通节点</p><h2>${approved?'付款已审核通过':'请先完成付款开通'}</h2><p class="desc">${approved?'已解锁正式起诉状生成，可以继续下一步。':'在正式生成起诉状前，需要完成 99 元付款并提交付款记录。'}</p><div class="payment-meta"><div><span>唯一付款金额</span><strong>99 元</strong></div><div><span>付款方</span><strong>范晓军〔铭天律所〕</strong></div><div><span>当前状态</span><strong>${approved?'已开通':'待付款或待审核'}</strong></div></div><button class="primary next" type="button" onclick="${approved?'continueAfterPaymentGate()':'openAccount(\'payment\')'}">${approved?'继续生成起诉状　→':'打开付款开通　→'}</button>${testModeEnabled()&&!approved?'<button class="payment-test-button" type="button" onclick="openAccount(\'payment\')">测试模式：打开付款审核</button>':''}</div>`;
+  mountStickyActions();
+};
+function continueAfterPaymentGate(){
+  if(!paymentIsApproved()){openAccount('payment');return}
+  answers.push('付款审核通过，已开通正式起诉状生成');position++;render();
+}
+const originalStartForCase=start;
+start=function(){currentCaseId=`case_${Date.now()}`;originalStartForCase()};
+const originalRefreshAccountUi=refreshAccountUi;
+refreshAccountUi=function(){originalRefreshAccountUi();const account=readLocalAccount();const trigger=document.getElementById('account-trigger');if(trigger)trigger.textContent=paymentIsApproved()?'已开通':account?(account.name||'账号').slice(0,4):'账号';refreshPaymentUi();renderCaseList()};
 const wheelSubmitForm=submitForm;
 submitForm=function(){
   syncAllFormDateValues();
