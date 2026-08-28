@@ -1,6 +1,6 @@
 # 我行我诉 Codex 恢复说明
 
-这个压缩包包含“我行我诉”手机版诉讼指导 agent 的当前源码。
+这个压缩包包含“我行我诉”手机版诉讼指导 agent 截至 2026 年 8 月 26 日的最新完整源码及测试版。
 
 ## 主要入口
 
@@ -14,20 +14,20 @@
 
 ```powershell
 $env:DEEPSEEK_API_KEY="你的 DeepSeek API Key"
-$env:PORT="8769"
+$env:PORT="8770"
 python server.py
 ```
 
 然后打开：
 
 ```text
-http://127.0.0.1:8769/mobile-preview-v2.html
+http://127.0.0.1:8770/mobile-preview-v2.html
 ```
 
 直接测试最新流程（带预填测试数据和任意步骤跳转工具）：
 
 ```text
-http://127.0.0.1:8769/mobile-preview-v2.html?test=1&mobile=7&element=complete&auth=2
+http://127.0.0.1:8770/mobile-preview-v2.html?test=1&mobile=7&element=complete&auth=2
 ```
 
 如果没有配置 `DEEPSEEK_API_KEY`，页面仍可运行，本地规则校验仍会工作，但 DeepSeek 联网判断不会启用。
@@ -36,6 +36,7 @@ http://127.0.0.1:8769/mobile-preview-v2.html?test=1&mobile=7&element=complete&au
 
 - 手机版单步问答流程。
 - 测试模式：访问地址追加 `?test=1` 时显示测试面板。可用下拉框选择任意默认流程步骤并直接跳转继续测试，也可一键进入多笔还款页、利息填写页或直接查看典型计算结果；正式用户不显示。
+- “要被告承担什么费用”页面只勾选律师费、诉讼费、保全费、保函费、公告费等类别，不要求填写金额；测试模式自动提供勾选数据。
 - 诉讼阶段顶部节点进度条。
 - 所有涉及证据来源的输入步骤，证据来源与输入框在同一页展示。
 - 证据来源选项：借条、转账、聊天、录音、其他。
