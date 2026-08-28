@@ -2655,6 +2655,7 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
   font-size: 12px;
   line-height: 1.7;
 }
+.assessment-checkpoint{display:grid;gap:7px;margin:12px 0 4px;padding:12px 13px;border:1px solid #dce7e8;border-radius:11px;background:#f8fbfb;text-align:left;color:#5f7079;font-size:12px;line-height:1.65}.assessment-checkpoint strong{color:#1f3a44;font-size:13px}.assessment-checkpoint .assessment-checkpoint-risk{color:#8a5b25}.assessment-checkpoint .assessment-checkpoint-ok{color:#277051}
 
 .form-fields.other-security-form .other-security-textarea:focus::placeholder,
 .content .important-situation-textarea:focus::placeholder {
@@ -5765,11 +5766,21 @@ function addFlowContextGuide(){
   node.textContent=label;
   heading.before(node);
 }
+function renderAssessmentCheckpoint(){
+  const desc=document.querySelector('#card .desc');
+  if(!desc||queue[position]?.title!=='能否起诉初步分析完成'||typeof buildCaseAssessment!=='function')return;
+  const result=buildCaseAssessment();
+  const evidenceRisk=/证据|凭证/.test(result.riskText);
+  const hasEvidence=/凭证|记录/.test(result.basis);
+  const evidenceText=evidenceRisk?'现有证据仍有不足，建议补充或核对相关凭证。':hasEvidence?'已有证据能够支持主要事实，但仍需提交原件或完整记录。':'已具备部分有利材料，提交前还需要核对借款交付、欠款金额和催款记录。';
+  desc.innerHTML=`<div class="assessment-checkpoint"><div>起诉条件初步结论：<strong>${complaintEscapeHtml(result.eligibility)}</strong></div><div class="${evidenceRisk?'assessment-checkpoint-risk':'assessment-checkpoint-ok'}">证据情况：<strong>${complaintEscapeHtml(evidenceText)}</strong></div><div>分析依据：${complaintEscapeHtml(result.basis)}${result.riskText&&result.riskText!=='暂未发现明显风险，但仍需核对证据原件'?`。需要注意：${complaintEscapeHtml(result.riskText)}。`:''}</div></div><p>以上是根据你前面填写的信息作出的初步分析，不等同于法院裁判。确认后再进入付款开通和正式起诉状生成。</p>`;
+}
 const caringGuideRender=render;
 render=function(){
   const step=queue[position];
   if(step?.kind==='assessmentResult'){renderAssessmentResult(step);return}
   caringGuideRender();
+  renderAssessmentCheckpoint();
   addFlowContextGuide();
 };
 const assessmentAwareChoose=choose;
