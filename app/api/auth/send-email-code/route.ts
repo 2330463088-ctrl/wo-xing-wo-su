@@ -191,7 +191,7 @@ async function sendEmail(email: string, code: string): Promise<EmailDelivery> {
   return {
     sent: false,
     provider: "preview",
-    message: "未配置邮件服务密钥，已返回本地测试验证码",
+    message: "未配置邮件服务密钥，验证码没有发送",
   };
 }
 
@@ -222,7 +222,6 @@ export async function POST(request: Request) {
       challenge,
       expiresAt,
       message: delivery.message,
-      devCode: delivery.sent ? undefined : code,
     });
   } catch {
     return jsonResponse({ ok: false, message: "验证码发送失败，请稍后重试" }, 500);
