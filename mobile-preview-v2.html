@@ -5516,12 +5516,14 @@ async function sendEmailCode(){
     if(!result?.ok||!result?.challenge)throw new Error(result?.message||'验证码发送失败');
     sessionStorage.setItem(emailChallengeKey,JSON.stringify({email,challenge:result.challenge,expiresAt:result.expiresAt||0}));
     sessionStorage.removeItem(emailLocalCodeKey);
-    writeAccountMessage('login-message',result.sent?'验证码已发送，请查收邮箱':`本地预览验证码：${result.devCode||'请查看服务端日志'}`);
+    if(!result.sent)throw new Error(result?.message||'邮件服务未接通');
+    writeAccountMessage('login-message','验证码已发送，请查收邮箱');
   }catch{
-    const code=randomSixDigitCode();
-    sessionStorage.setItem(emailLocalCodeKey,JSON.stringify({email,code,expiresAt:Date.now()+10*60*1000}));
     sessionStorage.removeItem(emailChallengeKey);
-    writeAccountMessage('login-message',`本地预览验证码：${code}`);
+    sessionStorage.removeItem(emailLocalCodeKey);
+    writeAccountMessage('login-message','验证码没有发送成功，请稍后重试或联系人工服务');
+    setSendCodeButton('重新发送',false);
+    return;
   }
   startEmailCodeCountdown();
 }
@@ -5535,10 +5537,6 @@ async function verifyEmailCode(email,code){
       if(response.ok&&result?.ok)return {ok:true,email:result.email||email,name:result.displayName||displayNameForEmail(email)};
       if(response.status!==404)return {ok:false,message:result?.message||'验证码不正确或已过期'};
     }catch{}
-  }
-  const localCode=readStoredJson(emailLocalCodeKey);
-  if(localCode?.email===email&&localCode?.code===code&&Date.now()<Number(localCode.expiresAt||0)){
-    return {ok:true,email,name:displayNameForEmail(email)};
   }
   return {ok:false,message:'验证码不正确或已过期'};
 }
