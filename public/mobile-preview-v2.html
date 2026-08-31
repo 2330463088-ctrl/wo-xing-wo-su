@@ -3159,6 +3159,25 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
       #guide .progress-nodes li span { font-size: 9px !important; }
     }
   </style>
+  <style id="production-readable-type">
+    /* Use strong contrast and comfortable sizes in the customer-facing flow. */
+    body { color: #111 !important; }
+    #guide .progress-nodes li,
+    #guide .progress-nodes li span { font-size: 11px !important; color: #111 !important; font-weight: 650 !important; }
+    #guide .progress-nodes i { color: #fff !important; }
+    .content h2, .card h2 { color: #111 !important; font-size: 24px !important; }
+    .desc, .option small, .note, .stage-name, .progress, .back, .text { color: #111 !important; font-size: 14px !important; }
+    .option strong, .form-fields label, .picker-label, .evidence-option { color: #111 !important; font-size: 14px !important; }
+    .entry, .repay-date, .repay-money, .wheel-select, .rate-tab { color: #111 !important; font-size: 15px !important; }
+    .evidence-warning, .calc-box, .calc-logic, .calc-help, .repay-summary-item { color: #111 !important; font-size: 13px !important; }
+    .human-service, .primary { font-size: 14px !important; }
+    .account-sheet, .account-sheet p, .account-sheet label, .account-sheet button { color: #111; }
+    @media (max-width: 360px) {
+      #guide .progress-nodes li,
+      #guide .progress-nodes li span { font-size: 10px !important; }
+      .content h2, .card h2 { font-size: 22px !important; }
+    }
+  </style>
 </head>
 <body><div class="app"><header><div class="brand"><span class="mark">诉</span><span>我行我诉</span></div><span class="hint" id="hint"></span></header>
   <section class="welcome" id="welcome"><button class="splash-enter" type="button" onclick="start()" aria-label="轻触进入我行我诉"><span class="splash-logo"><span class="splash-mark">诉</span><span class="splash-name">我行我诉</span></span><span class="splash-prompt">轻触进入</span></button></section>
@@ -5405,6 +5424,7 @@ window.flowTestApi={
   testRestart,
 };
 function testModeEnabled(){
+  if(location.hostname==='woxingwosu8.com'||location.hostname.endsWith('.woxingwosu8.com'))return false;
   const value=new URLSearchParams(location.search).get('test');
   try{
     if(value==='1')localStorage.setItem('wo-xing-wo-su-test-mode','1');
