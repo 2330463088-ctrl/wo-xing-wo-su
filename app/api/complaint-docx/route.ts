@@ -233,7 +233,7 @@ export async function POST(request: Request) {
     const doc = pages.length > 0 ? buildImageDocument(pages) : buildDocument(text);
     const buffer = await Packer.toBuffer(doc);
     const filename = (payload.filename || "民事起诉状.docx").replace(/[\\/:*?"<>|]+/g, "_");
-    return new Response(buffer, {
+    return new Response(new Uint8Array(buffer), {
       status: 200,
       headers: {
         ...corsHeaders(),

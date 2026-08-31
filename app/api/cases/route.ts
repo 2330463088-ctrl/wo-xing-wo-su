@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 type CaseDraftRow = {
   id?: string;
   user_email: string;
@@ -30,7 +28,7 @@ function json(data: unknown, init: ResponseInit = {}) {
 }
 
 function readEnv(name: string): string {
-  return String((env as Record<string, string | undefined>)[name] || "").trim();
+  return String(process.env[name] || "").trim();
 }
 
 function getSupabaseConfig() {

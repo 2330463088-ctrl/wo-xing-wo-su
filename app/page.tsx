@@ -3,7 +3,7 @@ export default function Home() {
     <main style={{ minHeight: "100vh", background: "#e9eeee" }}>
       <iframe
         title="我行我诉"
-        src="/mobile-preview.html"
+        src="/mobile-preview-v2.html"
         style={{
           display: "block",
           width: "100%",

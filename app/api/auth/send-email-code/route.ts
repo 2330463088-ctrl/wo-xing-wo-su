@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 type ChallengePayload = {
   email: string;
   expiresAt: number;
@@ -30,7 +28,7 @@ function jsonResponse(payload: Record<string, unknown>, status = 200): Response 
 }
 
 function readEnv(name: string): string {
-  return String((env as Record<string, string | undefined>)[name] || "").trim();
+  return String(process.env[name] || "").trim();
 }
 
 function normalizeEmail(value: unknown): string {
@@ -191,7 +189,7 @@ async function sendEmail(email: string, code: string): Promise<EmailDelivery> {
   return {
     sent: false,
     provider: "preview",
-    message: "未配置邮件服务密钥，已返回本地测试验证码",
+    message: "未配置邮件服务密钥，验证码没有发送",
   };
 }
 
@@ -222,7 +220,6 @@ export async function POST(request: Request) {
       challenge,
       expiresAt,
       message: delivery.message,
-      devCode: delivery.sent ? undefined : code,
     });
   } catch {
     return jsonResponse({ ok: false, message: "验证码发送失败，请稍后重试" }, 500);

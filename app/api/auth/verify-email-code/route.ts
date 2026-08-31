@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 type ChallengePayload = {
   email: string;
   expiresAt: number;
@@ -24,7 +22,7 @@ function jsonResponse(payload: Record<string, unknown>, status = 200): Response 
 }
 
 function readEnv(name: string): string {
-  return String((env as Record<string, string | undefined>)[name] || "").trim();
+  return String(process.env[name] || "").trim();
 }
 
 function authSecret(): string {

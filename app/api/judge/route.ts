@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 type Payload = {
   current?: Record<string, unknown>;
   answer?: unknown;
@@ -24,16 +22,16 @@ function jsonResponse(payload: Result, status = 200): Response {
 }
 
 function modelName(): string {
-  return env.DEEPSEEK_MODEL || "deepseek-chat";
+  return process.env.DEEPSEEK_MODEL || "deepseek-chat";
 }
 
 function apiUrl(): string {
-  return env.DEEPSEEK_API_URL || "https://api.deepseek.com/chat/completions";
+  return process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/chat/completions";
 }
 
 function foldText(value: unknown): string {
   const text = String(value ?? "").trim();
-  const table = new Map(
+  const table = new Map<string, string>(
     [
       ["０", "0"],
       ["１", "1"],
@@ -393,10 +391,10 @@ function localJudge(payload: Payload): Result {
     const annual = ["年息", "年利率", "每年", "/年"].some((token) => answer.includes(token));
     const monthly = ["月息", "月利率", "每月", "/月"].some((token) => answer.includes(token));
     const periods = [
-      ["日息", daily],
-      ["月息", monthly],
-      ["年息", annual],
-    ].filter(([, selected]) => selected).map(([label]) => label);
+      { label: "日息", selected: daily },
+      { label: "月息", selected: monthly },
+      { label: "年息", selected: annual },
+    ].filter((period) => period.selected).map((period) => period.label);
     if (periods.length > 1) {
       return baseResult("need_clarify", "请只选择日息、月息或年息一种。", ["利息周期冲突"]);
     }
@@ -442,7 +440,7 @@ async function judgeWithDeepSeek(payload: Payload): Promise<Result> {
     };
   }
 
-  const apiKey = env.DEEPSEEK_API_KEY;
+  const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
     return {
       ...ruleResult,
