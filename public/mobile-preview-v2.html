@@ -6111,5 +6111,12 @@ submitForm=function(){
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeTerms();closeAccount()}});
 refreshAccountUi();
 syncPlatformAccount();
+const assessmentStepLabelRender=render;
+render=function(){
+  assessmentStepLabelRender();
+  const step=queue[position];
+  const label=document.querySelector('#guide .progress span');
+  if(label)label.textContent=step?.assessmentIntro?'评估引导':`第 ${Math.max(1,position-(step?.assessmentIntro?1:0))} 步`;
+};
 installTestPanel();
 </script></body></html>
