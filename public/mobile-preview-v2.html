@@ -17,6 +17,47 @@
     .test-panel{position:fixed;z-index:60;left:12px;right:12px;bottom:70px;max-width:456px;margin:auto;background:#ffffffee;backdrop-filter:blur(10px);border:1px solid #dce9eb;border-radius:14px;box-shadow:0 12px 28px #123c4a25;padding:10px}.test-head{display:flex;align-items:center;justify-content:space-between;color:#135b76;font-size:12px;font-weight:750;margin-bottom:8px}.test-close{border:0;background:transparent;color:#7b8995;font:inherit}.test-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.test-actions button{border:1px solid #dce6e8;background:#f8fbfb;color:#344755;border-radius:9px;padding:9px 6px;font:inherit;font-size:12px}.test-actions button:active{background:#eef7f7}.test-jump{display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px}.test-select{height:38px;border:1px solid #dce6e8;border-radius:9px;background:#fff;color:#344755;font:inherit;font-size:12px;padding:0 8px;min-width:0}.test-jump button{border:0;background:#135b76;color:#fff;border-radius:9px;padding:0 12px;font:inherit;font-size:12px;white-space:nowrap}
   </style>
 
+  <style id="readable-typography-fix">
+    /* Keep the compact mobile layout readable after legacy theme overrides. */
+    header .brand { font-size: 16px !important; }
+    header .mark { font-size: 15px !important; }
+    header .hint { font-size: 11px !important; }
+    .splash-mark { font-size: 37px !important; }
+    .splash-name { font-size: 34px !important; }
+    .splash-prompt { font-size: 13px !important; }
+    .primary { font-size: 14px !important; }
+    .note, .progress { font-size: 12px !important; }
+    .stages li, .progress-nodes li { font-size: 10px !important; }
+    .dot, .progress-nodes i { font-size: 11px !important; }
+    .card h2, .content h2 { font-size: 23px !important; }
+    .stage-name { font-size: 12px !important; }
+    .desc { font-size: 13px !important; }
+    .option strong { font-size: 14px !important; }
+    .option small { font-size: 11px !important; }
+    .arrow { font-size: 17px !important; }
+    .entry, .repay-date, .repay-money { font-size: 14px !important; }
+    .form-fields label, .picker-label, .evidence-option { font-size: 13px !important; }
+    .picker-label span { font-size: 11px !important; }
+    .evidence-option i, .evidence-option.selected i:after { font-size: 11px !important; }
+    .evidence-warning { font-size: 11px !important; }
+    .evidence-warning strong { font-size: 12px !important; }
+    .human-service { font-size: 13px !important; }
+    .human-toast, .ai-pill { font-size: 12px !important; }
+    .repay-row-title, .repay-summary-empty { font-size: 12px !important; }
+    .add-repay, .rate-tab, .wheel-select { font-size: 13px !important; }
+    .calc-box { font-size: 12px !important; }
+    .calc-total, .calc-row.total strong { font-size: 20px !important; }
+    .calc-row strong { font-size: 15px !important; }
+    .calc-logic, .calc-help { font-size: 11px !important; }
+    .wheel-label { font-size: 11px !important; }
+    .wheel-item { font-size: 14px !important; }
+    .wheel-item.selected { font-size: 16px !important; }
+    .repay-summary-item { font-size: 12px !important; }
+    .repay-summary-item strong { font-size: 13px !important; }
+    .repay-clear, .test-panel, .test-actions button, .test-select, .test-jump button { font-size: 12px !important; }
+    .back, .text { font-size: 13px !important; }
+  </style>
+
 <script>
 // ===== DeepSeek 配置 =====
 // DeepSeek 统一走后端 /api/judge 代理，前端不保存任何密钥。
