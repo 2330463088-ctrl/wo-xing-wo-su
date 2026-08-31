@@ -213,6 +213,18 @@ export async function POST(request: Request) {
     const { challenge, expiresAt } = await buildChallenge(email, code);
     const delivery = await sendEmail(email, code);
 
+    if (!delivery.sent) {
+      return jsonResponse(
+        {
+          ok: false,
+          sent: false,
+          provider: delivery.provider,
+          message: delivery.message || "邮件服务尚未配置",
+        },
+        503,
+      );
+    }
+
     return jsonResponse({
       ok: true,
       sent: delivery.sent,
