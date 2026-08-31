@@ -6115,6 +6115,15 @@ const assessmentStepLabelRender=render;
 render=function(){
   assessmentStepLabelRender();
   const step=queue[position];
+  if(step?.assessmentIntro){
+    const nodes=[...document.querySelectorAll('#guide .progress-nodes li')];
+    nodes.forEach((node,index)=>{
+      node.classList.toggle('done',false);
+      node.classList.toggle('active',index===0);
+      const icon=node.querySelector('i');
+      if(icon)icon.textContent='';
+    });
+  }
   const label=document.querySelector('#guide .progress span');
   if(label)label.textContent=step?.assessmentIntro?'评估引导':`第 ${Math.max(1,position-(step?.assessmentIntro?1:0))} 步`;
 };
