@@ -3145,6 +3145,20 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
       }
     }
   </style>
+  <style id="clear-process-labels">
+    /* The fixed process bar stays legible on narrow screens. */
+    #guide .stages { padding: 10px 10px 11px !important; }
+    #guide .progress-nodes { gap: 0 !important; }
+    #guide .progress-nodes li,
+    #guide .progress-nodes li span { font-size: 10px !important; line-height: 1.25 !important; }
+    #guide .progress-nodes li { gap: 6px !important; }
+    #guide .progress-nodes i { width: 18px !important; height: 18px !important; font-size: 11px !important; }
+    #guide .progress-nodes:before { top: 9px !important; }
+    @media (max-width: 360px) {
+      #guide .progress-nodes li,
+      #guide .progress-nodes li span { font-size: 9px !important; }
+    }
+  </style>
 </head>
 <body><div class="app"><header><div class="brand"><span class="mark">诉</span><span>我行我诉</span></div><span class="hint" id="hint"></span></header>
   <section class="welcome" id="welcome"><button class="splash-enter" type="button" onclick="start()" aria-label="轻触进入我行我诉"><span class="splash-logo"><span class="splash-mark">诉</span><span class="splash-name">我行我诉</span></span><span class="splash-prompt">轻触进入</span></button></section>
