@@ -753,7 +753,8 @@ function buildElementComplaintDraftText(){
   const plaintiffName=plaintiffParts[0]||'原告',defendantName=defendantParts[0]||'被告';
   const plaintiffResidence=plaintiffParts[3]||plaintiffParts[2]||'不详';
   const defendantResidence=defendantParts[2]||'不详';
-  const principal=complaintFormatMoney(complaintGetAnswer(map,'借款本金总金额'))||'0';
+  const amounts=complaintLoanAmounts(map);
+  const principal=amounts.principal!=null?String(amounts.principal):'0';
   const loanDate=complaintFormatDate(complaintGetAnswer(map,'请填写借款日期'),'不详');
   const dueDate=complaintFormatDate(complaintGetAnswer(map,'请填写约定还款日期'),'');
   const firstDemand=complaintFormatDate(complaintGetAnswer(map,'请填写第一次催要时间'),'');
@@ -807,7 +808,7 @@ function buildElementComplaintDraftText(){
     '四、事实和理由',
     `1. 借款凭证：${elementIsYes(voucherChoice)?voucher:'无书面借款凭证，以其他证据证明'}。`,
     `2. 签订主体：出借人${plaintiffName}，借款人${defendantName}。`,
-    `3. 借款金额：约定并实际提供人民币${principal}元。`,
+    `3. 借款金额：实际提供人民币${principal}元${amounts.agreedPrincipal!=null&&amounts.agreedPrincipal!==amounts.principal?`（约定金额人民币${amounts.agreedPrincipal}元）`:''}。`,
     `4. 借款期限：${dueDate?`${loanDate}起至${dueDate}止，现已到期`:'未约定固定期限'}。`,
     `5. 借款利率：${hasInterest?(rate||'以凭证记载为准'):'未约定借期内利息'}。`,
     `6. 借款提供：${loanDate}通过${elementGet(map,'款项如何交付？','不详')}交付；借款事由为${elementGet(map,'请填写借款事由','未特别说明')}。`,
@@ -885,9 +886,9 @@ function elementComplaintRows(){
   const defendantOrganizationCells=defendants.filter(item=>elementIsOrganization(item.type)).map(item=>`${item.label}\n${elementPartyCell(item.type,complaintSplitParts(item.raw),'defendant')}`).join('\n\n');
   const thirdType=elementGet(map,'第三人是个人还是单位？','无');
   const third=complaintSplitParts(complaintGetAnswer(map,'请填写第三人个人身份信息','请填写第三人企业信息'));
-  const principal=complaintFormatMoney(elementGet(map,'借款本金总金额','0'));
-  const actualChoice=elementGet(map,'实际出借金额和约定出借金额一致吗？',elementGet(map,'实际出借金额和约定本金一致吗？',elementGet(map,'实际交付金额与约定本金一致吗？','一致')));
-  const actual=actualChoice==='一致'?principal:complaintFormatMoney(elementGet(map,'请填写实际出借金额',elementGet(map,'请填写实际交付金额',principal)));
+  const amounts=complaintLoanAmounts(map);
+  const principal=amounts.agreedPrincipal!=null?String(amounts.agreedPrincipal):'0';
+  const actual=amounts.providedPrincipal!=null?String(amounts.providedPrincipal):principal;
   const cutoff=complaintFormatDate(elementGet(map,'请填写计算诉讼金额的截止时间',complaintCurrentDate()));
   const loanDate=complaintFormatDate(elementGet(map,'请填写借款日期','不详'));
   const due=complaintFormatDate(complaintGetAnswer(map,'请填写约定还款日期'),'');
@@ -962,9 +963,9 @@ function elementComplaintTokens(){
   const electronic=elementGet(map,'是否接受电子送达？','不接受');
   Object.assign(tokens,{ES_Y:electronic==='不接受'?no:yes,ES_N:electronic==='不接受'?yes:no,ES_SMS:mark(electronic,'短信'),ES_WECHAT:mark(electronic,'微信'),ES_FAX:mark(electronic,'传真'),ES_EMAIL:mark(electronic,'邮箱'),ES_OTHER:''});
 
-  const principal=complaintFormatMoney(elementGet(map,'借款本金总金额','0'));
-  const actualChoice=elementGet(map,'实际出借金额和约定出借金额一致吗？',elementGet(map,'实际出借金额和约定本金一致吗？',elementGet(map,'实际交付金额与约定本金一致吗？','一致')));
-  const actual=actualChoice==='一致'?principal:complaintFormatMoney(elementGet(map,'请填写实际出借金额',elementGet(map,'请填写实际交付金额',principal)));
+  const amounts=complaintLoanAmounts(map);
+  const principal=amounts.agreedPrincipal!=null?String(amounts.agreedPrincipal):'0';
+  const actual=amounts.providedPrincipal!=null?String(amounts.providedPrincipal):principal;
   const cutoff=complaintFormatDate(elementGet(map,'请填写计算诉讼金额的截止时间',complaintCurrentDate()));
   const loanDate=complaintFormatDate(elementGet(map,'请填写借款日期',''));
   const due=complaintFormatDate(complaintGetAnswer(map,'请填写约定还款日期'),'');
@@ -3851,6 +3852,16 @@ function moneyValue(text){
   if(!value)return null;
   return Number(value[1])*(value[2]?10000:1);
 }
+function complaintLoanAmounts(map){
+  const agreedAnswer=complaintGetAnswer(map,'借款本金总金额','借款总金额');
+  const agreedPrincipal=moneyValue(agreedAnswer);
+  const choice=complaintGetAnswer(map,'实际出借金额和约定出借金额一致吗？','实际出借金额和约定本金一致吗？','实际交付金额与约定本金一致吗？');
+  const actualAnswer=complaintGetAnswer(map,'请填写实际出借金额','请填写实际交付金额');
+  const actualPrincipal=moneyValue(actualAnswer);
+  const isDifferent=/^不一致/.test(choice);
+  const providedPrincipal=isDifferent&&actualPrincipal!=null?actualPrincipal:agreedPrincipal;
+  return {agreedPrincipal,actualPrincipal,providedPrincipal,principal:providedPrincipal,choice};
+}
 function moneyValues(text){
   return [...String(text||'').replace(/，/g,'').matchAll(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/gi)]
     .map(match=>Number(match[1])*(match[2]?10000:1));
@@ -3947,11 +3958,8 @@ function repaymentOrder(noInterest=false){
 }
 function computeRepayment(){
   const missing=[];
-  const principalRecord=latestRecord('借款本金总金额')||latestRecord('借款总金额');
-  const agreedPrincipal=moneyValue(principalRecord?.answer);
-  const actualChoice=(latestRecord('实际出借金额和约定出借金额一致吗')||latestRecord('实际出借金额和约定本金一致吗')||latestRecord('实际交付金额与约定本金一致吗'))?.answer||'一致';
-  const actualPrincipal=moneyValue((latestRecord('请填写实际出借金额')||latestRecord('请填写实际交付金额'))?.answer);
-  const principal=actualChoice==='不一致'?actualPrincipal:agreedPrincipal;
+  const amounts=complaintLoanAmounts(complaintAnswerMap());
+  const {agreedPrincipal,actualPrincipal,principal}=amounts;
   if(principal==null)missing.push('借款本金金额');
   const cutoff=dateValue((latestRecord('计算诉讼金额的截止时间')||latestRecord('计算截止日期'))?.answer);
   if(!cutoff)missing.push('计算诉讼金额的截止时间');
