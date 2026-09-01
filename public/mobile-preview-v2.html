@@ -235,7 +235,7 @@ function complaintFormatDate(value, fallback = '日期待补充') {
 
 function complaintFormatMoney(value, fallback = '') {
   const text = String(value || '');
-  const noDate = text.replace(/(20\d{2}|19\d{2})[年.\-\/]\d{1,2}[月.\-\/]\d{1,2}日?/g, ' ');
+  const noDate = text.replace(/(20\d{2}|19\d{2})[年.\-\/]\d{1,2}[月.\-\/]\d{1,2}日?/g, ' ').replace(/[,，]/g, '');
   const match = noDate.match(/(\d+(?:\.\d+)?)/);
   return match ? match[1] : fallback;
 }
@@ -3848,14 +3848,14 @@ function jurisdictionDecision(){
   return {level:'ok',title:'管辖法院为被告所在地法院',detail:`被告所在地：${target.address}。网上立案时请选择该地址对应的人民法院。`};
 }
 function moneyValue(text){
-  const value=String(text||'').replace(/，/g,'').match(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/i);
+  const value=String(text||'').replace(/[,，]/g,'').match(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/i);
   if(!value)return null;
   return Number(value[1])*(value[2]?10000:1);
 }
 function complaintLoanAmounts(map){
   const agreedAnswer=complaintGetAnswer(map,'借款本金总金额','借款总金额');
   const agreedPrincipal=moneyValue(agreedAnswer);
-  const choice=complaintGetAnswer(map,'实际出借金额和约定出借金额一致吗？','实际出借金额和约定本金一致吗？','实际交付金额与约定本金一致吗？');
+  const choice=complaintGetAnswer(map,'实际出借金额和约定出借金额一致吗？','实际出借金额和约定出借金额一致吗','实际出借金额和约定本金一致吗？','实际出借金额和约定本金一致吗','实际交付金额与约定本金一致吗？','实际交付金额与约定本金一致吗');
   const actualAnswer=complaintGetAnswer(map,'请填写实际出借金额','请填写实际交付金额');
   const actualPrincipal=moneyValue(actualAnswer);
   const isDifferent=/^不一致/.test(choice);
@@ -3863,7 +3863,7 @@ function complaintLoanAmounts(map){
   return {agreedPrincipal,actualPrincipal,providedPrincipal,principal:providedPrincipal,choice};
 }
 function moneyValues(text){
-  return [...String(text||'').replace(/，/g,'').matchAll(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/gi)]
+  return [...String(text||'').replace(/[,，]/g,'').matchAll(/(\d+(?:\.\d+)?)\s*(万)?\s*(?:元|人民币|RMB|¥)?/gi)]
     .map(match=>Number(match[1])*(match[2]?10000:1));
 }
 function dateValue(text){
