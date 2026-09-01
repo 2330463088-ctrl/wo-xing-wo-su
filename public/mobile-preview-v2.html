@@ -2937,7 +2937,7 @@ function deliveryFlow(){return [
 choice('款项如何交付？','用于判断借款是否实际交付。',[{label:'转账交付',desc:'银行/微信/支付宝等转账',add:[]},{label:'现金交付',desc:'需要收条或聊天记录补强',add:[]},{label:'现金加转账',desc:'部分现金、部分转账',add:[]},{label:'不确定',desc:'需要人工核实交付证据',add:[human('款项交付方式不清，需要核实证据')]}])
 ]}
 function commonComplaintInfoFlow(){return [
-choice('送达地址是否使用原告地址？','送达地址就是法院邮寄传票、通知等材料的地址。',[{label:'是',desc:'使用前面填写的原告地址和电话',add:[]},{label:'否',desc:'填写其他能正常收件的地址',add:[form('请填写送达信息','请确保法院能够正常联系和投递。',[{label:'送达地址',placeholder:'请输入完整地址'},{label:'收件人',placeholder:'请输入收件人姓名'},{label:'联系电话',placeholder:'请输入联系电话'}],1)]}],1),
+choice('送达地址是否使用原告地址？','简单说，就是法院以后寄送传票、通知和其他诉讼材料时，是否寄到您前面填写的原告地址。地址要有人正常收件，避免漏收法院材料。',[{label:'是',desc:'使用前面填写的原告地址和电话',add:[]},{label:'否',desc:'填写其他能正常收件的地址',add:[form('请填写送达信息','请确保法院能够正常联系和投递。',[{label:'送达地址',placeholder:'请输入完整地址'},{label:'收件人',placeholder:'请输入收件人姓名'},{label:'联系电话',placeholder:'请输入联系电话'}],1)]}],1),
 choice('是否接受电子送达？','电子送达就是法院通过短信、微信或邮箱发送诉讼文书。',[{label:'接受短信送达',desc:'使用前面填写的联系电话',add:[]},{label:'接受微信送达',desc:'通过微信接收法院文书',add:[]},{label:'接受邮箱送达',desc:'填写常用接收邮箱',add:[input('请填写电子送达邮箱','填写常用且能正常接收邮件的邮箱。','例如：name@example.com',1)]},{label:'不接受',desc:'使用其他法定送达方式',add:[]}],1),
 ...thirdPartyFlow(),
 choice('是否要被告承担打官司的费用？','根据您的实际要求选择。',[{label:'否',desc:'不另外主张费用',add:[]},{label:'是',desc:'选择需要被告承担的费用',add:[{kind:'costPicker',title:'要被告承担什么费用？',description:'可多选，只勾选需要主张的费用。',stage:1}]}],1),
