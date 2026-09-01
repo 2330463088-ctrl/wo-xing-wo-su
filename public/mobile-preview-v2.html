@@ -3115,8 +3115,6 @@ render=function(){
         textarea.maxLength=500;
         textarea.placeholder='在此填写被告还用了哪些资产做了担保';
         textarea.setAttribute('aria-label',step.fields[index].label);
-        const help=document.createElement('small');help.className='field-help other-security-help';help.textContent='一般填写担保的具体方式、担保物或责任人、担保时间，以及对方承担的责任。例如“被告以某车辆作担保，车牌号为×××，自借款之日起承担担保责任”。如果没有抵押、质押、保证以外的担保，请返回上一步选择“无”。';
-        textarea.insertAdjacentElement('afterend',help);
         label.replaceWith(textarea);
       }else if(identityForm){
         label.classList.add('identity-field');
