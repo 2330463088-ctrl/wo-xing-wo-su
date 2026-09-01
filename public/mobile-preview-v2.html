@@ -2581,9 +2581,9 @@ header {
   .back { left: calc(50% - 145px) !important; width: 135px !important; }
 }
 .cost-picker{display:grid;gap:9px;margin:24px 0 18px}
-.cost-item{width:100%;border:1px solid #d9e1e5;border-radius:12px;background:#fff;display:flex;align-items:center;min-height:58px;padding:6px 14px;gap:8px;cursor:pointer}
+.cost-item{width:100%;border:1px solid #d9e1e5;border-radius:12px;background:#fff;display:flex;align-items:center;min-height:68px;padding:7px 14px;gap:8px;cursor:pointer}
 .cost-item.selected{border-color:#17677f;background:#f6fbfc}
-.cost-toggle{width:100%;min-height:44px;padding:0 4px;border:0;background:transparent;display:flex;align-items:center;gap:10px;text-align:left;font-size:15px;color:#1d2b35}
+.cost-toggle{width:100%;min-height:52px;padding:3px 4px;border:0;background:transparent;display:flex;align-items:flex-start;gap:10px;text-align:left;font-size:15px;color:#1d2b35}.cost-toggle span{display:grid;gap:3px;line-height:1.35}.cost-toggle small{color:#788890;font-size:11px;font-weight:400;line-height:1.45}
 .cost-toggle i{width:20px;height:20px;border:1px solid #b8c8cf;border-radius:5px;display:grid;place-items:center;font-style:normal;font-size:13px;color:#fff;flex:0 0 auto}
 .cost-item.selected i{border-color:#17677f;background:#17677f}
 .cost-fields{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
@@ -4673,10 +4673,16 @@ function renderCostPicker(){
   if(step?.kind!=='costPicker')return;
   const c=document.getElementById('card');
   const pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100);
-  const types=['律师费','诉讼费','保全费','保函费','公告费'];
-  const rows=types.map(name=>{
+  const types=[
+    ['律师费','委托律师代理案件产生的服务费用。'],
+    ['诉讼费','向法院起诉时通常需要预交的案件受理费用。'],
+    ['保全费','申请冻结、查封对方财产时产生的申请费用。'],
+    ['保函费','办理保全担保保函时可能产生的担保服务费用。'],
+    ['公告费','无法正常送达时，法院公告送达可能产生的费用。']
+  ];
+  const rows=types.map(([name,description])=>{
     const selected=selectedCostTypes.includes(name);
-    return `<button type="button" class="cost-item cost-toggle ${selected?'selected':''}" onclick="toggleCostType('${name}')"><i>${selected?'✓':''}</i><span>${name}</span></button>`;
+    return `<button type="button" class="cost-item cost-toggle ${selected?'selected':''}" onclick="toggleCostType('${name}')"><i>${selected?'✓':''}</i><span><strong>${name}</strong><small>${description}</small></span></button>`;
   }).join('');
   c.className='card';
   c.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>要被告承担什么费用？</h2><div class="cost-picker">${rows}</div><p class="cost-note">律师费和保函费没有约定情况下，一般由原告承担；诉讼费、保全费和公告费由原告先行垫付，最终由败诉方承担。</p><button class="primary next" type="button" onclick="submitCostPicker()">保存并继续　→</button></div><button class="back" type="button" onclick="back()">← 返回上一步</button>`;
