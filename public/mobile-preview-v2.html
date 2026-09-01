@@ -2659,6 +2659,7 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
   padding: 55px 18px 12px !important;
   text-align: center !important;
 }
+.preservation-actions{display:grid;gap:10px;margin-top:16px}.preservation-actions .primary{margin-top:0}.preservation-download{border:1px solid #8ebbc0;border-radius:11px;background:#f4fbfb;color:#135b76;padding:14px 20px;font:inherit;font-weight:700;box-shadow:none}.preservation-download:active{background:#e8f6f6}.preservation-actions .preservation-download{width:100%}
 .assessment-checkpoint{display:grid;gap:7px;margin:12px 0 4px;padding:12px 13px;border:1px solid #dce7e8;border-radius:11px;background:#f8fbfb;text-align:left;color:#5f7079;font-size:12px;line-height:1.65}.assessment-checkpoint strong{color:#1f3a44;font-size:13px}.assessment-checkpoint .assessment-checkpoint-risk{color:#8a5b25}.assessment-checkpoint .assessment-checkpoint-ok{color:#277051}
 .draft-ready-banner{margin:4px 0 16px;padding:12px 14px;border:1px solid #b9dfe0;border-radius:12px;background:#f0fbfa;color:#28636b;font-size:13px;line-height:1.65;text-align:left}.draft-ready-banner strong{display:block;margin-bottom:4px;color:#155b68;font-size:15px}
 
@@ -4721,7 +4722,7 @@ render=function(){
   const c=document.getElementById('card');
   const data=preservationApplicationData();
   c.className='card';
-  c.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${Math.min(96,((position+1)/Math.max(queue.length,1))*100)}%"></div></div></div><div class="content"><h2>请核对保全申请书</h2><p class="preservation-review-tip">请先查看完整内容，确认姓名、金额和法院无误后再下载。</p>${preservationPreviewHtml(data)}${preservationRiskHtml(data)}<p class="calc-help">提交时通常还需财产线索和法院认可的担保材料。</p><button class="primary next" type="button" onclick="downloadPreservationApplication()">下载 Word　↓</button><button class="primary next" type="button" onclick="finishPreservationApplication()">内容无误，继续　→</button></div><button class="back" type="button" onclick="back()">← 返回上一步</button>`;
+  c.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${Math.min(96,((position+1)/Math.max(queue.length,1))*100)}%"></div></div></div><div class="content"><h2>请核对保全申请书</h2><p class="preservation-review-tip">请先查看完整内容，确认申请人、被申请人、金额和法院无误。确认无误后可下载 Word 文档，下载后仍需按法院要求提交。</p>${preservationPreviewHtml(data)}${preservationRiskHtml(data)}<p class="calc-help">提交时通常还需财产线索和法院认可的担保材料。</p><div class="preservation-actions"><button class="preservation-download" type="button" onclick="downloadPreservationApplication()">下载 Word 文档　↓</button><button class="primary" type="button" onclick="finishPreservationApplication()">内容无误，继续　→</button></div></div><button class="back" type="button" onclick="back()">← 返回上一步</button>`;
 };
 function showTestStep(step,extraAnswers=[]){
   welcome.classList.add('hidden');
