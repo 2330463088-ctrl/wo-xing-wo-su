@@ -3157,7 +3157,7 @@ const subtitleFreeRender=render;
 render=function(){
   subtitleFreeRender();
   const step=queue[position];
-  if(!['本案是否有第三人？','请填写计算诉讼金额的截止时间'].includes(step?.title)) document.querySelector('.content > .desc')?.remove();
+  if(!['本案是否有第三人？','请填写计算诉讼金额的截止时间','送达地址是否使用原告地址？'].includes(step?.title)) document.querySelector('.content > .desc')?.remove();
 };
 const cleanFieldsRender=render;
 render=function(){
