@@ -3169,7 +3169,7 @@ render=function(){
     if(entry) entry.placeholder=step.placeholder;
   }
   document.querySelectorAll('.entry').forEach(entry=>{
-    if(entry.closest('.identity-form')||entry.classList.contains('collateral-textarea')||entry.dataset.flowHint||!entry.placeholder||entry.placeholder.length<18)return;
+    if(entry.closest('.identity-form')||entry.classList.contains('collateral-textarea')||entry.classList.contains('other-security-textarea')||entry.dataset.flowHint||!entry.placeholder||entry.placeholder.length<18)return;
     const hint=entry.placeholder;entry.placeholder='';entry.dataset.flowHint='1';
     const wrap=document.createElement('span');wrap.className='input-wrap';
     const text=document.createElement('span');text.className='scroll-hint';text.textContent=hint;
