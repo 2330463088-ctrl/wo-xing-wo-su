@@ -4681,6 +4681,7 @@ function renderCostPicker(){
   c.className='card';
   c.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>要被告承担什么费用？</h2><div class="cost-picker">${rows}</div><p class="cost-note">律师费和保函费没有约定情况下，一般由原告承担；诉讼费、保全费和公告费由原告先行垫付，最终由败诉方承担。</p><button class="primary next" type="button" onclick="submitCostPicker()">保存并继续　→</button></div><button class="back" type="button" onclick="back()">← 返回上一步</button>`;
   c.querySelector('.primary.next').onclick=submitCostPicker;
+  mountStickyActions();
 }
 function submitCostPicker(){
   if(!selectedCostTypes.length){showAiNotice('请至少选择一项费用','warn');return;}
