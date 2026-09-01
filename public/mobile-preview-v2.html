@@ -2752,7 +2752,7 @@ textarea.entry:not(:placeholder-shown) { text-align: left !important; }
     body.sticky-actions-visible .ai-pill{bottom:calc(74px + env(safe-area-inset-bottom))!important}
     body.sticky-actions-visible .test-panel{bottom:calc(74px + env(safe-area-inset-bottom))!important}
     .flow-context{display:flex;align-items:center;justify-content:center;gap:7px;margin:-8px 0 14px;color:#6f7f89;font-size:11px;line-height:1.4;letter-spacing:.02em}.flow-context:before{content:"";width:18px;height:1px;background:#8caeb3}.flow-context:after{content:"";width:18px;height:1px;background:#8caeb3}.assessment-summary{display:grid;gap:9px}.assessment-box{border:1px solid #e1e8e9;border-radius:11px;background:#fbfcfc;padding:13px 14px}.assessment-box.primary-result{border-color:#8ebbc0;background:#f1f9f9}.assessment-label{font-size:11px;color:#74838d;margin-bottom:5px}.assessment-value{font-size:17px;line-height:1.45;font-weight:700;color:#172731}.assessment-box p{margin:5px 0 0;color:#667680;font-size:12px;line-height:1.65}.assessment-risk{margin:12px 0 0;padding:11px 13px;border-radius:10px;background:#fff7ed;border:1px solid #f3d7b5;color:#765126;font-size:12px;line-height:1.65}.assessment-disclaimer{margin:10px 3px 0;color:#8a969e;font-size:10px;line-height:1.55;text-align:center}
-    .assessment-narrative{margin-top:2px;padding:17px 16px;border:1px solid #dce7e8;border-radius:12px;background:#f8fbfb;color:#44545f;font-size:14px;line-height:1.9;text-align:left}.assessment-narrative p{margin:0}.assessment-narrative strong{color:#142934;font-weight:700}
+    .assessment-narrative{margin-top:2px;padding:17px 16px;border:1px solid #dce7e8;border-radius:12px;background:#f8fbfb;color:#44545f;font-size:14px;line-height:1.9;text-align:left}.assessment-narrative p{margin:0}.assessment-narrative strong{color:#142934;font-weight:700}.assessment-intro{margin-top:14px!important;padding:15px 16px;border:1px solid #dce7e8;border-radius:11px;background:#f8fbfb;color:#44545f!important;font-size:14px!important;line-height:1.9!important;text-align:left}.assessment-intro strong{display:block;color:#142934;font-size:15px;font-weight:750;margin-bottom:4px}
     @media(max-width:360px){header,#guide .stages,.sticky-action-bar{left:8px;right:8px}header .brand .mark{display:none}.account-trigger{left:10px}.human-service,body.sticky-actions-visible .human-service{right:10px!important}}
     .account-drawer-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:0 0 17px;padding:4px;border-radius:12px;background:#f3f6f6}
     .account-drawer-tab{height:36px;border:0;border-radius:9px;background:transparent;color:#748187;font:inherit;font-size:12px}
@@ -5149,7 +5149,7 @@ render=function(){
   const pct=Math.min(96,((position+1)/Math.max(queue.length,1))*100);
   const card=document.getElementById('card');
   card.className='card';
-  card.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2>${step.description?`<p class="desc">${step.description}</p>`:''}<div class="voucher-panel"><div class="voucher-panel-head">有几种就选几种 <span>可多选</span></div><div class="voucher-grid">${step.options.map((option,index)=>`<button id="multi-choice-${index}" class="voucher-card" type="button" onclick="toggleMultiChoice(${index},'${option.label}')"><i></i><strong>${option.label}</strong></button>`).join('')}</div></div><button class="primary next" onclick="submitMultiChoice()">确认并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
+card.innerHTML=`<div class="progress"><span>第 ${position+1} 步</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div><div class="content"><h2>${step.title}</h2>${step.description?`<p class="desc">${step.description}</p>`:''}<div class="voucher-panel"><div class="voucher-panel-head">请选择相关凭证 <span>可多选</span></div><div class="voucher-grid">${step.options.map((option,index)=>`<button id="multi-choice-${index}" class="voucher-card" type="button" onclick="toggleMultiChoice(${index},'${option.label}')"><i></i><strong>${option.label}</strong></button>`).join('')}</div></div><button class="primary next" onclick="submitMultiChoice()">确认并继续　→</button></div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;
 };
 function toggleMultiChoice(index,name){
   const none='没有书面凭证';
@@ -5765,6 +5765,11 @@ function addFlowContextGuide(){
   else if((step.stage||1)===1&&queue.findIndex(item=>item.kind==='assessmentResult')>=0&&position>queue.findIndex(item=>item.kind==='assessmentResult'))label='初步评估已完成 · 正在准备起诉材料';
   else label=`第 ${step.stage||1} 阶段 · ${stageNames[(step.stage||1)-1]||'诉讼指导'}`;
   if(!label)return;
+  const assessmentIntro=content.querySelector('.desc');
+  if(step.title==='先帮您评估该借款能否起诉'&&assessmentIntro){
+    assessmentIntro.classList.add('assessment-intro');
+    assessmentIntro.innerHTML='<strong>先判断能不能起诉、胜诉把握如何</strong><br>接下来只问几个关键问题，现在不用填写完整起诉状信息。';
+  }
   const node=document.createElement('div');
   node.className='flow-context';
   node.textContent=label;
