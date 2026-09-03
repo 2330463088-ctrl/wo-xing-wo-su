@@ -718,6 +718,143 @@ function generateComplaintDraft() {
   complaintDraftGenerated = true;
   showComplaintDraftResult();
 }
+let appealDraftText='';
+function generateAppealDraft(step){
+  const map=complaintAnswerMap();
+  const parties=buildAppealPartyLine(map);
+  const reason=appealReasonText||'对判决认定的事实和适用法律有异议';
+  const judgment=judgmentDocumentText||'一审判决';
+  const prompt=`请根据以下案件信息，撰写一份民事上诉状初稿，用中文，格式规范：
+案件类型：民间借贷纠纷
+${parties}
+${judgment ? '一审情况：' + judgment : ''}
+上诉理由：${reason}
+要求：
+1. 包含上诉人、被上诉人信息
+2. 上诉请求明确
+3. 事实和理由充分
+4. 符合民事上诉状格式
+5. 输出纯文本，不要markdown格式`;
+  generateDraftViaAI(prompt,function(text){appealDraftText=text;showDraftResult(text);},function(){showDraftError();});
+}
+function retryAppealDraft(){const step=queue[position];generateAppealDraft(step);}
+function downloadAppealDraft(){
+  if(!appealDraftText)return;
+  downloadDocx(appealDraftText,'民事上诉状.docx');
+}
+function finishAppealDraft(){
+  answers.push('上诉状已生成');
+  position++;
+  render();
+}
+let enforcementDraftText='';
+function generateEnforcementDraft(step){
+  const map=complaintAnswerMap();
+  const calc=computeRepayment();
+  const amount=calc.ok?calc.total:complaintGetAnswer(map,'借款本金总金额','借款总金额');
+  const plaintiff=complaintGetAnswer(map,'请填写原告个人身份信息','请填写原告企业名称');
+  const defendant=complaintGetAnswer(map,'请填写被告个人身份信息','请填写被告企业名称');
+  const plaintiffName=complaintSplitParts(plaintiff)[0]||'';
+  const defendantName=complaintSplitParts(defendant)[0]||'';
+  const docType=step?.documentType||'民事判决书';
+  const prompt=`请根据以下案件信息，撰写一份强制执行申请书初稿，用中文，格式规范：
+执行依据：${docType}
+申请执行人（原告）：${plaintiffName}
+被执行人（被告）：${defendantName}
+执行标的：${amount}元
+案件类型：民间借贷纠纷
+要求：
+1. 包含申请执行人、被执行人信息
+2. 执行请求明确（本金、利息、迟延履行金等）
+3. 事实与理由清晰
+4. 符合强制执行申请书格式
+5. 输出纯文本，不要markdown格式`;
+  generateDraftViaAI(prompt,function(text){enforcementDraftText=text;showDraftResult(text);},function(){showDraftError();});
+}
+function retryEnforcementDraft(){const step=queue[position];generateEnforcementDraft(step);}
+function downloadEnforcementDraft(){
+  if(!enforcementDraftText)return;
+  downloadDocx(enforcementDraftText,'强制执行申请书.docx');
+}
+function finishEnforcementDraft(){
+  answers.push('强制执行申请书已生成');
+  position++;
+  render();
+}
+// 通用：通过 AI 生成文书草稿
+let draftGenerating=false;
+function generateDraftViaAI(prompt,onSuccess,onError){
+  if(draftGenerating)return;
+  draftGenerating=true;
+  const loading=document.getElementById('draft-loading');
+  const errorEl=document.getElementById('draft-error');
+  const contentEl=document.getElementById('draft-content');
+  const actionsEl=document.getElementById('draft-actions');
+  const nextBtn=document.getElementById('draft-next');
+  if(loading)loading.classList.remove('hidden');
+  if(errorEl)errorEl.classList.add('hidden');
+  if(contentEl)contentEl.classList.add('hidden');
+  if(actionsEl)actionsEl.classList.add('hidden');
+  if(nextBtn)nextBtn.classList.add('hidden');
+  fetch('/api/judge',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      current:{question:'请生成文书',answer:''},
+      answer:prompt,
+      history:[]
+    })
+  }).then(function(r){return r.json();}).then(function(res){
+    draftGenerating=false;
+    if(loading)loading.classList.add('hidden');
+    if(res&&res.message){
+      if(onSuccess)onSuccess(res.message);
+    }else{
+      if(onError)onError();
+    }
+  }).catch(function(){
+    draftGenerating=false;
+    if(loading)loading.classList.add('hidden');
+    if(onError)onError();
+  });
+}
+function showDraftResult(text){
+  const contentEl=document.getElementById('draft-content');
+  const actionsEl=document.getElementById('draft-actions');
+  const nextBtn=document.getElementById('draft-next');
+  if(contentEl){
+    contentEl.classList.remove('hidden');
+    contentEl.innerText=text;
+  }
+  if(actionsEl)actionsEl.classList.remove('hidden');
+  if(nextBtn)nextBtn.classList.remove('hidden');
+}
+function showDraftError(){
+  const errorEl=document.getElementById('draft-error');
+  if(errorEl)errorEl.classList.remove('hidden');
+}
+// 通用：下载 docx
+function downloadDocx(text,filename){
+  const endpoints = location.protocol === 'file:'
+    ? ['http://localhost:3000/api/complaint-docx','http://127.0.0.1:8787/api/complaint-docx']
+    : ['/api/complaint-docx'];
+  let lastError=null;
+  (async function(){
+    for(const endpoint of endpoints){
+      try{
+        const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,filename})});
+        if(!response.ok)throw new Error('HTTP '+response.status);
+        const blob=await response.blob();
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download=filename||'document.docx';
+        document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+        return;
+      }catch(e){lastError=e;}
+    }
+    alert('下载失败：'+(lastError?.message||'未知错误'));
+  })();
+}
+
 
 function elementGet(map,title,fallback='无'){
   const value=complaintGetAnswer(map,title);
@@ -3020,7 +3157,41 @@ function render(){let step=queue[position],stage=step?.stage||7,current=step?.ti
 <div id="draft-content" class="draft-content hidden"></div>
 <div id="draft-actions" class="draft-actions hidden"><button class="copy-btn" onclick="copyComplaintDraft()">复制全文</button><button class="download-btn" onclick="downloadComplaintDraft()">下载 Word</button></div>
 <button id="draft-next" class="primary next hidden" onclick="finishComplaintDraft()">确认并进入递交立案　→</button>
-</div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;setTimeout(function(){generateElementComplaintDraft();},300);return}c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="${step.action==='联系人工'?'humanService()':'next()'}">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
+</div>${position?'<button class="back" onclick="back()">← 返回上一步</button>':''}`;setTimeout(function(){generateElementComplaintDraft();},300);return}if(step.kind==='appealDraft'){c.className='card';c.innerHTML=top+`
+<div id="draft-loading" class="draft-loading">
+<div class="loading-spinner"></div>
+<div class="loading-text">AI 正在撰写上诉状，请稍候…</div>
+</div>
+<div id="draft-error" class="draft-error hidden">
+<div class="error-icon">⚠</div>
+<div class="error-text">生成失败，请检查网络后重试</div>
+<button class="retry-btn" onclick="retryAppealDraft()">重新生成</button>
+</div>
+<div id="draft-content" class="draft-content hidden"></div>
+<div id="draft-actions" class="draft-actions hidden">
+<button class="copy-btn" onclick="copyComplaintDraft()">复制全文</button>
+<button class="download-btn" onclick="downloadAppealDraft()">下载 Word</button>
+</div>
+<button id="draft-next" class="primary next hidden" onclick="finishAppealDraft()">确认上诉状　→</button>
+</div>${paymentGate?paymentGate:''}`;generateAppealDraft(step);return;}
+if(step.kind==='enforcementDraft'){c.className='card';c.innerHTML=top+`
+<div id="draft-loading" class="draft-loading">
+<div class="loading-spinner"></div>
+<div class="loading-text">AI 正在撰写强制执行申请书，请稍候…</div>
+</div>
+<div id="draft-error" class="draft-error hidden">
+<div class="error-icon">⚠</div>
+<div class="error-text">生成失败，请检查网络后重试</div>
+<button class="retry-btn" onclick="retryEnforcementDraft()">重新生成</button>
+</div>
+<div id="draft-content" class="draft-content hidden"></div>
+<div id="draft-actions" class="draft-actions hidden">
+<button class="copy-btn" onclick="copyComplaintDraft()">复制全文</button>
+<button class="download-btn" onclick="downloadEnforcementDraft()">下载 Word</button>
+</div>
+<button id="draft-next" class="primary next hidden" onclick="finishEnforcementDraft()">确认执行申请书　→</button>
+</div>${paymentGate?paymentGate:''}`;generateEnforcementDraft(step);return;}
+c.className='card result';c.innerHTML=`<div><div class="check">✓</div><p class="stage-name">第 ${stage} 阶段 · ${stageNames[stage-1]}</p><h2>${step.title}</h2><p class="desc">${step.description}</p><button class="primary" onclick="${step.action==='联系人工'?'humanService()':'next()'}">${step.action}　→</button>${position?'<button class="text" onclick="back()">返回上一步</button>':''}</div>`}
 function tagBranch(nodes,parents){return nodes.map(node=>({...node,_branchParents:parents,options:node.options?.map(option=>({...option,add:option.add?tagBranch(option.add,parents):option.add}))}))}
 const uniqueIdentityStepTitles=new Set(['请填写原告个人身份信息','请填写原告企业名称','请填写被告个人身份信息','请填写被告企业名称','请填写担保人身份信息']);
 function uniqueIdentityStepKey(step){return uniqueIdentityStepTitles.has(step?.title)?step.title:''}
