@@ -796,7 +796,8 @@ function generateDraftViaAI(prompt,onSuccess,onError){
   if(contentEl)contentEl.classList.add('hidden');
   if(actionsEl)actionsEl.classList.add('hidden');
   if(nextBtn)nextBtn.classList.add('hidden');
-  fetch('/api/judge',{
+  const judgeApiUrl=(location.hostname.endsWith('coze.site')||location.protocol==='file:')?'https://woxingwosu8.com/api/judge':'/api/judge';
+  fetch(judgeApiUrl,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
@@ -837,7 +838,9 @@ function showDraftError(){
 function downloadDocx(text,filename){
   const endpoints = location.protocol === 'file:'
     ? ['http://localhost:3000/api/complaint-docx','http://127.0.0.1:8787/api/complaint-docx']
-    : ['/api/complaint-docx'];
+    : location.hostname.endsWith('coze.site')
+      ? ['https://woxingwosu8.com/api/complaint-docx']
+      : ['/api/complaint-docx'];
   let lastError=null;
   (async function(){
     for(const endpoint of endpoints){
@@ -1210,7 +1213,8 @@ async function downloadComplaintDraft() {
   if (!complaintDraftText) return;
   try {
     if(complaintDraftType==='element'){
-      const response=await fetch('/api/element-complaint-docx',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens:elementComplaintTokens(),omit_rows:elementOmittedTemplateRows()})});
+      const elementDocxUrl=(location.hostname.endsWith('coze.site')||location.protocol==='file:')?'https://woxingwosu8.com/api/element-complaint-docx':'/api/element-complaint-docx';
+      const response=await fetch(elementDocxUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens:elementComplaintTokens(),omit_rows:elementOmittedTemplateRows()})});
       if(!response.ok)throw new Error(`HTTP ${response.status}`);
       const blob=await response.blob();
       const url=URL.createObjectURL(blob);
@@ -1221,7 +1225,9 @@ async function downloadComplaintDraft() {
           'http://localhost:3000/api/complaint-docx',
           'http://127.0.0.1:8787/api/complaint-docx',
         ]
-      : ['/api/complaint-docx'];
+      : location.hostname.endsWith('coze.site')
+        ? ['https://woxingwosu8.com/api/complaint-docx']
+        : ['/api/complaint-docx'];
     let lastError = null;
     for (const endpoint of endpoints) {
       try {
@@ -3478,7 +3484,7 @@ async function askDeepSeek(step,answer,afterPosition){
   }
   showAiNotice('AI 正在判断本步信息…');
   try{
-    const judgeUrl=location.protocol==='file:'?'http://127.0.0.1:8765/api/judge':'/api/judge';
+    const judgeUrl=location.protocol==='file:'?'http://127.0.0.1:8765/api/judge':location.hostname.endsWith('coze.site')?'https://woxingwosu8.com/api/judge':'/api/judge';
     const response=await fetch(judgeUrl,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -4880,7 +4886,8 @@ function submitCostPicker(){
 async function downloadPreservationApplication(){
   const data=preservationApplicationData();
   try{
-    const response=await fetch('/api/preservation-application-docx',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens:data.tokens})});
+    const presUrl=(location.hostname.endsWith('coze.site')||location.protocol==='file:')?'https://woxingwosu8.com/api/preservation-application-docx':'/api/preservation-application-docx';
+    const response=await fetch(presUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tokens:data.tokens})});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     const blob=await response.blob();
     const url=URL.createObjectURL(blob);
