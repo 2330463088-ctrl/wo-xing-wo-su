@@ -5762,9 +5762,11 @@ async function loginAccount(event){
 }
 function logoutAccount(){try{sessionStorage.removeItem(localSessionKey)}catch{}refreshAccountUi()}
 function normalizeEvidenceSourcePanels(){
+  const step=queue[position];
+  const options=evidenceOptionsForStep(step);
   document.querySelectorAll('.evidence-options').forEach(panel=>{
     const selected=new Set(selectedEvidence);
-    panel.innerHTML=evidenceSourceOptions.map((name,index)=>`<button id="evidence-${index}" class="evidence-option${selected.has(name)?' selected':''}" type="button" onclick="toggleEvidence(${index},'${name}')"><i></i>${name}</button>`).join('');
+    panel.innerHTML=options.map((name,index)=>`<button id="evidence-${index}" class="evidence-option${selected.has(name)?' selected':''}" type="button" onclick="toggleEvidence(${index},'${name}')"><i></i>${name}</button>`).join('');
   });
 }
 function normalizeQuestionTitle(){
