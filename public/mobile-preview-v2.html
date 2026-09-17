@@ -1200,31 +1200,6 @@ function elementComplaintTokens(){
     Object.assign(tokens,{T_NAME:third[0]||'',T_MALE:mark(thirdSex,'男'),T_FEMALE:mark(thirdSex,'女'),T_BIRTH_YEAR:thirdBirth.year,T_BIRTH_MONTH:thirdBirth.month,T_BIRTH_DAY:thirdBirth.day,T_NATION:third[5]||'',T_WORK:third[6]||'',T_JOB:third[7]||'',T_PHONE:third[2]||'',T_DOMICILE:third[3]||'',T_RESIDENCE:third[4]||''});
   }else if(elementIsOrganization(thirdType))Object.assign(tokens,{T_ORG_NAME:third[0]||'',T_ORG_CODE:third[1]||'',T_ORG_REGISTERED:third[2]||'',T_ORG_OFFICE:third[5]||third[2]||'',T_ORG_REP:third[3]||'',T_ORG_PHONE:third[4]||'',T_ORG_REP_JOB:third[6]||''},orgMarks('T',third[7]));
 
-  (function(){
-    if(guaranteeChoice==='无担保人'||!guaranteeParts[0])return;
-    const guaranteeType=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
-    const isJoint=guaranteeType.includes('连带');
-    const periodChoice=elementGet(map,'借条有没有写担保有效多久？','没写');
-    const demand=elementGet(map,'有没有向担保人要求还款？','没有');
-    let listAsD2=false;
-    if(isJoint)listAsD2=true;
-    else if(guaranteeType.includes('一般')){
-      if(periodChoice==='没写'||periodChoice==='不确定'){
-        listAsD2=demand!=='没有';
-      }else{
-        listAsD2=demand==='有，并且有证据';
-      }
-    }else{
-      listAsD2=demand==='有，并且有证据';
-    }
-    if(!listAsD2)return;
-    const gName=guaranteeParts[0]||'';
-    const gId=guaranteeParts[1]||'';
-    const gSex=complaintSexFromMainlandId?complaintSexFromMainlandId(gId):'';
-    const gBirth=dateParts(complaintBirthDateFromMainlandId(gId)||'');
-    Object.assign(tokens,{D2_NAME:gName,D2_BIRTH_YEAR:gBirth.year,D2_BIRTH_MONTH:gBirth.month,D2_BIRTH_DAY:gBirth.day,D2_MALE:mark(gSex,'男'),D2_FEMALE:mark(gSex,'女'),D2_NATION:'',D2_WORK:'',D2_JOB:'',D2_PHONE:'',D2_DOMICILE:'',D2_RESIDENCE:''});
-  })();
-
   const agentChoice=elementGet(map,'是否委托诉讼代理人？','无'),agent=complaintSplitParts(elementGet(map,'请填写诉讼代理人信息',''));
   Object.assign(tokens,{AG_Y:mark(agentChoice,'有'),AG_N:mark(agentChoice,'无'),AG_NAME:agent[0]||'',AG_UNIT:agent[1]||'',AG_JOB:agent[2]||'',AG_PHONE:agent[3]||'',AG_GENERAL:agentChoice==='有'?yes:'',AG_SPECIAL:''});
   const deliverySame=elementGet(map,'送达地址是否使用原告地址？','是')==='是',delivery=complaintSplitParts(elementGet(map,'请填写送达信息',''));
@@ -1275,6 +1250,30 @@ function elementComplaintTokens(){
   const guaranteeText=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
   const collateralDetails=elementCollateralDetails(collateral),maxChoice=elementGet(map,'担保合同里有没有写“最高担保金额”？','没有'),maxParts=complaintSplitParts(elementGet(map,'请填写最高担保金额和期限',''));
   const registration=elementGet(map,'是否办理抵押或质押登记？','未登记'),guaranteeParts=complaintSplitParts(guarantee);
+  (function(){
+    if(guaranteeChoice==='无担保人'||!guaranteeParts[0])return;
+    const guaranteeType=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
+    const isJoint=guaranteeType.includes('连带');
+    const periodChoice=elementGet(map,'借条有没有写担保有效多久？','没写');
+    const demand=elementGet(map,'有没有向担保人要求还款？','没有');
+    let listAsD2=false;
+    if(isJoint)listAsD2=true;
+    else if(guaranteeType.includes('一般')){
+      if(periodChoice==='没写'||periodChoice==='不确定'){
+        listAsD2=demand!=='没有';
+      }else{
+        listAsD2=demand==='有，并且有证据';
+      }
+    }else{
+      listAsD2=demand==='有，并且有证据';
+    }
+    if(!listAsD2)return;
+    const gName=guaranteeParts[0]||'';
+    const gId=guaranteeParts[1]||'';
+    const gSex=complaintSexFromMainlandId?complaintSexFromMainlandId(gId):'';
+    const gBirth=dateParts(complaintBirthDateFromMainlandId(gId)||'');
+    Object.assign(tokens,{D2_NAME:gName,D2_BIRTH_YEAR:gBirth.year,D2_BIRTH_MONTH:gBirth.month,D2_BIRTH_DAY:gBirth.day,D2_MALE:mark(gSex,'男'),D2_FEMALE:mark(gSex,'女'),D2_NATION:'',D2_WORK:'',D2_JOB:'',D2_PHONE:'',D2_DOMICILE:'',D2_RESIDENCE:''});
+  })();
   const otherSecurityChoice=elementGet(map,'是否还有其他担保方式？','无'),otherSecurity=complaintSplitParts(elementGet(map,'请填写其他担保信息',''));
   Object.assign(tokens,{SECURITY_CONTRACT_Y:collateralChoice==='无'?no:yes,SECURITY_CONTRACT_N:collateralChoice==='无'?yes:no,SECURITY_DATE:collateralDetails.date,SECURITY_OBJECT:collateralDetails.object,GUARANTOR:guaranteeParts[0]||'',MAX_SECURITY_Y:mark(maxChoice,'有'),MAX_SECURITY_N:mark(maxChoice,'没有'),MAX_SECURITY_DATE:maxParts[0]||'',MAX_SECURITY_AMOUNT:maxParts[1]||'',REGISTRATION_Y:registration==='未登记'?no:yes,REGISTRATION_N:registration==='未登记'?yes:no,FORMAL_REG:mark(registration,'正式登记'),NOTICE_REG:mark(registration,'预告登记'),GUARANTEE_CONTRACT_Y:guaranteeChoice==='无担保人'?no:yes,GUARANTEE_CONTRACT_N:guaranteeChoice==='无担保人'?yes:no,GUARANTEE_DATE:guaranteeParts[2]||'',GUARANTEE_CONTENT:guaranteeParts[3]||guaranteeText,GENERAL_GUARANTEE:mark(guaranteeText,'一般保证'),JOINT_GUARANTEE:mark(guaranteeText,'连带责任保证人'),OTHER_SECURITY_Y:otherSecurityChoice==='无'?no:yes,OTHER_SECURITY_N:otherSecurityChoice==='无'?yes:no,OTHER_SECURITY_TYPE:otherSecurity[0]||'',OTHER_SECURITY_DATE:otherSecurity[1]||'',OTHER_FACTS:elementGet(map,'请填写其他重要情况',''),EVIDENCE_LIST:elementEvidenceList(map).map((item,index)=>`${index+1}. ${item}`).join('；')});
   return tokens;
