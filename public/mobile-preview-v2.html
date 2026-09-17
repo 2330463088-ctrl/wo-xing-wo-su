@@ -5370,7 +5370,7 @@ function submitCostPicker(){
   const answer=values.join('；');
   answers.push(answer);rememberCalc(queue[position],answer);position++;render();
 }
-async async function downloadPreservationApplication(){
+async function downloadPreservationApplication(){
   const data=preservationApplicationData();
   try{
     const u8=await _genDocxFromTemplate(PRESERVATION_DOCX_TPL,data.tokens);
