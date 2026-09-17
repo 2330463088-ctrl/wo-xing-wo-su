@@ -1251,7 +1251,20 @@ function elementComplaintTokens(){
   const filingDate=dateParts(complaintCurrentDate());
   const lastRepayment=(repaymentItems(latestRecord('已还款明细')||latestRecord('已还款情况'))||[]).slice(-1)[0];
   const lastRepaymentDate=lastRepayment?.date?{year:String(lastRepayment.date.getFullYear()),month:String(lastRepayment.date.getMonth()+1),day:String(lastRepayment.date.getDate())}:{year:'',month:'',day:''};
-  Object.assign(tokens,{CONTRACT_DETAIL:`${voucher}；签订时间：${loanDate}`,LENDER:plaintiff[0]||'',BORROWER:defendant[0]||'',AGREED_AMOUNT:principal,ACTUAL_AMOUNT:actual,DUE_Y:due?yes:no,DUE_N:due?no:yes,LOAN_START:loanDate,LOAN_END:due||'',RATE_SELECTED:interestText?yes:no,RATE_VALUE:String(interestText).replace(/[^0-9.]/g,''),RATE_CLAUSE:'',PROVIDE_DATE:loanDate,REPAY_OTHER_CHECK:yes,REPAY_OTHER:elementGet(map,'借款约定如何还款？','未特别约定'),PAID_PRINCIPAL:calculated.ok?Number(calculated.paidPrincipal||0).toFixed(2):'',PAID_INTEREST:calculated.ok?Number(calculated.paidInterest||0).toFixed(2):'',PAID_INTEREST_YEAR:lastRepaymentDate.year,PAID_INTEREST_MONTH:lastRepaymentDate.month,PAID_INTEREST_DAY:lastRepaymentDate.day,OVERDUE_Y:due?yes:no,OVERDUE_N:due?no:yes,OVERDUE_DATE:due||'',PARTY_SIGN:plaintiff[0]||'',FILING_YEAR:filingDate.year,FILING_MONTH:filingDate.month,FILING_DAY:filingDate.day});
+  const repayText=elementGet(map,'借款约定如何还款？','未特别约定');
+  const repayMatch=(function(){
+    const t=repayText||'';
+    const r={EQUAL_P:no,EQUAL_PI:no,LUMP_PI:no,MONTH:no,QUARTER:no,YEAR:no,OTHER:no,OTHER_TEXT:''};
+    if(t.includes('等额本金')&&!t.includes('等额本息'))r.EQUAL_P=yes;
+    else if(t.includes('等额本息')&&!t.includes('等额本金'))r.EQUAL_PI=yes;
+    else if(t.includes('一次性还本付息')||t.includes('到期一次')||t.includes('到期还本付息'))r.LUMP_PI=yes;
+    else if(t.includes('按月计息')||(t.includes('按月')&&t.includes('到期')))r.MONTH=yes;
+    else if(t.includes('按季计息')||(t.includes('按季')&&t.includes('到期')))r.QUARTER=yes;
+    else if(t.includes('按年计息')||(t.includes('按年')&&t.includes('到期')))r.YEAR=yes;
+    else{r.OTHER=yes;r.OTHER_TEXT=t;}
+    return r;
+  })();
+  Object.assign(tokens,{CONTRACT_DETAIL:`${voucher}；签订时间：${loanDate}`,LENDER:plaintiff[0]||'',BORROWER:defendant[0]||'',AGREED_AMOUNT:principal,ACTUAL_AMOUNT:actual,DUE_Y:due?yes:no,DUE_N:due?no:yes,LOAN_START:loanDate,LOAN_END:due||'',RATE_SELECTED:interestText?yes:no,RATE_VALUE:String(interestText).replace(/[^0-9.]/g,''),RATE_CLAUSE:'',PROVIDE_DATE:loanDate,REPAY_EQUAL_P:repayMatch.EQUAL_P,REPAY_EQUAL_PI:repayMatch.EQUAL_PI,REPAY_LUMP_PI:repayMatch.LUMP_PI,REPAY_MONTH:repayMatch.MONTH,REPAY_QUARTER:repayMatch.QUARTER,REPAY_YEAR:repayMatch.YEAR,REPAY_OTHER_CHECK:repayMatch.OTHER,REPAY_OTHER:repayMatch.OTHER_TEXT,PAID_PRINCIPAL:calculated.ok?Number(calculated.paidPrincipal||0).toFixed(2):'',PAID_INTEREST:calculated.ok?Number(calculated.paidInterest||0).toFixed(2):'',PAID_INTEREST_YEAR:lastRepaymentDate.year,PAID_INTEREST_MONTH:lastRepaymentDate.month,PAID_INTEREST_DAY:lastRepaymentDate.day,OVERDUE_Y:due?yes:no,OVERDUE_N:due?no:yes,OVERDUE_DATE:due||'',PARTY_SIGN:plaintiff[0]||'',FILING_YEAR:filingDate.year,FILING_MONTH:filingDate.month,FILING_DAY:filingDate.day,PRE_COURT:'',PRE_DATE:''});
   const collateral=elementGet(map,'请填写押了什么东西',''),collateralChoice=elementHasNoCollateral(collateral)?'无':elementGet(map,'有无房、车或其他财产作担保？','没有');
   const guaranteeText=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
   const collateralDetails=elementCollateralDetails(collateral),maxChoice=elementGet(map,'担保合同里有没有写“最高担保金额”？','没有'),maxParts=complaintSplitParts(elementGet(map,'请填写最高担保金额和期限',''));
