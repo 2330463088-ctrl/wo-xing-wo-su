@@ -1076,7 +1076,7 @@ function generateElementComplaintDraft(){
   showComplaintDraftResult();
 }
 const elementRowLabels={
-  2:'原告（自然人）',3:'原告（法人、非法人组织）',4:'委托诉讼代理人',5:'送达地址及收件人、电话',6:'是否接受电子送达',7:'被告（自然人）',8:'被告（法人、非法人组织）',9:'第三人（自然人）',10:'第三人（法人、非法人组织）',12:'1.本金',13:'2.利息',14:'3.是否要求提前还款或解除合同',15:'4.是否主张担保权利',16:'5.是否主张实现债权的费用',17:'6.其他请求',18:'7.标的总额',19:'8.请求依据',21:'1.有无仲裁、法院管辖约定',22:'2.是否申请财产保全措施',24:'1.合同签订情况',25:'2.签订主体',26:'3.借款金额',27:'4.借款期限',28:'5.借款利率',29:'6.借款提供时间',30:'7.还款方式',31:'8.还款情况',32:'9.是否存在逾期还款',33:'10.是否签订物的担保合同',34:'11.担保人、担保物',35:'12.是否最高额担保',36:'13.是否办理抵押、质押登记',37:'14.是否签订保证合同',38:'15.保证方式',39:'16.其他担保方式',40:'17.其他需要说明的内容',41:'18.证据清单'
+  2:'原告（自然人）',3:'原告（法人、非法人组织）',4:'委托诉讼代理人',5:'送达地址及收件人、电话',6:'是否接受电子送达',7:'被告（自然人）',8:'被告（法人、非法人组织）',9:'第三人（自然人）',10:'第三人（法人、非法人组织）',101:'被告二（自然人）',102:'被告二（法人、非法人组织）',12:'1.本金',13:'2.利息',14:'3.是否要求提前还款或解除合同',15:'4.是否主张担保权利',16:'5.是否主张实现债权的费用',17:'6.其他请求',18:'7.标的总额',19:'8.请求依据',21:'1.有无仲裁、法院管辖约定',22:'2.是否申请财产保全措施',24:'1.合同签订情况',25:'2.签订主体',26:'3.借款金额',27:'4.借款期限',28:'5.借款利率',29:'6.借款提供时间',30:'7.还款方式',31:'8.还款情况',32:'9.是否存在逾期还款',33:'10.是否签订物的担保合同',34:'11.担保人、担保物',35:'12.是否最高额担保',36:'13.是否办理抵押、质押登记',37:'14.是否签订保证合同',38:'15.保证方式',39:'16.其他担保方式',40:'17.其他需要说明的内容',41:'18.证据清单'
 };
 function elementComplaintPreviewHtml(){
   const rows=elementComplaintRows();
@@ -1095,6 +1095,20 @@ function elementPartyRowIndexes(){
   rows.push(4,5,6);
   if(!defendants.length||defendants.some(item=>!elementIsOrganization(item.type)))rows.push(7);
   if(defendants.some(item=>elementIsOrganization(item.type)))rows.push(8);
+  // 担保人列为被告二
+  const gChoice2=elementGet(map,'是否有借款担保人？','无担保人');
+  const gInfo=complaintSplitParts(elementGet(map,'请填写担保人身份信息',''));
+  if(gChoice2!=='无担保人'&&gInfo[0]){
+    const gType2=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
+    const isJoint2=gType2.includes('连带');
+    const pChoice2=elementGet(map,'借条有没有写担保有效多久？','没写');
+    const demand2=elementGet(map,'有没有向担保人要求还款？','没有');
+    let list2=false;
+    if(isJoint2)list2=true;
+    else if(gType2.includes('一般')){list2=pChoice2==='没写'||pChoice2==='不确定'?demand2!=='没有':demand2==='有，并且有证据';}
+    else list2=demand2==='有，并且有证据';
+    if(list2)rows.push(101);
+  }
   if(thirdType==='个人')rows.push(9);
   if(elementIsOrganization(thirdType))rows.push(10);
   return rows;
@@ -1158,7 +1172,18 @@ function elementComplaintRows(){
   return {
     2:plaintiffPersonalCells||(!elementIsOrganization(plaintiffType)?elementPartyCell(plaintiffType,plaintiff,'plaintiff'):''),3:plaintiffOrganizationCells||(elementIsOrganization(plaintiffType)?elementPartyCell(plaintiffType,plaintiff,'plaintiff'):''),
     4:agentChoice==='无'?'☐有\n☑无':`☑有  ${agent}\n☐无`,5:deliveryChoice==='是'?`地址：${plaintiffServiceAddress||'不详'}\n收件人：${plaintiff[0]||'不详'}\n电话：${plaintiffServicePhone||'不详'}`:`地址、收件人、电话：${delivery}`,6:electronic==='不接受'?'☐是\n☑否':`☑是  方式：${electronic}${elementGet(map,'请填写电子送达邮箱','')}\n☐否`,
-    7:defendantPersonalCells||(!elementIsOrganization(defendantType)?elementPartyCell(defendantType,defendant,'defendant'):''),8:defendantOrganizationCells||(elementIsOrganization(defendantType)?elementPartyCell(defendantType,defendant,'defendant'):''),9:thirdType==='个人'?elementPartyCell(thirdType,third,'plaintiff'):'',10:elementIsOrganization(thirdType)?elementPartyCell(thirdType,third,'plaintiff'):'',
+    7:defendantPersonalCells||(!elementIsOrganization(defendantType)?elementPartyCell(defendantType,defendant,'defendant'):''),8:defendantOrganizationCells||(elementIsOrganization(defendantType)?elementPartyCell(defendantType,defendant,'defendant'):''),9:thirdType==='个人'?elementPartyCell(thirdType,third,'plaintiff'):'',10:elementIsOrganization(thirdType)?elementPartyCell(thirdType,third,'plaintiff'):'',101:(function(){
+    if(guaranteeChoice==='无担保人'||!guaranteeParts[0])return '';
+    const gType=elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？',''));
+    const isJoint=gType.includes('连带');
+    const pChoice=elementGet(map,'借条有没有写担保有效多久？','没写');
+    const demand=elementGet(map,'有没有向担保人要求还款？','没有');
+    let list=false;
+    if(isJoint)list=true;
+    else if(gType.includes('一般')){list=pChoice==='没写'||pChoice==='不确定'?demand!=='没有':demand==='有，并且有证据';}
+    else list=demand==='有，并且有证据';
+    return list?elementPartyCell('个人',guaranteeParts.slice(0,7),'defendant'):'';
+  })(),102:'',
     12:`截至${cutoff}止，尚欠本金${remaining}（人民币，下同）`,13:`截至${cutoff}止，欠利息${interest}；计算方式：${elementGet(map,'请填写约定利息百分比','依法计算')}\n是否请求支付至实际清偿之日止：${elementGet(map,'利息是否计算至实际清偿日？','是')==='是'?'☑是 ☐否':'☐是 ☑否'}`,14:elementEarlyClaimText(map),15:guaranteeChoice==='无担保人'?'☐是\n☑否':`☑是  内容：${guarantee}\n☐否`,16:complaintExtraCostData(map).hasAny?`☑是  明细：${complaintExtraCostData(map).details.join('；')}\n☐否`:'☐是\n☑否',17:`由被告承担本案诉讼费用${filingHasPreservation()?'及保全费用':''}`,18:total,19:'合同约定：借款凭证及双方约定\n法律规定：相关法律规定',
     21:elementGet(map,'是否约定管辖法院或仲裁？','无')==='有'?`☑有  ${elementGet(map,'请填写管辖或仲裁约定','')}\n☐无`:'☐有\n☑无',22:filingHasPreservation()?'申请诉讼保全：☑是 ☐否':'申请诉讼保全：☐是 ☑否',
     24:`${voucher}；签订时间：${loanDate}`,25:`贷款人：${plaintiffNames}\n借款人：${defendantNames}`,26:`约定：${principal}元\n实际提供：${actual}元`,27:`是否到期：${due?'☑是 ☐否':'☐是 ☐否'}\n约定期限：${loanDate}起至${due||'未约定'}止`,28:elementGet(map,'请填写约定利息百分比','未约定利息'),29:`${loanDate}，${actual}元`,30:elementGet(map,'借款约定如何还款？','未特别约定'),31:calculated.ok?`已还本金：${yuan(calculated.paidPrincipal||0)}\n已还利息：${yuan(calculated.paidInterest||0)}`:elementGet(map,'请填写已还款明细','未还款'),32:due?`☑是  逾期时间：${due}至今\n☐否`:'是否逾期以催告及合理期限届满情况为准',33:collateralChoice==='无'?'☐是\n☑否':`☑是  签订时间：${collateralDetails.date||'不详'}\n☐否`,34:`担保人：${guaranteeChoice==='无担保人'?'无':guaranteeParts[0]||'不详'}\n担保物：${collateralChoice==='无'?'无':collateralDetails.object||'不详'}`,35:maxChoice==='有'?`☑是\n☐否\n担保债权的确定时间：${maxInfo[0]||'不详'}\n担保额度：${maxInfo[1]||'不详'}`:'☐是\n☑否',36:registration==='未登记'?'☐是\n☑否':`☑是  ${registration}\n☐否`,37:guaranteeChoice==='无担保人'?'☐是\n☑否':`☑是  签订时间：${guaranteeParts[2]||'不详'}  保证人：${guaranteeParts[0]||'不详'}\n主要内容：${guaranteeParts[3]||'不详'}\n☐否`,38:guaranteeChoice==='无担保人'?'不适用':elementGet(map,'担保人签名旁写了什么？',elementGet(map,'担保签名写的是什么？','未明确约定')),39:otherSecurityChoice==='无'?'☐是\n☑否':`☑是  形式：${otherSecurity[0]||'不详'}  签订时间：${otherSecurity[1]||'不详'}\n☐否`,40:elementGet(map,'请填写其他重要情况','无'),41:evidence||'无'
