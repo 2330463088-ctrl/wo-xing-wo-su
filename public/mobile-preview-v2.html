@@ -1353,7 +1353,7 @@ function complaintDownloadFallback() {
   URL.revokeObjectURL(url);
 }
 
-async function downloadComplaintDraft() {
+async async function downloadComplaintDraft() {
   if (!complaintDraftText) return;
   try {
     if(complaintDraftType==='element'){
@@ -5370,7 +5370,7 @@ function submitCostPicker(){
   const answer=values.join('；');
   answers.push(answer);rememberCalc(queue[position],answer);position++;render();
 }
-async function downloadPreservationApplication(){
+async async function downloadPreservationApplication(){
   const data=preservationApplicationData();
   try{
     const u8=await _genDocxFromTemplate(PRESERVATION_DOCX_TPL,data.tokens);
