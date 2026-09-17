@@ -194,6 +194,7 @@ function extractLawsuitKeywords() {
 let complaintDraftText = '';
 let complaintDraftGenerated = false;
 let complaintDraftType = 'general';
+let complaintDraftDownloading = false;
 
 function complaintAnswerRecords() {
   const records = [];
@@ -1378,7 +1379,8 @@ function complaintDownloadFallback() {
 }
 
 async function downloadComplaintDraft() {
-  if (!complaintDraftText) return;
+  if (!complaintDraftText||complaintDraftDownloading) return;
+  complaintDraftDownloading=true;
   try {
     if(complaintDraftType==='element'){
       const u8=await _genDocxFromTemplate(ELEMENT_DOCX_TPL,elementComplaintTokens());
@@ -1424,6 +1426,8 @@ async function downloadComplaintDraft() {
   } catch (error) {
     console.warn('Word 下载失败，使用 .doc 回退。', error);
     complaintDownloadFallback();
+  } finally {
+    setTimeout(function(){complaintDraftDownloading=false;},500);
   }
 }
 </script>
